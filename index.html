@@ -297,6 +297,138 @@
       text-transform: uppercase;
       color: #fff;
     }
+
+    /* ===== Animations ===== */
+
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes growDown {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1); }
+      to   { transform: scale(1.08); }
+    }
+
+    @keyframes widthGrow {
+      from { width: 0; }
+      to   { width: 28px; }
+    }
+
+    /* Hero — background slow zoom */
+    .hero__bg {
+      animation: slowZoom 12s ease-out forwards;
+    }
+
+    /* Hero — header elements */
+    .jpn-badge__label {
+      opacity: 0;
+      animation: fadeDown 0.8s ease-out 0.3s forwards;
+    }
+
+    .jpn-badge__line {
+      transform-origin: top;
+      transform: scaleY(0);
+      animation: growDown 0.6s ease-out 0.9s forwards;
+    }
+
+    .header__logo {
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.5s forwards;
+    }
+
+    .hamburger {
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.5s forwards;
+    }
+
+    /* Hero — center block */
+    .center-block__title {
+      opacity: 0;
+      animation: fadeUp 1s ease-out 0.8s forwards;
+    }
+
+    .center-block__number {
+      opacity: 0;
+      animation: fadeUp 1s ease-out 1.2s forwards;
+    }
+
+    .center-block__line {
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out 1.6s forwards;
+    }
+
+    /* Hero — bottom logo */
+    .bottom-logo__main {
+      opacity: 0;
+      animation: fadeUp 1s ease-out 1.4s forwards;
+    }
+
+    .bottom-logo__sub {
+      opacity: 0;
+      animation: fadeUp 1s ease-out 1.6s forwards;
+    }
+
+    /* Section 02 — scroll-triggered */
+    .story__bg {
+      animation: slowZoom 14s ease-out paused forwards;
+    }
+
+    .story__vertical-col {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    .story__vertical-col:nth-child(2) {
+      transition-delay: 0.3s;
+    }
+
+    .story__brand-name {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: opacity 1s ease-out 0.4s, transform 1s ease-out 0.4s;
+    }
+
+    .story__brand-sub {
+      opacity: 0;
+      transition: opacity 1s ease-out 0.8s;
+    }
+
+    /* Active state when scrolled into view */
+    .story.is-visible .story__bg {
+      animation-play-state: running;
+    }
+
+    .story.is-visible .story__vertical-col {
+      opacity: 0.92;
+      transform: translateY(0);
+    }
+
+    .story.is-visible .story__brand-name {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .story.is-visible .story__brand-sub {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -370,5 +502,17 @@
       </div>
     </div>
   </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.25 });
+
+    document.querySelectorAll('.story').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
