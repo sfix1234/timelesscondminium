@@ -122,12 +122,161 @@
       gap: 6px;
       padding: 22px 20px;
       cursor: pointer;
+      z-index: 10001;
+      position: relative;
     }
 
     .hamburger__line {
       width: 28px;
       height: 1px;
       background: #fff;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.3s ease;
+      transform-origin: center;
+    }
+
+    /* Hamburger → X animation */
+    .hamburger.is-open .hamburger__line:nth-child(1) {
+      transform: translateY(3.5px) rotate(45deg);
+    }
+
+    .hamburger.is-open .hamburger__line:nth-child(2) {
+      transform: translateY(-3.5px) rotate(-45deg);
+    }
+
+    /* ===== Fullscreen Nav Overlay ===== */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .nav-overlay__bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 6, 4, 0.97);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .nav-overlay.is-open {
+      pointer-events: auto;
+    }
+
+    .nav-overlay.is-open .nav-overlay__bg {
+      opacity: 1;
+    }
+
+    .nav-overlay__inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px 20px 60px;
+    }
+
+    /* Gold accent line */
+    .nav-overlay__accent {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198, 168, 124, 0.6), transparent);
+      margin-bottom: 40px;
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+    }
+
+    .nav-overlay.is-open .nav-overlay__accent {
+      width: 80px;
+    }
+
+    /* Nav links */
+    .nav-overlay__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .nav-overlay__item {
+      overflow: hidden;
+    }
+
+    .nav-overlay__link {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(26px, 7vw, 42px);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 0;
+      transform: translateY(110%);
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  color 0.3s ease;
+    }
+
+    .nav-overlay__link:hover {
+      color: rgba(198, 168, 124, 0.9);
+    }
+
+    .nav-overlay.is-open .nav-overlay__item:nth-child(1) .nav-overlay__link {
+      transform: translateY(0);
+      transition-delay: 0.25s;
+    }
+    .nav-overlay.is-open .nav-overlay__item:nth-child(2) .nav-overlay__link {
+      transform: translateY(0);
+      transition-delay: 0.35s;
+    }
+    .nav-overlay.is-open .nav-overlay__item:nth-child(3) .nav-overlay__link {
+      transform: translateY(0);
+      transition-delay: 0.45s;
+    }
+    .nav-overlay.is-open .nav-overlay__item:nth-child(4) .nav-overlay__link {
+      transform: translateY(0);
+      transition-delay: 0.55s;
+    }
+    .nav-overlay.is-open .nav-overlay__item:nth-child(5) .nav-overlay__link {
+      transform: translateY(0);
+      transition-delay: 0.65s;
+    }
+
+    /* Bottom info */
+    .nav-overlay__footer {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease 0.7s, transform 0.6s ease 0.7s;
+    }
+
+    .nav-overlay.is-open .nav-overlay__footer {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nav-overlay__footer-line {
+      width: 1px;
+      height: 30px;
+      background: rgba(198, 168, 124, 0.4);
+    }
+
+    .nav-overlay__footer-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
     }
 
     /* ----- Center text ----- */
