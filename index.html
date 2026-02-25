@@ -298,140 +298,330 @@
       color: #fff;
     }
 
-    /* ===== Animations ===== */
-
-    /* Keyframes */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+    /* ===== Intro Overlay ===== */
+    .intro {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
+    .intro__line {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198, 168, 124, 0.8), transparent);
+      transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .intro__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(24px, 6vw, 40px);
+      letter-spacing: 12px;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .intro__title span {
+      display: inline-block;
+      transform: translateY(110%);
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .intro__sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(11px, 2.8vw, 16px);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: rgba(198, 168, 124, 0.8);
+      overflow: hidden;
+    }
+
+    .intro__sub span {
+      display: inline-block;
+      transform: translateY(110%);
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+    }
+
+    /* Intro active states */
+    .intro.step-1 .intro__title span {
+      transform: translateY(0);
+    }
+
+    .intro.step-1 .intro__sub span {
+      transform: translateY(0);
+    }
+
+    .intro.step-1 .intro__line {
+      width: 120px;
+    }
+
+    /* Curtain split */
+    .intro__curtain-top,
+    .intro__curtain-bottom {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: #0a0a0a;
+      z-index: 1;
+      transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    .intro__curtain-top { top: 0; }
+    .intro__curtain-bottom { bottom: 0; }
+
+    .intro__center {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .intro.step-2 .intro__curtain-top {
+      transform: translateY(-100%);
+    }
+
+    .intro.step-2 .intro__curtain-bottom {
+      transform: translateY(100%);
+    }
+
+    .intro.step-2 .intro__center {
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+    }
+
+    .intro.step-3 {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease-out 0.2s;
+    }
+
+    /* ===== Scroll lock during intro ===== */
+    html.no-scroll,
+    html.no-scroll body {
+      overflow: hidden;
+      height: 100%;
+    }
+
+    /* ===== Animations & Keyframes ===== */
+    @keyframes kenBurns {
+      0%   { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.15) translate(-1.5%, -1%); }
+    }
+
+    @keyframes kenBurns2 {
+      0%   { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.12) translate(1%, -1.5%); }
+    }
+
+    @keyframes clipRevealUp {
+      from { clip-path: inset(100% 0 0 0); }
+      to   { clip-path: inset(0 0 0 0); }
+    }
+
+    @keyframes clipRevealDown {
+      from { clip-path: inset(0 0 100% 0); }
+      to   { clip-path: inset(0 0 0 0); }
+    }
+
+    @keyframes clipRevealCenter {
+      from { clip-path: inset(50% 50% 50% 50%); }
+      to   { clip-path: inset(0 0 0 0); }
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(40px); filter: blur(4px); }
+      to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-25px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes growDown {
+    @keyframes growLine {
       from { transform: scaleY(0); }
       to   { transform: scaleY(1); }
     }
 
-    @keyframes slowZoom {
-      from { transform: scale(1); }
-      to   { transform: scale(1.08); }
-    }
-
-    @keyframes widthGrow {
+    @keyframes lineExpand {
       from { width: 0; }
       to   { width: 28px; }
     }
 
-    /* Hero — background slow zoom */
-    .hero__bg {
-      animation: slowZoom 12s ease-out forwards;
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
     }
 
-    /* Hero — header elements */
+    @keyframes breathe {
+      0%, 100% { opacity: 0.4; }
+      50%      { opacity: 0.7; }
+    }
+
+    /* Hero — Ken Burns background */
+    .hero__bg {
+      animation: kenBurns 18s ease-out forwards;
+      will-change: transform;
+    }
+
+    /* Hero — header: initially hidden, JS triggers */
     .jpn-badge__label {
-      opacity: 0;
-      animation: fadeDown 0.8s ease-out 0.3s forwards;
+      clip-path: inset(0 0 100% 0);
+      animation: clipRevealDown 0.7s cubic-bezier(0.16, 1, 0.3, 1) paused forwards;
     }
 
     .jpn-badge__line {
       transform-origin: top;
       transform: scaleY(0);
-      animation: growDown 0.6s ease-out 0.9s forwards;
+      animation: growLine 0.6s ease-out paused forwards;
     }
 
     .header__logo {
       opacity: 0;
-      animation: fadeIn 1s ease-out 0.5s forwards;
+      animation: fadeSlideDown 1s cubic-bezier(0.16, 1, 0.3, 1) paused forwards;
     }
 
     .hamburger {
       opacity: 0;
-      animation: fadeIn 1s ease-out 0.5s forwards;
+      animation: fadeSlideDown 1s cubic-bezier(0.16, 1, 0.3, 1) paused forwards;
     }
 
-    /* Hero — center block */
+    /* Hero — center block: clip-path reveal */
     .center-block__title {
-      opacity: 0;
-      animation: fadeUp 1s ease-out 0.8s forwards;
+      clip-path: inset(100% 0 0 0);
+      animation: clipRevealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) paused forwards;
     }
 
     .center-block__number {
       opacity: 0;
-      animation: fadeUp 1s ease-out 1.2s forwards;
+      animation: fadeSlideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) paused forwards;
     }
 
     .center-block__line {
-      opacity: 0;
-      animation: fadeIn 0.8s ease-out 1.6s forwards;
+      width: 0;
+      animation: lineExpand 0.8s ease-out paused forwards;
     }
 
-    /* Hero — bottom logo */
+    /* Hero — bottom logo: dramatic scale reveal */
     .bottom-logo__main {
-      opacity: 0;
-      animation: fadeUp 1s ease-out 1.4s forwards;
+      clip-path: inset(100% 0 0 0);
+      animation: clipRevealUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) paused forwards;
     }
 
     .bottom-logo__sub {
-      opacity: 0;
-      animation: fadeUp 1s ease-out 1.6s forwards;
+      clip-path: inset(100% 0 0 0);
+      animation: clipRevealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) paused forwards;
     }
 
-    /* Section 02 — scroll-triggered */
+    /* Gold shimmer on bottom logo */
+    .bottom-logo__main::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 30%, rgba(198, 168, 124, 0.15) 50%, transparent 70%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out 4.5s 1 forwards;
+      pointer-events: none;
+    }
+
+    .bottom-logo__main {
+      position: relative;
+    }
+
+    /* ===== Section 02 — scroll-triggered ===== */
     .story__bg {
-      animation: slowZoom 14s ease-out paused forwards;
+      animation: kenBurns2 20s ease-out paused forwards;
+      will-change: transform;
     }
 
+    /* Vertical text: each column clip reveals */
     .story__vertical-col {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 1s ease-out, transform 1s ease-out;
+      clip-path: inset(100% 0 0 0);
+      transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .story__vertical-col:nth-child(2) {
-      transition-delay: 0.3s;
+      transition-delay: 0.35s;
     }
 
+    /* Brand block */
     .story__brand-name {
-      opacity: 0;
-      transform: translateY(25px);
-      transition: opacity 1s ease-out 0.4s, transform 1s ease-out 0.4s;
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
     }
 
     .story__brand-sub {
       opacity: 0;
-      transition: opacity 1s ease-out 0.8s;
+      transform: translateY(15px);
+      transition: opacity 1s ease-out 1s, transform 1s ease-out 1s;
     }
 
-    /* Active state when scrolled into view */
+    /* Section divider line (new element) */
+    .story__divider {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198, 168, 124, 0.6), transparent);
+      margin-top: 20px;
+      transition: width 1.2s ease-out 1.2s;
+    }
+
+    /* Active states when scrolled into view */
     .story.is-visible .story__bg {
       animation-play-state: running;
     }
 
     .story.is-visible .story__vertical-col {
-      opacity: 0.92;
-      transform: translateY(0);
+      clip-path: inset(0 0 0 0);
     }
 
     .story.is-visible .story__brand-name {
-      opacity: 1;
-      transform: translateY(0);
+      clip-path: inset(0 0 0 0);
     }
 
     .story.is-visible .story__brand-sub {
       opacity: 1;
+      transform: translateY(0);
+    }
+
+    .story.is-visible .story__divider {
+      width: 60px;
+    }
+
+    /* Overlay breathing glow */
+    .story__overlay::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(198, 168, 124, 0.05) 0%, transparent 70%);
+      animation: breathe 5s ease-in-out infinite;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
+  <!-- ===== Cinematic Intro Overlay ===== -->
+  <div class="intro" id="intro">
+    <div class="intro__curtain-top"></div>
+    <div class="intro__curtain-bottom"></div>
+    <div class="intro__center">
+      <div class="intro__title"><span>The Timeless</span></div>
+      <div class="intro__line"></div>
+      <div class="intro__sub"><span>Condominium</span></div>
+    </div>
+  </div>
+
   <section class="hero">
     <!-- Background -->
     <div class="hero__bg"></div>
@@ -499,20 +689,90 @@
           <span class="story__brand-furnished">Furnished by</span>
           <span class="story__brand-armani">Armani/Casa</span>
         </div>
+        <div class="story__divider"></div>
       </div>
     </div>
   </section>
 
   <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
+    (() => {
+      const intro = document.getElementById('intro');
+      const html = document.documentElement;
+
+      // Lock scroll during intro
+      html.classList.add('no-scroll');
+
+      // Helper: play a paused CSS animation after delay (ms)
+      function playAfter(selector, delay) {
+        setTimeout(() => {
+          document.querySelectorAll(selector).forEach(el => {
+            el.style.animationPlayState = 'running';
+          });
+        }, delay);
+      }
+
+      // === INTRO SEQUENCE ===
+      // Step 1: reveal intro text (after brief pause)
+      setTimeout(() => intro.classList.add('step-1'), 300);
+
+      // Step 2: curtain split
+      setTimeout(() => intro.classList.add('step-2'), 2200);
+
+      // Step 3: fade out intro overlay + unlock scroll
+      setTimeout(() => {
+        intro.classList.add('step-3');
+        html.classList.remove('no-scroll');
+      }, 3000);
+
+      // Remove intro from DOM after animation
+      setTimeout(() => intro.remove(), 4000);
+
+      // === HERO STAGED ANIMATIONS (start when curtain opens) ===
+      const heroStart = 2400;
+
+      // Header elements
+      playAfter('.jpn-badge__label', heroStart);
+      playAfter('.jpn-badge__line', heroStart + 400);
+      playAfter('.header__logo', heroStart + 200);
+      playAfter('.hamburger', heroStart + 200);
+
+      // Center block
+      playAfter('.center-block__title', heroStart + 500);
+      playAfter('.center-block__number', heroStart + 1000);
+      playAfter('.center-block__line', heroStart + 1500);
+
+      // Bottom logo
+      playAfter('.bottom-logo__main', heroStart + 800);
+      playAfter('.bottom-logo__sub', heroStart + 1100);
+
+      // === SCROLL-TRIGGERED ANIMATIONS ===
+      const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            scrollObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.story').forEach(el => scrollObserver.observe(el));
+
+      // === PARALLAX on scroll ===
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const scrollY = window.scrollY;
+            const hero = document.querySelector('.hero__bg');
+            if (hero) {
+              hero.style.transform = `scale(${1 + scrollY * 0.0001}) translateY(${scrollY * 0.3}px)`;
+            }
+            ticking = false;
+          });
+          ticking = true;
         }
       });
-    }, { threshold: 0.25 });
-
-    document.querySelectorAll('.story').forEach(el => observer.observe(el));
+    })();
   </script>
 </body>
 </html>
