@@ -771,6 +771,25 @@
     </div>
   </div>
 
+  <!-- ===== Fullscreen Nav Overlay ===== -->
+  <nav class="nav-overlay" id="navOverlay">
+    <div class="nav-overlay__bg"></div>
+    <div class="nav-overlay__inner">
+      <div class="nav-overlay__accent"></div>
+      <ul class="nav-overlay__list">
+        <li class="nav-overlay__item"><a href="#" class="nav-overlay__link">Concept</a></li>
+        <li class="nav-overlay__item"><a href="#" class="nav-overlay__link">Design</a></li>
+        <li class="nav-overlay__item"><a href="#" class="nav-overlay__link">Location</a></li>
+        <li class="nav-overlay__item"><a href="#" class="nav-overlay__link">Plan</a></li>
+        <li class="nav-overlay__item"><a href="#" class="nav-overlay__link">Access</a></li>
+      </ul>
+      <div class="nav-overlay__footer">
+        <div class="nav-overlay__footer-line"></div>
+        <span class="nav-overlay__footer-text">The Timeless Condominium</span>
+      </div>
+    </div>
+  </nav>
+
   <section class="hero">
     <!-- Background -->
     <div class="hero__bg"></div>
@@ -905,6 +924,35 @@
       }, { threshold: 0.2 });
 
       document.querySelectorAll('.story').forEach(el => scrollObserver.observe(el));
+
+      // === HAMBURGER MENU ===
+      const hamburger = document.querySelector('.hamburger');
+      const navOverlay = document.getElementById('navOverlay');
+
+      hamburger.addEventListener('click', () => {
+        const isOpen = hamburger.classList.toggle('is-open');
+        navOverlay.classList.toggle('is-open', isOpen);
+        html.classList.toggle('no-scroll', isOpen);
+      });
+
+      // Close on nav link click
+      navOverlay.querySelectorAll('.nav-overlay__link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          hamburger.classList.remove('is-open');
+          navOverlay.classList.remove('is-open');
+          html.classList.remove('no-scroll');
+        });
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navOverlay.classList.contains('is-open')) {
+          hamburger.classList.remove('is-open');
+          navOverlay.classList.remove('is-open');
+          html.classList.remove('no-scroll');
+        }
+      });
 
       // === PARALLAX on scroll ===
       let ticking = false;
