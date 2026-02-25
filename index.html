@@ -8,18 +8,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --gold: #c8b88a;
-      --gold-dim: rgba(200,184,138,0.6);
-      --white: #f0ece4;
-      --white-dim: rgba(240,236,228,0.7);
+      --gold-dim: rgba(200,184,138,0.5);
+      --cream: #f0ece4;
+      --dark: #1a1a1a;
       --black: #000;
+      --white: #fff;
       --en: 'Cormorant Garamond', serif;
       --jp: 'Noto Serif JP', serif;
     }
@@ -27,54 +24,72 @@
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--black);
-      color: var(--white);
+      background: var(--cream);
+      color: var(--dark);
       font-family: var(--jp);
       line-height: 1.8;
       overflow-x: hidden;
     }
 
-    /* ---------- HEADER ---------- */
+    /* ========== HEADER ========== */
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      padding: 24px 40px;
+      padding: 20px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
     }
-    header a {
+    .header-left {
+      font-family: var(--en);
+      font-size: 11px;
+      letter-spacing: 2.5px;
       color: var(--white);
       text-decoration: none;
-      font-family: var(--en);
-      font-size: 12px;
-      letter-spacing: 2.5px;
       opacity: 0.85;
-      transition: opacity 0.3s;
     }
-    header a:hover { opacity: 1; }
-    .nav-right {
+    .header-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--en);
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--white);
+      opacity: 0.6;
+      white-space: nowrap;
+    }
+    .header-right {
       display: flex;
       align-items: center;
-      gap: 28px;
+      gap: 20px;
     }
+    .header-right a {
+      font-family: var(--en);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--white);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .header-right a:hover { opacity: 1; }
     .hamburger {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       cursor: pointer;
       padding: 4px;
     }
     .hamburger span {
-      width: 26px;
+      width: 24px;
       height: 1px;
       background: var(--white);
       display: block;
     }
 
-    /* ---------- HERO ---------- */
+    /* ========== HERO ========== */
     .hero {
       position: relative;
       width: 100%;
@@ -87,385 +102,366 @@
     .hero-bg {
       position: absolute;
       inset: 0;
-      background:
-        url('https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1920&q=80') center center / cover no-repeat;
+      background: url('https://images.unsplash.com/photo-1576017003498-6d4e2cfbcf68?w=1400&q=80') center 20% / cover no-repeat;
     }
     .hero-bg::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.45);
-    }
-    .hero-bg::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.6) 100%),
-        radial-gradient(ellipse 80% 60% at 50% 50%, transparent 40%, rgba(0,0,0,0.3) 100%);
+      background: rgba(0,0,0,0.35);
     }
     .hero-content {
       position: relative;
       z-index: 2;
       text-align: center;
+      padding: 0 20px;
     }
     .hero-eyebrow {
       font-family: var(--en);
       font-size: 11px;
       letter-spacing: 6px;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 24px;
-      font-weight: 400;
-    }
-    .hero-title {
-      font-family: var(--en);
-      font-size: clamp(36px, 5.5vw, 64px);
-      font-weight: 300;
-      letter-spacing: 14px;
       color: var(--white);
       text-transform: uppercase;
-      margin-bottom: 36px;
+      font-weight: 400;
+      line-height: 1.8;
+      opacity: 0.9;
+    }
+    .hero-line {
+      width: 1px;
+      height: 36px;
+      background: rgba(255,255,255,0.4);
+      margin: 20px auto;
     }
     .hero-num {
       font-family: var(--en);
-      font-size: 12px;
-      letter-spacing: 4px;
-      color: var(--gold);
-      margin-bottom: 6px;
-    }
-    .hero-sub {
-      font-family: var(--en);
-      font-size: 12px;
-      letter-spacing: 5px;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-    .hero-jp {
-      font-family: var(--jp);
       font-size: 13px;
-      letter-spacing: 3px;
-      color: var(--gold-dim);
+      letter-spacing: 4px;
+      color: var(--white);
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+    .hero-title {
+      font-family: var(--en);
+      font-size: clamp(36px, 9vw, 60px);
       font-weight: 300;
+      letter-spacing: 10px;
+      color: var(--white);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      line-height: 1.1;
     }
-    .scroll-indicator {
-      position: absolute;
-      bottom: 36px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    .scroll-indicator span {
+    .hero-furnished {
       font-family: var(--en);
       font-size: 9px;
-      letter-spacing: 3px;
-      color: var(--gold);
-      text-transform: uppercase;
-      writing-mode: vertical-rl;
-    }
-    .scroll-line {
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, var(--gold), transparent);
-      animation: pulse 2.5s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%,100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
-
-    /* ---------- LOGO ---------- */
-    .logo-section {
-      padding: 110px 20px;
-      text-align: center;
-      background: var(--black);
-    }
-    .logo-mark {
-      font-family: var(--en);
-      font-size: clamp(26px, 3.5vw, 44px);
-      font-weight: 300;
-      letter-spacing: 16px;
-      color: var(--gold);
-      text-transform: uppercase;
-    }
-    .logo-line {
-      width: 50px;
-      height: 1px;
-      background: var(--gold);
-      margin: 28px auto;
-      opacity: 0.4;
-    }
-    .logo-brand {
-      font-family: var(--en);
-      font-size: clamp(11px, 1.4vw, 15px);
-      font-weight: 400;
-      letter-spacing: 10px;
-      color: var(--gold);
-      text-transform: uppercase;
-      opacity: 0.75;
-    }
-
-    /* ---------- CRAFTSMEN ---------- */
-    .craftsmen {
-      padding: 60px 20px 120px;
-      text-align: center;
-      background: var(--black);
-    }
-    .craftsmen-headline {
-      font-family: var(--jp);
-      font-size: clamp(18px, 2.5vw, 28px);
-      font-weight: 400;
-      letter-spacing: 5px;
+      letter-spacing: 4px;
       color: var(--white);
-      margin-bottom: 70px;
+      opacity: 0.6;
+      text-transform: uppercase;
+      margin-bottom: 6px;
     }
-    .craftsmen-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px 20px;
-      max-width: 920px;
-      margin: 0 auto;
+    .hero-brand {
+      font-family: var(--en);
+      font-size: clamp(18px, 5vw, 28px);
+      font-weight: 400;
+      letter-spacing: 6px;
+      color: var(--white);
+      text-transform: uppercase;
+      opacity: 0.9;
     }
-    .craftsman {
-      text-align: center;
-    }
-    .craftsman-role {
+    .hero-vertical {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      writing-mode: vertical-rl;
       font-family: var(--jp);
       font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--gold);
-      margin-bottom: 10px;
-    }
-    .craftsman-name-en {
-      font-family: var(--en);
-      font-size: clamp(15px, 1.6vw, 19px);
-      font-weight: 500;
-      letter-spacing: 3px;
+      letter-spacing: 5px;
       color: var(--white);
+      opacity: 0.7;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    /* ========== BRAND / LOGO ========== */
+    .brand {
+      background: var(--cream);
+      padding: 90px 20px 60px;
+      text-align: center;
+    }
+    .brand-name {
+      font-family: var(--en);
+      font-size: clamp(22px, 5vw, 34px);
+      font-weight: 400;
+      letter-spacing: 12px;
+      color: var(--dark);
+      text-transform: uppercase;
+    }
+    .brand-line {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin: 24px auto;
+      opacity: 0.5;
+    }
+    .brand-furnished {
+      font-family: var(--en);
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: var(--dark);
+      opacity: 0.4;
       text-transform: uppercase;
       margin-bottom: 4px;
     }
-    .craftsman-name-jp {
+    .brand-casa {
+      font-family: var(--en);
+      font-size: clamp(13px, 2.5vw, 18px);
+      letter-spacing: 8px;
+      color: var(--dark);
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+    .brand-tagline {
+      margin-top: 40px;
       font-family: var(--jp);
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 3px;
-      color: rgba(255,255,255,0.4);
+      color: var(--dark);
+      opacity: 0.5;
       font-weight: 300;
+      line-height: 2.2;
     }
 
-    /* ---------- THE STAGE ---------- */
-    .stage {
-      background: var(--black);
-      padding: 100px 0 0;
-    }
-    .stage-head {
+    /* ========== CRAFTSMEN ========== */
+    .craftsmen {
+      background: var(--cream);
+      padding: 40px 20px 90px;
       text-align: center;
-      margin-bottom: 70px;
     }
-    .stage-num {
+    .craftsmen-headline {
+      font-family: var(--jp);
+      font-size: clamp(18px, 4.5vw, 26px);
+      font-weight: 400;
+      letter-spacing: 3px;
+      color: var(--dark);
+      margin-bottom: 50px;
+      line-height: 1.9;
+    }
+    .craftsmen-photo {
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto 50px;
+      aspect-ratio: 16/9;
+      background: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=900&q=80') center center / cover no-repeat;
+      filter: grayscale(20%);
+    }
+    .craftsmen-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .craftsmen-list li {
       font-family: var(--en);
       font-size: 12px;
       letter-spacing: 4px;
-      color: var(--gold);
-      margin-bottom: 12px;
+      color: var(--dark);
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+
+    /* ========== THE STAGE ========== */
+    .stage {
+      background: var(--cream);
+      padding: 80px 28px;
+      border-top: 1px solid rgba(0,0,0,0.06);
     }
     .stage-title {
       font-family: var(--en);
-      font-size: clamp(30px, 4.5vw, 52px);
+      font-size: clamp(28px, 7vw, 44px);
       font-weight: 300;
-      letter-spacing: 12px;
-      color: var(--white);
+      letter-spacing: 10px;
+      color: var(--dark);
       text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 60px;
     }
-    .stage-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      max-width: 1200px;
+    .stage-content {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      max-width: 600px;
       margin: 0 auto;
     }
-    .stage-img {
-      position: relative;
-      min-height: 420px;
-      background:
-        url('https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=960&q=80') center center / cover no-repeat;
+    .stage-left {
+      font-family: var(--jp);
+      font-size: clamp(15px, 3.5vw, 20px);
+      font-weight: 400;
+      letter-spacing: 2px;
+      line-height: 2.2;
+      color: var(--dark);
     }
-    .stage-img::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.15);
-    }
-    .stage-text {
-      padding: 60px 55px;
+    .stage-right {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      background: #080808;
+      gap: 16px;
+      text-align: right;
+      padding-top: 6px;
     }
-    .stage-loc {
-      font-family: var(--en);
-      font-size: 11px;
-      letter-spacing: 4px;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .stage-area-jp {
+    .stage-right span,
+    .stage-right a {
       font-family: var(--jp);
-      font-size: clamp(24px, 3vw, 36px);
-      font-weight: 500;
-      letter-spacing: 8px;
-      color: var(--white);
-      margin-bottom: 6px;
-    }
-    .stage-area-en {
-      font-family: var(--en);
       font-size: 11px;
-      letter-spacing: 4px;
-      color: var(--gold-dim);
-      text-transform: uppercase;
-      margin-bottom: 32px;
+      letter-spacing: 2px;
+      color: var(--dark);
+      opacity: 0.45;
+      text-decoration: none;
+      transition: opacity 0.3s;
     }
-    .stage-desc {
-      font-family: var(--jp);
-      font-size: 13px;
-      line-height: 2.4;
-      color: var(--white-dim);
-      font-weight: 300;
-      letter-spacing: 0.5px;
-    }
+    .stage-right a:hover { opacity: 0.8; }
 
-    /* ---------- KYOTO FULL-IMAGE ---------- */
-    .kyoto {
+    /* ========== KYOTO IMAGE ========== */
+    .kyoto-image-section {
       position: relative;
       width: 100%;
-      height: 85vh;
+      height: 75vh;
       overflow: hidden;
     }
     .kyoto-bg {
       position: absolute;
       inset: 0;
-      background:
-        url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=80') center center / cover no-repeat;
+      background: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1400&q=80') center center / cover no-repeat;
     }
     .kyoto-bg::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.3);
     }
-    .kyoto-bg::after {
-      content: '';
+    .kyoto-overlay {
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.5) 100%);
-    }
-    .kyoto-content {
-      position: relative;
-      z-index: 2;
-      padding: 0 50px;
-      height: 100%;
       display: flex;
-      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      max-width: 1200px;
-      margin: 0 auto;
+      z-index: 2;
     }
-    .kyoto-label {
-      font-family: var(--en);
-      font-size: 11px;
-      letter-spacing: 5px;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .kyoto-title-jp {
+    .kyoto-kanji {
       font-family: var(--jp);
-      font-size: clamp(30px, 4.5vw, 52px);
+      font-size: clamp(60px, 18vw, 120px);
       font-weight: 400;
-      letter-spacing: 10px;
       color: var(--white);
-      margin-bottom: 8px;
-    }
-    .kyoto-title-en {
-      font-family: var(--en);
-      font-size: clamp(30px, 4.5vw, 52px);
-      font-weight: 300;
-      letter-spacing: 12px;
-      color: var(--white);
-      text-transform: uppercase;
+      letter-spacing: 20px;
     }
 
-    /* ---------- FOOTER ---------- */
+    /* ========== KYOTO TEXT ========== */
+    .kyoto-text {
+      background: var(--cream);
+      padding: 60px 28px 70px;
+      text-align: center;
+    }
+    .kyoto-en {
+      font-family: var(--en);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 300;
+      letter-spacing: 12px;
+      color: var(--dark);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .kyoto-desc {
+      font-family: var(--jp);
+      font-size: 12px;
+      line-height: 2.4;
+      color: var(--dark);
+      opacity: 0.5;
+      font-weight: 300;
+      max-width: 440px;
+      margin: 0 auto 36px;
+      text-align: left;
+      letter-spacing: 0.5px;
+    }
+    .view-more {
+      display: inline-block;
+      font-family: var(--en);
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--dark);
+      text-decoration: none;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(0,0,0,0.3);
+      padding-bottom: 4px;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+    .view-more:hover { opacity: 0.8; }
+
+    /* ========== FOOTER ========== */
     footer {
       background: var(--black);
-      padding: 70px 40px;
+      padding: 60px 28px;
       text-align: center;
-      border-top: 1px solid rgba(200,184,138,0.08);
     }
     .ft-logo {
       font-family: var(--en);
-      font-size: 15px;
+      font-size: 14px;
       letter-spacing: 8px;
       color: var(--gold);
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .ft-brand {
       font-family: var(--en);
-      font-size: 10px;
-      letter-spacing: 5px;
-      color: rgba(200,184,138,0.45);
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: rgba(200,184,138,0.35);
       text-transform: uppercase;
-      margin-bottom: 36px;
+      margin-bottom: 30px;
     }
     .ft-copy {
       font-family: var(--en);
-      font-size: 10px;
+      font-size: 9px;
       letter-spacing: 2px;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.2);
     }
 
-    /* ---------- RESPONSIVE ---------- */
-    @media (max-width: 768px) {
-      header { padding: 16px 20px; }
-      .craftsmen-grid { grid-template-columns: repeat(2, 1fr); gap: 30px 10px; }
-      .stage-body { grid-template-columns: 1fr; }
-      .stage-img { min-height: 280px; }
-      .stage-text { padding: 40px 24px; }
-      .kyoto-content { padding: 0 24px; }
-    }
-
-    /* ---------- SCROLL ANIMATION ---------- */
+    /* ========== SCROLL ANIMATION ========== */
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 1s cubic-bezier(0.25,0.46,0.45,0.94),
-                  transform 1s cubic-bezier(0.25,0.46,0.45,0.94);
+      transform: translateY(24px);
+      transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
     }
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 480px) {
+      .hero-vertical { right: 12px; font-size: 9px; letter-spacing: 4px; }
+      .stage-content { gap: 20px; }
+    }
+    @media (min-width: 769px) {
+      header { padding: 24px 40px; }
+      .hero-vertical { right: 40px; }
+      .stage-content { gap: 80px; }
+      .brand { padding: 110px 20px 70px; }
+    }
   </style>
 </head>
 <body>
 
   <!-- HEADER -->
   <header>
-    <a href="#">JPN</a>
-    <div class="nav-right">
+    <a href="#" class="header-left">JPN</a>
+    <span class="header-center">THE SILENCE design.01</span>
+    <div class="header-right">
       <a href="#">CONTACT</a>
       <div class="hamburger">
         <span></span>
@@ -479,94 +475,72 @@
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
-      <p class="hero-eyebrow">THE TIMELESS CONDOMINIUM</p>
-      <h1 class="hero-title">THE SILENCE</h1>
+      <p class="hero-eyebrow">THE TIMELESS<br>CONDOMINIUM</p>
+      <div class="hero-line"></div>
       <p class="hero-num">01</p>
-      <p class="hero-sub">THE SILENCE Furnished By ARMANI/CASA</p>
-      <p class="hero-jp">京都の静寂に抱かれた、永遠の邸宅。</p>
+      <h1 class="hero-title">THE SILENCE</h1>
+      <p class="hero-furnished">Furnished By</p>
+      <p class="hero-brand">ARMANI/CASA</p>
     </div>
-    <div class="scroll-indicator">
-      <span>Scroll</span>
-      <div class="scroll-line"></div>
-    </div>
+    <div class="hero-vertical">日本の最も美しき物語を、一〇〇年後の世界に届く。</div>
   </section>
 
-  <!-- LOGO -->
-  <section class="logo-section">
-    <div class="logo-mark reveal">THE SILENCE</div>
-    <div class="logo-line reveal reveal-delay-1"></div>
-    <div class="logo-brand reveal reveal-delay-2">ARMANI / CASA</div>
+  <!-- BRAND / LOGO -->
+  <section class="brand">
+    <div class="brand-name reveal">THE SILENCE</div>
+    <div class="brand-line reveal reveal-delay-1"></div>
+    <div class="brand-furnished reveal reveal-delay-1">Furnished By</div>
+    <div class="brand-casa reveal reveal-delay-2">ARMANI / CASA</div>
+    <p class="brand-tagline reveal reveal-delay-3">
+      日本の最も美しき物語を、<br>一〇〇年後の世界に届く。
+    </p>
   </section>
 
   <!-- CRAFTSMEN -->
   <section class="craftsmen">
-    <h2 class="craftsmen-headline reveal">世界初、匠の技が結集した邸宅。</h2>
-    <div class="craftsmen-grid">
-      <div class="craftsman reveal reveal-delay-1">
-        <p class="craftsman-role">建築デザイン監修</p>
-        <p class="craftsman-name-en">KUMA KENGO</p>
-        <p class="craftsman-name-jp">隈 研吾</p>
-      </div>
-      <div class="craftsman reveal reveal-delay-2">
-        <p class="craftsman-role">施工</p>
-        <p class="craftsman-name-en">KONGO-GUMI</p>
-        <p class="craftsman-name-jp">金剛組</p>
-      </div>
-      <div class="craftsman reveal reveal-delay-3">
-        <p class="craftsman-role">インテリアデザイン</p>
-        <p class="craftsman-name-en">ARMANI / CASA</p>
-        <p class="craftsman-name-jp">アルマーニ / カーザ</p>
-      </div>
-      <div class="craftsman reveal reveal-delay-1">
-        <p class="craftsman-role">庭園</p>
-        <p class="craftsman-name-en">NAKAMURA SOTOJI</p>
-        <p class="craftsman-name-jp">中村 外二</p>
-      </div>
-      <div class="craftsman reveal reveal-delay-2">
-        <p class="craftsman-role">照明デザイン</p>
-        <p class="craftsman-name-en">ERI KOUKO</p>
-        <p class="craftsman-name-jp">江利 香子</p>
-      </div>
-      <div class="craftsman reveal reveal-delay-3">
-        <p class="craftsman-role">植栽</p>
-        <p class="craftsman-name-en">ONIMA UEJI</p>
-        <p class="craftsman-name-jp">御庭植治</p>
-      </div>
-    </div>
+    <h2 class="craftsmen-headline reveal">世界初、<br>匠の技が結集した邸宅。</h2>
+    <div class="craftsmen-photo reveal reveal-delay-1"></div>
+    <ul class="craftsmen-list reveal reveal-delay-2">
+      <li>KUMA KENGO</li>
+      <li>KONGO-GUMI</li>
+      <li>ARMANI</li>
+      <li>NAKAMURA SOTOJI</li>
+      <li>ERI KOUKO</li>
+      <li>ONIMA UEJI</li>
+    </ul>
   </section>
 
   <!-- THE STAGE -->
   <section class="stage">
-    <div class="stage-head reveal">
-      <p class="stage-num">02</p>
-      <h2 class="stage-title">THE STAGE</h2>
-    </div>
-    <div class="stage-body">
-      <div class="stage-img"></div>
-      <div class="stage-text">
-        <p class="stage-loc reveal">Kyoto</p>
-        <h3 class="stage-area-jp reveal reveal-delay-1">上七軒</h3>
-        <p class="stage-area-en reveal reveal-delay-2">KAMISHICHIKEN</p>
-        <p class="stage-desc reveal reveal-delay-3">
-          京都最古の花街、上七軒。<br>
-          北野天満宮の門前に広がるこの地は、<br>
-          室町時代より続く格式と風雅を今に伝える。<br>
-          石畳の路地に軒を連ねる茶屋の佇まいは、<br>
-          千年の都の記憶そのもの。<br>
-          この比類なき舞台に、新たな邸宅が誕生する。
-        </p>
+    <h2 class="stage-title reveal">THE STAGE</h2>
+    <div class="stage-content">
+      <div class="stage-left reveal">
+        舞台は、<br>京文化発祥の地<br>上七軒。
+      </div>
+      <div class="stage-right reveal reveal-delay-1">
+        <span>京都</span>
+        <span>北野天満宮</span>
+        <span>上七軒・旧勝谷川邸</span>
+        <a href="#">エピソード</a>
       </div>
     </div>
   </section>
 
-  <!-- KYOTO -->
-  <section class="kyoto">
+  <!-- KYOTO IMAGE -->
+  <section class="kyoto-image-section">
     <div class="kyoto-bg"></div>
-    <div class="kyoto-content">
-      <p class="kyoto-label reveal">The Heritage</p>
-      <h2 class="kyoto-title-jp reveal reveal-delay-1">千年の都</h2>
-      <h2 class="kyoto-title-en reveal reveal-delay-2">KYOTO</h2>
+    <div class="kyoto-overlay">
+      <span class="kyoto-kanji reveal">京都</span>
     </div>
+  </section>
+
+  <!-- KYOTO TEXT -->
+  <section class="kyoto-text">
+    <h2 class="kyoto-en reveal">KYOTO</h2>
+    <p class="kyoto-desc reveal reveal-delay-1">
+      794年 桓武天皇が、千年の都として京と定めた事は、日本文化の花開きに大きな意味を持つ。京文化と呼ばれる独自の美意識がこの地で花開き、以後千年以上にわたり日本の首都として栄え続けた。四季折々の自然と調和した寺社仏閣が織りなす景観は、今なお世界中の人々を魅了し続けている。
+    </p>
+    <a href="#" class="view-more reveal reveal-delay-2">VIEW MORE</a>
   </section>
 
   <!-- FOOTER -->
