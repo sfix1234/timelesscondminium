@@ -48,7 +48,27 @@
     });
   }, { threshold: 0.2 });
 
-  document.querySelectorAll('.story, .craftsmen, .visual').forEach(el => scrollObserver.observe(el));
+  document.querySelectorAll('.story, .craftsmen, .stage').forEach(el => scrollObserver.observe(el));
+
+  // === STAGE TAB SWITCHING ===
+  const stageTabs = document.querySelectorAll('.stage__tab');
+  const stageSlides = document.querySelectorAll('.stage__slide');
+  const stageInfos = document.querySelectorAll('.stage__info-block');
+
+  stageTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const idx = tab.dataset.tab;
+
+      stageTabs.forEach(t => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+
+      stageSlides.forEach(s => s.classList.remove('is-active'));
+      document.querySelector('.stage__slide[data-slide="' + idx + '"]').classList.add('is-active');
+
+      stageInfos.forEach(i => i.classList.remove('is-active'));
+      document.querySelector('.stage__info-block[data-info="' + idx + '"]').classList.add('is-active');
+    });
+  });
 
   // === HAMBURGER MENU ===
   const hamburger = document.querySelector('.hamburger');
