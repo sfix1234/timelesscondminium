@@ -138,6 +138,7 @@
   });
 
   // === SCROLL MORPH: Logo shrink animation ===
+  const centerBlock = document.querySelector('.center-block');
   const bottomLogo = document.querySelector('.bottom-logo');
   const storyBrandName = document.querySelector('.story__brand-name');
   const storyBrandCondo = document.querySelector('.story__brand-condo');
@@ -160,6 +161,21 @@
         const heroBg = document.querySelector('.hero__bg');
         if (heroBg) {
           heroBg.style.transform = 'scale(' + (1 + scrollY * 0.0001) + ') translateY(' + (scrollY * 0.3) + 'px)';
+        }
+
+        // Center-block fade out & rise
+        var cbFadeStart = 0;
+        var cbFadeEnd = vh * 0.35;
+        if (scrollY <= cbFadeStart) {
+          centerBlock.style.opacity = '1';
+          centerBlock.style.transform = 'translateY(0)';
+        } else if (scrollY <= cbFadeEnd) {
+          var cbP = (scrollY - cbFadeStart) / (cbFadeEnd - cbFadeStart);
+          centerBlock.style.opacity = String(1 - cbP);
+          centerBlock.style.transform = 'translateY(' + (-cbP * 40) + 'px)';
+        } else {
+          centerBlock.style.opacity = '0';
+          centerBlock.style.transform = 'translateY(-40px)';
         }
 
         // Logo morph phases

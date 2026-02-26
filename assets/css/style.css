@@ -273,6 +273,7 @@ html.no-scroll body {
   justify-content: center;
   align-items: center;
   padding-bottom: 8vh;
+  will-change: opacity, transform;
 }
 
 .center-block__title {
