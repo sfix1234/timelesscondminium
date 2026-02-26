@@ -866,29 +866,32 @@ html.no-scroll body {
 .stage__tabs {
   display: flex;
   flex-direction: column;
-  gap: clamp(6px, 1.5vw, 12px);
-  align-items: flex-end;
+  gap: 0;
+  align-items: flex-start;
 }
 
 .stage__tab {
   background: none;
   border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 300;
   font-size: clamp(10px, 2.5vw, 14px);
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.45);
   cursor: pointer;
-  padding: 6px 0;
+  padding: 10px 0;
   position: relative;
   transition: color 0.4s ease;
   flex-shrink: 0;
+  width: 100%;
+  text-align: left;
 }
 
 .stage__tab::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -1px;
   left: 0;
   width: 0;
   height: 1px;
