@@ -865,10 +865,13 @@ html.no-scroll body {
 
 .stage__tabs {
   display: flex;
-  gap: clamp(14px, 3vw, 28px);
+  flex-direction: row;
+  gap: clamp(10px, 2.5vw, 28px);
   flex-wrap: nowrap;
   align-items: center;
   white-space: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .stage__tab {
@@ -876,13 +879,14 @@ html.no-scroll body {
   border: none;
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 300;
-  font-size: clamp(11px, 2.8vw, 14px);
-  letter-spacing: 0.15em;
+  font-size: clamp(10px, 2.5vw, 14px);
+  letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.45);
   cursor: pointer;
   padding: 6px 0;
   position: relative;
   transition: color 0.4s ease;
+  flex-shrink: 0;
 }
 
 .stage__tab::after {
