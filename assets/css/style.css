@@ -850,7 +850,7 @@ html.no-scroll body {
   align-items: flex-start;
   gap: 20px;
   margin-bottom: clamp(24px, 4vh, 36px);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .stage__lead {
@@ -866,8 +866,9 @@ html.no-scroll body {
 .stage__tabs {
   display: flex;
   gap: clamp(14px, 3vw, 28px);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
+  white-space: nowrap;
 }
 
 .stage__tab {
