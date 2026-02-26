@@ -1029,3 +1029,137 @@ html.no-scroll body {
   transform: translateX(4px);
 }
 
+/* ===== Detail Panel (slide from right) ===== */
+.detail-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+}
+
+.detail-panel.is-open {
+  pointer-events: auto;
+}
+
+.detail-panel__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.detail-panel.is-open .detail-panel__overlay {
+  opacity: 1;
+}
+
+.detail-panel__body {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 85%;
+  max-width: 480px;
+  height: 100%;
+  background: #0e0e0e;
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: clamp(60px, 10vh, 80px) clamp(24px, 6vw, 40px) clamp(40px, 8vh, 60px);
+}
+
+.detail-panel.is-open .detail-panel__body {
+  transform: translateX(0);
+}
+
+.detail-panel__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.detail-panel__close span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.7);
+  transition: background 0.3s ease;
+}
+
+.detail-panel__close span:nth-child(1) {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.detail-panel__close span:nth-child(2) {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.detail-panel__close:hover span {
+  background: #fff;
+}
+
+.detail-panel__content {
+  display: none;
+  color: #fff;
+}
+
+.detail-panel__content.is-active {
+  display: block;
+}
+
+.detail-panel__label {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 10vw, 56px);
+  letter-spacing: 4px;
+  color: rgba(255, 255, 255, 0.15);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.detail-panel__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: clamp(20px, 5vw, 30px);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.detail-panel__line {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(198, 168, 124, 0.8), transparent);
+  margin-bottom: clamp(20px, 4vh, 32px);
+}
+
+.detail-panel__img {
+  width: 100%;
+  margin-bottom: clamp(20px, 4vh, 32px);
+  overflow: hidden;
+}
+
+.detail-panel__img img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.detail-panel__text {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 300;
+  font-size: clamp(12px, 3vw, 14px);
+  letter-spacing: 0.06em;
+  line-height: 2.2;
+  color: rgba(255, 255, 255, 0.65);
+}
+

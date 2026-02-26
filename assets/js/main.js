@@ -97,6 +97,46 @@
     }
   });
 
+  // === DETAIL PANEL (VIEW MORE) ===
+  const detailPanel = document.getElementById('detailPanel');
+  const detailClose = document.getElementById('detailClose');
+  const detailOverlay = detailPanel.querySelector('.detail-panel__overlay');
+  const detailContents = detailPanel.querySelectorAll('.detail-panel__content');
+  const viewMoreLink = document.querySelector('.stage__more-link');
+
+  function getActiveTabIdx() {
+    const active = document.querySelector('.stage__tab.is-active');
+    return active ? active.dataset.tab : '0';
+  }
+
+  function openDetail() {
+    var idx = getActiveTabIdx();
+    detailContents.forEach(function(c) { c.classList.remove('is-active'); });
+    var target = detailPanel.querySelector('.detail-panel__content[data-detail="' + idx + '"]');
+    if (target) target.classList.add('is-active');
+    detailPanel.classList.add('is-open');
+    html.classList.add('no-scroll');
+  }
+
+  function closeDetail() {
+    detailPanel.classList.remove('is-open');
+    html.classList.remove('no-scroll');
+  }
+
+  viewMoreLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    openDetail();
+  });
+
+  detailClose.addEventListener('click', closeDetail);
+  detailOverlay.addEventListener('click', closeDetail);
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && detailPanel.classList.contains('is-open')) {
+      closeDetail();
+    }
+  });
+
   // === SCROLL MORPH: Logo shrink animation ===
   const bottomLogo = document.querySelector('.bottom-logo');
   const storyBrandName = document.querySelector('.story__brand-name');
