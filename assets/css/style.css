@@ -865,13 +865,9 @@ html.no-scroll body {
 
 .stage__tabs {
   display: flex;
-  flex-direction: row;
-  gap: clamp(10px, 2.5vw, 28px);
-  flex-wrap: nowrap;
-  align-items: center;
-  white-space: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  flex-direction: column;
+  gap: clamp(6px, 1.5vw, 12px);
+  align-items: flex-end;
 }
 
 .stage__tab {
