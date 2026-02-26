@@ -745,14 +745,14 @@
       will-change: transform;
     }
 
-    /* Vertical text: each column clip reveals */
+    /* Vertical text: each column clip reveals (after logo morph) */
     .story__vertical-col {
       clip-path: inset(100% 0 0 0);
-      transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s;
     }
 
     .story__vertical-col:nth-child(2) {
-      transition-delay: 0.35s;
+      transition-delay: 1.15s;
     }
 
     /* Brand block */
@@ -781,7 +781,7 @@
       animation-play-state: running;
     }
 
-    .story.is-visible .story__vertical-col {
+    .story__vertical-col.is-revealed {
       clip-path: inset(0 0 0 0);
     }
 
@@ -1009,6 +1009,7 @@
       const bottomLogo = document.querySelector('.bottom-logo');
       const storyBrandName = document.querySelector('.story__brand-name');
       const storyBrandCondo = document.querySelector('.story__brand-condo');
+      const verticalCols = document.querySelectorAll('.story__vertical-col');
 
       // Create floating logo clone
       const floatingLogo = document.createElement('div');
@@ -1035,12 +1036,21 @@
             const phase1End   = vh * 0.70;
             const fadeEnd     = vh * 0.85;
 
+            // Helper to show/hide vertical text
+            function setVerticalRevealed(show) {
+              verticalCols.forEach(function(col) {
+                if (show) col.classList.add('is-revealed');
+                else col.classList.remove('is-revealed');
+              });
+            }
+
             if (scrollY <= phase1Start) {
               // Before morph: show original, hide floating
               bottomLogo.style.visibility = '';
               floatingLogo.style.opacity = '0';
               storyBrandName.classList.remove('is-revealed');
               if (storyBrandCondo) storyBrandCondo.classList.remove('is-revealed');
+              setVerticalRevealed(false);
             } else if (scrollY <= phase1End) {
               // Phase 1: shrink and move to center
               var p = (scrollY - phase1Start) / (phase1End - phase1Start);
@@ -1059,6 +1069,7 @@
 
               storyBrandName.classList.remove('is-revealed');
               if (storyBrandCondo) storyBrandCondo.classList.remove('is-revealed');
+              setVerticalRevealed(false);
             } else if (scrollY <= fadeEnd) {
               // Phase 2: hold position, fade out
               var p2 = (scrollY - phase1End) / (fadeEnd - phase1End);
@@ -1070,12 +1081,14 @@
 
               storyBrandName.classList.remove('is-revealed');
               if (storyBrandCondo) storyBrandCondo.classList.remove('is-revealed');
+              setVerticalRevealed(false);
             } else {
-              // Phase 3: floating gone, reveal story brand
+              // Phase 3: floating gone, reveal story brand + vertical text
               bottomLogo.style.visibility = 'hidden';
               floatingLogo.style.opacity = '0';
               storyBrandName.classList.add('is-revealed');
               if (storyBrandCondo) storyBrandCondo.classList.add('is-revealed');
+              setVerticalRevealed(true);
             }
 
             ticking = false;
