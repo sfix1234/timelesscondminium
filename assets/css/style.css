@@ -819,3 +819,71 @@ html.no-scroll body {
 }
 
 .craftsmen.is-visible .craftsmen__line-bottom { width: 60px; }
+
+/* ===== Section 04 — Visual ===== */
+.visual {
+  position: relative;
+  width: 100%;
+  height: 66vh;
+  overflow: hidden;
+}
+
+.visual__bg {
+  position: absolute;
+  inset: 0;
+  background: url('https://images.unsplash.com/photo-1480796927426-f609979314bd?auto=format&fit=crop&w=1080&q=80') center center / cover no-repeat;
+  z-index: 0;
+  transform: scale(1);
+  transition: transform 8s ease-out;
+}
+
+.visual.is-visible .visual__bg {
+  transform: scale(1.08);
+}
+
+.visual__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 15, 10, 0.35);
+  z-index: 1;
+}
+
+.visual__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.visual__number {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(48px, 12vw, 72px);
+  letter-spacing: 4px;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1.2s ease 0.3s, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+}
+
+.visual.is-visible .visual__number {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.visual__line {
+  width: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.5);
+  margin-top: 18px;
+  transition: width 1s ease-out 0.8s;
+}
+
+.visual.is-visible .visual__line {
+  width: 28px;
+}

@@ -48,7 +48,7 @@
     });
   }, { threshold: 0.2 });
 
-  document.querySelectorAll('.story, .craftsmen').forEach(el => scrollObserver.observe(el));
+  document.querySelectorAll('.story, .craftsmen, .visual').forEach(el => scrollObserver.observe(el));
 
   // === HAMBURGER MENU ===
   const hamburger = document.querySelector('.hamburger');
