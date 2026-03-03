@@ -1,39 +1,44 @@
-# THE SILENCE - Furnished By ARMANI/CASA
+# THE TIMELESS CONDOMINIUM
 
-京都最古の花街・上七軒に誕生する、世界初の匠の技が結集した高級コンドミニアム「THE SILENCE」のプロモーションサイトです。
+京都・上七軒を舞台にしたラグジュアリー邸宅プロモーションサイトです。  
+1ページ構成で、スクロール演出とセクション遷移を中心に設計しています。
 
-## About
+## 実装内容
 
-「THE SILENCE」は、京都の静寂と伝統美を体現する唯一無二の邸宅プロジェクトです。世界的な建築家・デザイナー・職人が集結し、千年の都にふさわしい住まいを創造します。
-
-### Craftsmen
-
-| 役割 | 名前 |
-|------|------|
-| 建築デザイン監修 | 隈 研吾 (Kuma Kengo) |
-| 施工 | 金剛組 (Kongo-Gumi) |
-| インテリアデザイン | Armani / Casa |
-| 庭園 | 中村 外二 (Nakamura Sotoji) |
-| 照明デザイン | 江利 香子 (Eri Kouko) |
-| 植栽 | 御庭植治 (Onima Ueji) |
+- Hero / Story / Craftsmen / Stage セクション
+- Stage 直下のメッセージセクション（縦組みテキスト + 画像）
+- 家紋背景を使った `REGISTRATION` セクション
+- スクロール時の `is-visible` 連動アニメーション
+- Stage 詳細用のスライドインパネル
 
 ## Tech Stack
 
-- HTML5 / CSS3 (単一ファイル構成)
-- Google Fonts (Cormorant Garamond, Noto Serif JP)
-- Intersection Observer API によるスクロールアニメーション
-- レスポンシブデザイン対応
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- Google Fonts
+  - Cormorant Garamond
+  - Noto Sans JP
 
-## Getting Started
+## 開発手順
 
 ```bash
 # リポジトリをクローン
 git clone https://github.com/sfix1234/timelesscondminium.git
+cd timelesscondminium
 
-# ブラウザで開く
-open index.html
+# ローカルサーバー起動
+python3 -m http.server 8000
 ```
+
+ブラウザで `http://localhost:8000` を開いて確認します。
+
+## 主要アセット
+
+- `assets/images/craftsmen-group.jpg`
+- `assets/images/stage-message.jpeg`
+- `assets/images/kamon-bg.webp`
 
 ## License
 
-&copy; 2026 THE SILENCE. All Rights Reserved.
+&copy; 2026 THE TIMELESS CONDOMINIUM. All Rights Reserved.
