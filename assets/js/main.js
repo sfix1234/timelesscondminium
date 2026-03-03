@@ -1,9 +1,5 @@
 (() => {
-  const intro = document.getElementById('intro');
   const html = document.documentElement;
-
-  // Lock scroll during intro
-  html.classList.add('no-scroll');
 
   // Helper: play a paused CSS animation after delay (ms)
   function playAfter(selector, delay) {
@@ -14,17 +10,8 @@
     }, delay);
   }
 
-  // === INTRO SEQUENCE ===
-  setTimeout(() => intro.classList.add('step-1'), 300);
-  setTimeout(() => intro.classList.add('step-2'), 2200);
-  setTimeout(() => {
-    intro.classList.add('step-3');
-    html.classList.remove('no-scroll');
-  }, 3000);
-  setTimeout(() => intro.remove(), 4000);
-
   // === HERO STAGED ANIMATIONS ===
-  const heroStart = 2400;
+  const heroStart = 0;
 
   playAfter('.jpn-badge__label', heroStart);
   playAfter('.jpn-badge__line', heroStart + 400);
