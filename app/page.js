@@ -167,7 +167,7 @@ export default function HomePage() {
         プロジェクトの詳細や世界の匠たちが織りなす物語を、ぜひご体感ください。<br />
         ご登録は無料で承っております。
       </p>
-      <a href="#" className="registration__button">詳細を確認する</a>
+      <a href="/property" className="registration__button">詳細を確認する</a>
     </div>
   </section>
 
