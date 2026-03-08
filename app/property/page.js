@@ -4,7 +4,7 @@ export default function PropertyPage() {
   return (
     <div className="property-page">
       <main>
-        <section className="property-hero property-hero--top">
+        <section className="property-hero property-hero--top" style={{'--property-bg-image': "url('https://images.unsplash.com/photo-1578469645742-46cae010e5d6?auto=format&fit=crop&w=1800&q=80')"}}>
           <div className="property-hero__overlay"></div>
           <div className="property-topbar">
             <div className="property-topbar__left">

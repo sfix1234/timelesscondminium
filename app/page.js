@@ -23,7 +23,7 @@ export default function HomePage() {
 
 
   <section className="hero">
-    <div className="hero__bg"></div>
+    <div className="hero__bg" style={{'--hero-bg-image': "url('https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1080&q=80')"}}></div>
     <div className="hero__overlay"></div>
     <div className="hero__content">
       <header className="header">
@@ -56,7 +56,7 @@ export default function HomePage() {
 
 
   <section className="story">
-    <div className="story__bg"></div>
+    <div className="story__bg" style={{'--story-bg-image': "url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1080&q=80')"}}></div>
     <div className="story__overlay"></div>
     <div className="story__content">
       <div className="story__vertical-text">
@@ -266,7 +266,7 @@ export default function HomePage() {
     </div>
   </section>
 
-  <section className="property-section">
+  <section className="property-section" style={{'--property-bg-image': "url('https://images.unsplash.com/photo-1578469645742-46cae010e5d6?auto=format&fit=crop&w=1600&q=80')"}}>
     <div className="property-section__overlay"></div>
     <div className="property-section__inner">
       <h2 className="property-section__title">PROPERTY</h2>
