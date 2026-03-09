@@ -175,6 +175,7 @@ export default function SiteBehavior() {
     on(detailOverlay, 'click', closeDetail);
 
     function openArtisanDetail(idx) {
+      const keepY = window.scrollY;
       artisanDetailContents?.forEach((content) => content.classList.remove('is-active'));
       const activeContent = artisanDetail?.querySelector(`.artisan-detail__content[data-artisan-detail="${idx}"]`);
       activeContent?.classList.add('is-active');
@@ -184,6 +185,8 @@ export default function SiteBehavior() {
         if (src) iframe.src = src;
       }
       artisanDetail?.classList.add('is-open');
+      // Some browsers/extensions jump to top when opening modal layers; force restore.
+      requestAnimationFrame(() => window.scrollTo({ top: keepY, left: 0, behavior: 'auto' }));
     }
 
     function closeArtisanDetail() {
