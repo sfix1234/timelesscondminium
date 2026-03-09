@@ -20,6 +20,11 @@ export async function POST(request) {
     }
 
     const { password, expiresAt } = issueAccessRequest(validation.clean);
+    const pendingAccessToken = createPendingAccessToken({
+      email: validation.clean.email,
+      password,
+      expiresAt
+    });
     const delivery = await sendAccessEmail({
       email: validation.clean.email,
       name: validation.clean.name,
@@ -27,11 +32,6 @@ export async function POST(request) {
       expiresAt
     });
     const cookieStore = await cookies();
-    const pendingAccessToken = createPendingAccessToken({
-      email: validation.clean.email,
-      password,
-      expiresAt
-    });
     cookieStore.set(ACCESS_REQUEST_COOKIE, pendingAccessToken, {
       httpOnly: true,
       sameSite: 'lax',
