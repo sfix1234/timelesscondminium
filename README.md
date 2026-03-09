@@ -39,6 +39,7 @@ npm run start
 
 - `RESEND_API_KEY` (本番必須)
 - `ACCESS_FROM_EMAIL` (本番必須 / Resendで検証済み送信元)
+- `ACCESS_COOKIE_SECRET` (本番必須 / 認証Cookie署名用シークレット)
 - `ACCESS_ADMIN_EMAIL` (任意 / 申請通知の送信先)
 
 ## 主要アセット

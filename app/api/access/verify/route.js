@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import {
+  ACCESS_REQUEST_COOKIE,
   ACCESS_SESSION_COOKIE,
   normalizeEmail,
   verifyAccessPassword
@@ -13,6 +14,8 @@ export async function POST(request) {
     const body = await request.json();
     const email = normalizeEmail(body.email);
     const password = String(body.password || '').trim().toUpperCase();
+    const cookieStore = await cookies();
+    const pendingAccessToken = cookieStore.get(ACCESS_REQUEST_COOKIE)?.value;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -21,7 +24,7 @@ export async function POST(request) {
       );
     }
 
-    const result = verifyAccessPassword(email, password);
+    const result = verifyAccessPassword(email, password, pendingAccessToken);
 
     if (!result.ok) {
       const messageMap = {
@@ -36,7 +39,6 @@ export async function POST(request) {
       );
     }
 
-    const cookieStore = await cookies();
     cookieStore.set(ACCESS_SESSION_COOKIE, result.sessionToken, {
       httpOnly: true,
       sameSite: 'lax',
@@ -44,6 +46,7 @@ export async function POST(request) {
       path: '/',
       expires: new Date(result.sessionExpiresAt)
     });
+    cookieStore.delete(ACCESS_REQUEST_COOKIE);
 
     return NextResponse.json({ ok: true });
   } catch (error) {

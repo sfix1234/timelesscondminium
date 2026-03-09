@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server';
-import { issueAccessRequest, sendAccessEmail, validateAccessPayload } from '../../../../lib/access-control';
+import { cookies } from 'next/headers';
+import {
+  ACCESS_REQUEST_COOKIE,
+  createPendingAccessToken,
+  issueAccessRequest,
+  sendAccessEmail,
+  validateAccessPayload
+} from '../../../../lib/access-control';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,6 +26,19 @@ export async function POST(request) {
       password,
       expiresAt
     });
+    const cookieStore = await cookies();
+    const pendingAccessToken = createPendingAccessToken({
+      email: validation.clean.email,
+      password,
+      expiresAt
+    });
+    cookieStore.set(ACCESS_REQUEST_COOKIE, pendingAccessToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      expires: new Date(expiresAt)
+    });
 
     return NextResponse.json({
       ok: true,
@@ -34,7 +54,8 @@ export async function POST(request) {
 
     const messageMap = {
       mail_config_missing: 'メール送信設定が未完了です。時間をおいて再度お試しください。',
-      mail_delivery_failed: 'メール送信に失敗しました。時間をおいて再度お試しください。'
+      mail_delivery_failed: 'メール送信に失敗しました。時間をおいて再度お試しください。',
+      auth_config_missing: '認証設定が未完了です。時間をおいて再度お試しください。'
     };
 
     return NextResponse.json(
