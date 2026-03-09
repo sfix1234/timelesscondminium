@@ -5,6 +5,38 @@ import { useEffect } from 'react';
 export default function SiteBehavior() {
   useEffect(() => {
     const html = document.documentElement;
+    html.classList.add('has-js');
+    const cleanupFns = [];
+    const on = (el, event, handler, options) => {
+      if (!el) return;
+      el.addEventListener(event, handler, options);
+      cleanupFns.push(() => el.removeEventListener(event, handler, options));
+    };
+
+    const langToggle = document.getElementById('langToggle');
+    const langMenu = document.getElementById('langMenu');
+    const langItems = langMenu?.querySelectorAll('[data-lang]');
+    const i18nElements = document.querySelectorAll('[data-ja][data-en]');
+    let currentLang = 'ja';
+
+    const applyLanguage = (lang) => {
+      if (lang === 'ja' || lang === 'en') {
+        i18nElements.forEach((el) => {
+          const next = lang === 'ja' ? el.getAttribute('data-ja') : el.getAttribute('data-en');
+          if (next) el.innerHTML = next;
+        });
+      }
+      currentLang = lang;
+      html.lang = lang;
+      if (langToggle) {
+        const labelMap = { ja: 'JPN', en: 'ENG', koto: '江東語', yue: '広東語' };
+        langToggle.textContent = labelMap[lang] || 'JPN';
+        langToggle.setAttribute('aria-label', 'Switch language');
+      }
+      langMenu?.classList.remove('is-open');
+    };
+
+    applyLanguage('ja');
 
     function playAfter(selector, delay) {
       setTimeout(() => {
@@ -25,6 +57,25 @@ export default function SiteBehavior() {
     playAfter('.bottom-logo__main', heroStart + 800);
     playAfter('.bottom-logo__sub', heroStart + 1100);
 
+    on(langToggle, 'click', () => {
+      langMenu?.classList.toggle('is-open');
+    });
+
+    langItems?.forEach((item) => {
+      on(item, 'click', () => {
+        const lang = item.getAttribute('data-lang');
+        if (lang) applyLanguage(lang);
+      });
+    });
+
+    on(document, 'click', (e) => {
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      if (!target.closest('.jpn-badge')) {
+        langMenu?.classList.remove('is-open');
+      }
+    });
+
     const scrollObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -41,7 +92,7 @@ export default function SiteBehavior() {
     const stageInfos = document.querySelectorAll('.stage__info-block');
 
     stageTabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
+      on(tab, 'click', () => {
         const idx = tab.dataset.tab;
 
         stageTabs.forEach((t) => t.classList.remove('is-active'));
@@ -57,16 +108,30 @@ export default function SiteBehavior() {
 
     const hamburger = document.querySelector('.hamburger');
     const navOverlay = document.getElementById('navOverlay');
+    const navOverlayClose = document.getElementById('navOverlayClose');
 
-    hamburger?.addEventListener('click', () => {
+    on(hamburger, 'click', () => {
       const isOpen = hamburger.classList.toggle('is-open');
       navOverlay?.classList.toggle('is-open', isOpen);
       html.classList.toggle('no-scroll', isOpen);
     });
 
+    on(navOverlayClose, 'click', () => {
+      hamburger?.classList.remove('is-open');
+      navOverlay?.classList.remove('is-open');
+      html.classList.remove('no-scroll');
+    });
+
     navOverlay?.querySelectorAll('.nav-overlay__link').forEach((link) => {
-      link.addEventListener('click', (e) => {
+      on(link, 'click', (e) => {
         e.preventDefault();
+        const targetSelector = link.getAttribute('data-target');
+        if (targetSelector) {
+          const target = document.querySelector(targetSelector);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
         hamburger?.classList.remove('is-open');
         navOverlay.classList.remove('is-open');
         html.classList.remove('no-scroll');
@@ -78,6 +143,12 @@ export default function SiteBehavior() {
     const detailOverlay = detailPanel?.querySelector('.detail-panel__overlay');
     const detailContents = detailPanel?.querySelectorAll('.detail-panel__content');
     const viewMoreLink = document.querySelector('.stage__more-link');
+    const artisanDetail = document.getElementById('artisanDetail');
+    const artisanDetailClose = document.getElementById('artisanDetailClose');
+    const artisanDetailOverlay = artisanDetail?.querySelector('.artisan-detail__overlay');
+    const artisanDetailContents = artisanDetail?.querySelectorAll('.artisan-detail__content');
+    const artisanMoreButtons = document.querySelectorAll('.artisan-card__more');
+    const artisanMediaButtons = document.querySelectorAll('.artisan-card__media-button');
 
     function getActiveTabIdx() {
       const active = document.querySelector('.stage__tab.is-active');
@@ -89,31 +160,67 @@ export default function SiteBehavior() {
       detailContents?.forEach((c) => c.classList.remove('is-active'));
       detailPanel?.querySelector(`.detail-panel__content[data-detail="${idx}"]`)?.classList.add('is-active');
       detailPanel?.classList.add('is-open');
-      html.classList.add('no-scroll');
     }
 
     function closeDetail() {
       detailPanel?.classList.remove('is-open');
-      html.classList.remove('no-scroll');
     }
 
-    viewMoreLink?.addEventListener('click', (e) => {
+    on(viewMoreLink, 'click', (e) => {
       e.preventDefault();
       openDetail();
     });
 
-    detailClose?.addEventListener('click', closeDetail);
-    detailOverlay?.addEventListener('click', closeDetail);
+    on(detailClose, 'click', closeDetail);
+    on(detailOverlay, 'click', closeDetail);
+
+    function openArtisanDetail(idx) {
+      artisanDetailContents?.forEach((content) => content.classList.remove('is-active'));
+      const activeContent = artisanDetail?.querySelector(`.artisan-detail__content[data-artisan-detail="${idx}"]`);
+      activeContent?.classList.add('is-active');
+      const iframe = activeContent?.querySelector('.artisan-detail__portrait-embed[data-src]');
+      if (iframe && iframe instanceof HTMLIFrameElement && iframe.src === 'about:blank') {
+        const src = iframe.getAttribute('data-src');
+        if (src) iframe.src = src;
+      }
+      artisanDetail?.classList.add('is-open');
+    }
+
+    function closeArtisanDetail() {
+      artisanDetail?.classList.remove('is-open');
+    }
+
+    artisanMoreButtons.forEach((button) => {
+      on(button, 'click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const idx = button.getAttribute('data-artisan');
+        if (idx) openArtisanDetail(idx);
+      });
+    });
+
+    artisanMediaButtons.forEach((button) => {
+      on(button, 'click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const idx = button.getAttribute('data-artisan');
+        if (idx) openArtisanDetail(idx);
+      });
+    });
+
+    on(artisanDetailClose, 'click', closeArtisanDetail);
+    on(artisanDetailOverlay, 'click', closeArtisanDetail);
 
     const centerBlock = document.querySelector('.center-block');
     const bottomLogo = document.querySelector('.bottom-logo');
     const storyBrandName = document.querySelector('.story__brand-name');
-    const storyBrandCondo = document.querySelector('.story__brand-condo');
     const verticalCols = document.querySelectorAll('.story__vertical-col');
+    const heroBg = document.querySelector('.hero__bg');
+    const craftsmenSection = document.querySelector('.craftsmen');
 
     const floatingLogo = document.createElement('div');
     floatingLogo.className = 'floating-logo';
-    floatingLogo.innerHTML = '<div class="floating-logo__main">The Timeless</div><div class="floating-logo__sub">Condominium</div>';
+    floatingLogo.innerHTML = '<div class="floating-logo__main"><img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" class="floating-logo__image" /></div>';
     document.body.appendChild(floatingLogo);
 
     let ticking = false;
@@ -123,8 +230,7 @@ export default function SiteBehavior() {
           const scrollY = window.scrollY;
           const vh = window.innerHeight;
 
-          const heroBg = document.querySelector('.hero__bg');
-          if (heroBg) {
+          if (heroBg && !heroBg.classList.contains('hero__bg--video')) {
             heroBg.style.transform = `scale(${1 + scrollY * 0.0001}) translateY(${scrollY * 0.3}px)`;
           }
 
@@ -143,51 +249,44 @@ export default function SiteBehavior() {
             }
           }
 
-          const phase1Start = vh * 0.05;
-          const phase1End = vh * 0.7;
-          const fadeEnd = vh * 0.85;
+          const moveStart = vh * 0.05;
+          const revealStart = vh * 0.68;
 
           const setVerticalRevealed = (show) => {
             verticalCols.forEach((col) => col.classList.toggle('is-revealed', show));
           };
 
           if (bottomLogo && storyBrandName) {
-            if (scrollY <= phase1Start) {
+            if (scrollY <= moveStart) {
               bottomLogo.style.visibility = '';
               floatingLogo.style.opacity = '0';
               storyBrandName.classList.remove('is-revealed');
-              storyBrandCondo?.classList.remove('is-revealed');
               setVerticalRevealed(false);
-            } else if (scrollY <= phase1End) {
-              const p = (scrollY - phase1Start) / (phase1End - phase1Start);
-              const ease = p < 0.5 ? 2 * p * p : 1 - ((-2 * p + 2) ** 2) / 2;
+            } else if (scrollY <= revealStart) {
+              const p = (scrollY - moveStart) / (revealStart - moveStart);
               bottomLogo.style.visibility = 'hidden';
               floatingLogo.style.opacity = '1';
               const startY = vh * 0.85;
-              const endY = vh * 0.42;
-              const currentY = startY + (endY - startY) * ease;
-              const scale = 1 - ease * 0.5;
+              const endY = vh * 1.05;
+              const currentY = startY + (endY - startY) * p;
               floatingLogo.style.top = `${currentY}px`;
-              floatingLogo.style.transform = `translateX(-50%) scale(${scale})`;
+              floatingLogo.style.transform = 'translateX(-50%)';
               storyBrandName.classList.remove('is-revealed');
-              storyBrandCondo?.classList.remove('is-revealed');
-              setVerticalRevealed(false);
-            } else if (scrollY <= fadeEnd) {
-              const p2 = (scrollY - phase1End) / (fadeEnd - phase1End);
-              bottomLogo.style.visibility = 'hidden';
-              floatingLogo.style.opacity = String(1 - p2);
-              floatingLogo.style.top = `${vh * 0.42}px`;
-              floatingLogo.style.transform = 'translateX(-50%) scale(0.5)';
-              storyBrandName.classList.remove('is-revealed');
-              storyBrandCondo?.classList.remove('is-revealed');
               setVerticalRevealed(false);
             } else {
               bottomLogo.style.visibility = 'hidden';
               floatingLogo.style.opacity = '0';
               storyBrandName.classList.add('is-revealed');
-              storyBrandCondo?.classList.add('is-revealed');
               setVerticalRevealed(true);
             }
+          }
+
+          if (craftsmenSection) {
+            const rect = craftsmenSection.getBoundingClientRect();
+            const start = vh * 0.14;
+            const span = Math.max(rect.height - vh * 0.24, vh * 0.95);
+            const progress = Math.min(Math.max((start - rect.top) / span, 0), 1);
+            craftsmenSection.style.setProperty('--craftsmen-overlay-progress', progress.toFixed(3));
           }
 
           ticking = false;
@@ -196,12 +295,14 @@ export default function SiteBehavior() {
       }
     };
 
-    window.addEventListener('scroll', onScroll);
+    on(window, 'scroll', onScroll, { passive: true });
+    onScroll();
 
     return () => {
       scrollObserver.disconnect();
-      window.removeEventListener('scroll', onScroll);
+      cleanupFns.forEach((fn) => fn());
       floatingLogo.remove();
+      html.classList.remove('has-js');
     };
   }, []);
 

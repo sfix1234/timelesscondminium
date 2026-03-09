@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from 'react';
 
 export default function PropertyCompare({ beforeSrc, afterSrc, beforeAlt, afterAlt }) {
-  const [split, setSplit] = useState(50);
+  const [split, setSplit] = useState(70);
   const wrapRef = useRef(null);
   const compareStyle = useMemo(() => ({ '--split': `${split}%` }), [split]);
   const clamp = (v) => Math.max(0, Math.min(100, v));
@@ -33,10 +33,12 @@ export default function PropertyCompare({ beforeSrc, afterSrc, beforeAlt, afterA
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
     >
-      <img src={beforeSrc} alt={beforeAlt} className="property-compare__image property-compare__image--before" />
+      <div className="property-compare__layer property-compare__layer--after">
+        <img src={afterSrc} alt={afterAlt} className="property-compare__image property-compare__image--after-base" />
+      </div>
       <span className="property-compare__tag property-compare__tag--before">BEFORE</span>
-      <div className="property-compare__after">
-        <img src={afterSrc} alt={afterAlt} className="property-compare__image property-compare__image--after" />
+      <div className="property-compare__layer property-compare__before">
+        <img src={beforeSrc} alt={beforeAlt} className="property-compare__image property-compare__image--before" />
       </div>
       <span className="property-compare__tag property-compare__tag--after">AFTER</span>
       <div className="property-compare__handle">

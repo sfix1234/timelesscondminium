@@ -1,26 +1,36 @@
+import SiteBehavior from '../components/site-behavior';
 import PropertyCompare from '../components/property-compare';
+import PropertyKumaVideo from '../components/property-kuma-video';
+import PropertyPlanTabs from '../components/property-plan-tabs';
+import SiteFooter from '../components/site-footer';
+import SiteHeader from '../components/site-header';
 
 export default function PropertyPage() {
   return (
     <div className="property-page">
       <main>
         <section className="property-hero property-hero--top">
-          <div className="property-hero__overlay"></div>
-          <div className="property-topbar">
-            <div className="property-topbar__left">
-              <span className="property-topbar__jpn">JPN</span>
-              <span className="property-topbar__line"></span>
-            </div>
-            <div className="property-topbar__center">
-              <span className="property-topbar__main">THE SILENCE</span>
-              <span className="property-topbar__furnished">Furnished By</span>
-              <span className="property-topbar__sub">ARMANI/CASA</span>
-            </div>
-            <div className="property-topbar__right">
-              <span className="property-topbar__line"></span>
-              <span className="property-topbar__line"></span>
-            </div>
+          <div className="property-hero__bgvideo" aria-hidden="true">
+            <iframe
+              className="property-hero__bgvideo-embed"
+              src="https://player.vimeo.com/video/1171460708?background=1&autoplay=1&muted=1&loop=1&playsinline=1&title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479"
+              frameBorder="0"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="THESILENCE_LPtakumi"
+            ></iframe>
           </div>
+          <div className="property-hero__overlay"></div>
+          <SiteHeader
+            headerClassName="property-page__header"
+            navItems={[
+              { labelJa: '構想', labelEn: 'Concept' },
+              { labelJa: '設計', labelEn: 'Design' },
+              { labelJa: '立地', labelEn: 'Location' },
+              { labelJa: '間取り', labelEn: 'Plan' },
+              { labelJa: 'アクセス', labelEn: 'Access' },
+            ]}
+          />
           <div className="property-hero__inner">
             <h1 className="property-hero__title">PROPERTY</h1>
             <div className="property-hero__number-wrap">
@@ -28,9 +38,7 @@ export default function PropertyPage() {
               <span className="property-hero__number-line"></span>
             </div>
             <div className="property-hero__brand">
-              <p className="property-hero__brand-main">THE SILENCE</p>
-              <p className="property-hero__brand-sub">ARMANI/CASA</p>
-              <p className="property-hero__brand-furnished">Furnished By</p>
+              <img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" className="property-hero__brand-logo" />
             </div>
           </div>
         </section>
@@ -42,14 +50,7 @@ export default function PropertyPage() {
               <h2 className="property-kuma__jp">隈研吾</h2>
             </div>
 
-            <a href="#" className="property-kuma__video" aria-label="Kengo Kuma interview">
-              <img
-                src="https://images.unsplash.com/photo-1481455473976-c280ae7c10f9?auto=format&fit=crop&w=1400&q=80"
-                alt="Kengo Kuma interview visual"
-                className="property-kuma__video-image"
-              />
-              <span className="property-kuma__play" aria-hidden="true"></span>
-            </a>
+            <PropertyKumaVideo />
 
             <p className="property-kuma__text">
               Kengo Kuma, the design supervisor of this residence, speaks about<br />
@@ -63,13 +64,7 @@ export default function PropertyPage() {
           <div className="property-info__inner">
             <h2 className="property-info__title">PROPERTY INFO</h2>
 
-            <div className="property-info__map-wrap">
-              <img
-                src="/assets/images/stage-message.jpeg"
-                alt="間取り図"
-                className="property-info__map"
-              />
-            </div>
+            <PropertyPlanTabs />
 
             <div className="property-info__meta">
               <p className="property-info__room">DINING KITCHEN LIVING ROOM</p>
@@ -87,8 +82,8 @@ export default function PropertyPage() {
             </div>
 
             <PropertyCompare
-              beforeSrc="/assets/images/stage-message.jpeg"
-              afterSrc="/assets/images/stage-message.jpeg"
+              beforeSrc="/assets/images/propatyinfo/timelesscondminium-01.png"
+              afterSrc="/assets/images/propatyinfo/timelesscondminium-02.png"
               beforeAlt="Before image"
               afterAlt="After image"
             />
@@ -108,24 +103,32 @@ export default function PropertyPage() {
           <div className="property-access__inner">
             <h2 className="property-access__title">ACCESS</h2>
 
-            <div className="property-access__map-wrap">
-              <img
-                src="/assets/images/stage-message.jpeg"
-                alt="アクセスマップ"
-                className="property-access__map"
-              />
-            </div>
+            <div className="property-access__layout">
+              <div className="property-access__map-wrap">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1633.5179451028744!2d135.7359468179798!3d35.03083202741095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60010785c8c4b309%3A0xae717f7dc9101ed3!2z5LiK5LiD6LuSIOmVt-iwt-W3nQ!5e0!3m2!1sja!2sjp!4v1772979101337!5m2!1sja!2sjp"
+                  className="property-access__map property-access__embed"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="上七軒 旧長谷川邸 地図"
+                ></iframe>
+              </div>
 
-            <div className="property-access__block">
-              <p className="property-access__label">車をご利用の場合</p>
-              <p className="property-access__text">新千歳空港から約90分</p>
-            </div>
+              <div className="property-access__info">
+                <div className="property-access__block">
+                  <p className="property-access__label">車をご利用の場合</p>
+                  <p className="property-access__text">新千歳空港から約90分</p>
+                </div>
 
-            <div className="property-access__block">
-              <p className="property-access__label">新幹線をご利用の場合</p>
-              <p className="property-access__text">
-                新千歳空港ヘリポートから敷地内ヘリポートまで25分
-              </p>
+                <div className="property-access__block">
+                  <p className="property-access__label">新幹線をご利用の場合</p>
+                  <p className="property-access__text">
+                    新千歳空港ヘリポートから敷地内ヘリポートまで25分
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -152,7 +155,7 @@ export default function PropertyPage() {
 
             <div className="property-director__image-wrap">
               <img
-                src="https://images.unsplash.com/photo-1481455473976-c280ae7c10f9?auto=format&fit=crop&w=1400&q=80"
+                src="/assets/images/artist_photo/KENJINAKAMURA.webp"
                 alt="中村建治"
                 className="property-director__image"
               />
@@ -194,24 +197,26 @@ export default function PropertyPage() {
 
         <section className="property-contact-block">
           <div className="property-contact-block__inner">
-            <h2 className="property-contact-block__title">CONTACT</h2>
+            <div className="property-contact-block__intro">
+              <h2 className="property-contact-block__title">CONTACT</h2>
+              <p className="property-contact-block__method">お問い合わせ方法</p>
+              <div className="property-contact-block__apps">
+                <a href="#" className="property-contact-block__app" aria-label="WHATSAPPで問い合わせ">
+                  <span className="property-contact-block__app-icon property-contact-block__app-icon--wa">☎</span>
+                  <div className="property-contact-block__app-body">
+                    <p className="property-contact-block__app-title">WHATSAPPで問い合わせ</p>
+                    <p className="property-contact-block__app-sub">ご要望を伺い、担当者が折り返しご案内します</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+
             <p className="property-contact-block__lead">
               THE SILENCEに関するお問い合わせは、<br />
-              下記フォームよりお気軽にご連絡ください。<br />
+              WHATSAPPにご連絡いただくか、下記フォームよりお気軽にご連絡ください。<br />
               担当者より折り返し<br />
               ご連絡させていただきます。
             </p>
-
-            <div className="property-contact-block__apps">
-              <div className="property-contact-block__app">
-                <span className="property-contact-block__app-icon property-contact-block__app-icon--wa">☎</span>
-                <p>WHATSAPPで<br />問い合わせ</p>
-              </div>
-              <div className="property-contact-block__app">
-                <span className="property-contact-block__app-icon property-contact-block__app-icon--line">LINE</span>
-                <p>LINEで<br />問い合わせ</p>
-              </div>
-            </div>
 
             <p className="property-contact-block__note">またはフォームにご記入ください</p>
 
@@ -244,7 +249,26 @@ export default function PropertyPage() {
             </form>
           </div>
         </section>
+
+        <section className="armani-homage">
+          <div className="armani-homage__media"></div>
+          <div className="armani-homage__overlay"></div>
+          <div className="armani-homage__inner">
+            <h2 className="armani-homage__title">GIORGIO ARMANI</h2>
+            <div className="armani-homage__copy">
+              <p>日本と京都をこよなく愛された</p>
+              <p className="armani-homage__copy-break">世界の巨匠として築き上げられた</p>
+              <p>美と気品に、深甚なる敬意を表します</p>
+              <p>本プロジェクトがささやかながらも、</p>
+              <p>オマージュとして捧げられることを、</p>
+              <p>心より願っております</p>
+            </div>
+          </div>
+        </section>
+
+        <SiteFooter />
       </main>
+      <SiteBehavior />
     </div>
   );
 }
