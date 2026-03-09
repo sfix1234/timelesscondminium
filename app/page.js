@@ -66,8 +66,8 @@ export default async function HomePage() {
     <div className="story__overlay"></div>
     <div className="story__content">
       <div className="story__vertical-text">
-        <span className="story__vertical-col" data-ja="日本の素晴らしき物語を" data-en="A remarkable Japanese story">一〇〇年後の世界に紡ぐ</span>
-        <span className="story__vertical-col" data-ja="一〇〇年後の世界に紡ぐ" data-en="Woven into the world 100 years from now">日本の素晴らしき物語を</span>
+        <span className="story__vertical-col" data-ja="日本の素晴らしき物語を" data-en="A remarkable Japanese story">日本の素晴らしき物語を</span>
+        <span className="story__vertical-col" data-ja="一〇〇年後の世界に紡ぐ" data-en="Woven into the world 100 years from now">一〇〇年後の世界に紡ぐ</span>
       </div>
       <div className="story__brand">
         <span className="story__brand-name">
