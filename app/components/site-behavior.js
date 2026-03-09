@@ -184,12 +184,10 @@ export default function SiteBehavior() {
         if (src) iframe.src = src;
       }
       artisanDetail?.classList.add('is-open');
-      html.classList.add('no-scroll');
     }
 
     function closeArtisanDetail() {
       artisanDetail?.classList.remove('is-open');
-      html.classList.remove('no-scroll');
     }
 
     artisanMoreButtons.forEach((button) => {
