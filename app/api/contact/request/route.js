@@ -62,6 +62,16 @@ export async function POST(request) {
     const resendApiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.ACCESS_FROM_EMAIL;
     const receivingEmails = getReceivingEmails();
+    const agreedAt = new Date();
+    const agreedAtText = agreedAt.toLocaleString('ja-JP', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'Asia/Tokyo'
+    });
 
     if (!resendApiKey || !fromEmail || receivingEmails.length === 0) {
       return NextResponse.json(
@@ -77,6 +87,8 @@ export async function POST(request) {
         <p>メールアドレス: ${escapeHtml(validation.clean.email)}</p>
         <p>会社名: ${escapeHtml(validation.clean.company || '-')}</p>
         <p>電話番号: ${escapeHtml(validation.clean.phoneNumber)}</p>
+        <p>プライバシーポリシー同意: 同意済み</p>
+        <p>同意時刻: ${escapeHtml(agreedAtText)} (JST)</p>
         <p>お問い合わせ内容:</p>
         <p style="white-space: pre-wrap;">${escapeHtml(validation.clean.message)}</p>
       </div>
