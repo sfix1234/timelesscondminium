@@ -13,25 +13,33 @@
 
 ## Tech Stack
 
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- Google Fonts
-  - Cormorant Garamond
-  - Noto Sans JP
+- Next.js 15
+- React 19
+- Node.js / npm
 
 ## 開発手順
 
 ```bash
-# リポジトリをクローン
-git clone https://github.com/sfix1234/timelesscondminium.git
-cd timelesscondminium
-
-# ローカルサーバー起動
-python3 -m http.server 8000
+npm install
+npm run dev
 ```
 
-ブラウザで `http://localhost:8000` を開いて確認します。
+ブラウザで `http://localhost:3000` を開いて確認します。
+
+## 本番ビルド
+
+```bash
+npm run build
+npm run start
+```
+
+## 環境変数
+
+`.env.example` を `.env.local` にコピーして必要な値を設定します。
+
+- `RESEND_API_KEY` (本番必須)
+- `ACCESS_FROM_EMAIL` (本番必須 / Resendで検証済み送信元)
+- `ACCESS_ADMIN_EMAIL` (任意 / 申請通知の送信先)
 
 ## 主要アセット
 
