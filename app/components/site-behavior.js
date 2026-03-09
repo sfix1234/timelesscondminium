@@ -184,10 +184,12 @@ export default function SiteBehavior() {
         if (src) iframe.src = src;
       }
       artisanDetail?.classList.add('is-open');
+      html.classList.add('no-scroll');
     }
 
     function closeArtisanDetail() {
       artisanDetail?.classList.remove('is-open');
+      html.classList.remove('no-scroll');
     }
 
     artisanMoreButtons.forEach((button) => {
@@ -210,6 +212,11 @@ export default function SiteBehavior() {
 
     on(artisanDetailClose, 'click', closeArtisanDetail);
     on(artisanDetailOverlay, 'click', closeArtisanDetail);
+    on(document, 'keydown', (e) => {
+      if (e.key === 'Escape' && artisanDetail?.classList.contains('is-open')) {
+        closeArtisanDetail();
+      }
+    });
 
     const centerBlock = document.querySelector('.center-block');
     const bottomLogo = document.querySelector('.bottom-logo');
