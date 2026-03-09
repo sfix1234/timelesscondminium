@@ -16,7 +16,9 @@ body {
 
 html, body {
   width: 100%;
+  max-width: 100%;
   font-family: 'Cormorant Garamond', serif;
+  overflow-x: hidden;
 }
 
 /* ===== Scroll lock ===== */
