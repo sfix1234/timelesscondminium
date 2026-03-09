@@ -2,6 +2,7 @@ import SiteBehavior from '../components/site-behavior';
 import PropertyCompare from '../components/property-compare';
 import PropertyKumaVideo from '../components/property-kuma-video';
 import PropertyPlanTabs from '../components/property-plan-tabs';
+import PropertyContactForm from '../components/property-contact-form';
 import SiteFooter from '../components/site-footer';
 import SiteHeader from '../components/site-header';
 
@@ -220,33 +221,7 @@ export default function PropertyPage() {
 
             <p className="property-contact-block__note">またはフォームにご記入ください</p>
 
-            <form className="property-contact-block__form">
-              <label>
-                お名前 *
-                <input type="text" placeholder="山田 太郎" />
-              </label>
-              <label>
-                メールアドレス *
-                <input type="email" placeholder="example@email.com" />
-              </label>
-              <label>
-                会社名
-                <input type="text" placeholder="株式会社○○" />
-              </label>
-              <label>
-                電話番号
-                <input type="tel" placeholder="090-1234-5678" />
-              </label>
-              <label>
-                お問い合わせ内容 *
-                <textarea placeholder="お問い合わせ内容をご記入ください"></textarea>
-              </label>
-              <label className="property-contact-block__check">
-                <input type="checkbox" />
-                <span>私はプライバシーポリシーに同意します *</span>
-              </label>
-              <button type="button" className="property-contact-block__submit">送信する</button>
-            </form>
+            <PropertyContactForm />
           </div>
         </section>
 

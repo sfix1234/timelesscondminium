@@ -4408,6 +4408,24 @@ html:not(.has-js) .craftsmen .craftsmen-photo__img {
   cursor: pointer;
 }
 
+.property-contact-block__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.property-contact-block__form small {
+  color: #8b1f1f;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(11px, 1.6vw, 13px);
+}
+
+.property-contact-block__status {
+  margin: 6px 0 0;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(12px, 1.8vw, 14px);
+  color: #1f5f3b;
+}
+
 .property-page .property-contact-block__title { font-size: clamp(28px, 4.8vw, 44px); }
 .property-page .property-contact-block__lead { font-size: clamp(12px, 1.7vw, 14px); }
 .property-page .property-contact-block__app-title { font-size: clamp(12px, 1.4vw, 14px); }
