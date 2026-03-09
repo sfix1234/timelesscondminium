@@ -28,6 +28,9 @@ export async function POST(request) {
     const delivery = await sendAccessEmail({
       email: validation.clean.email,
       name: validation.clean.name,
+      countryCode: validation.clean.countryCode,
+      phoneNumber: validation.clean.phoneNumber,
+      wealthBand: validation.clean.wealthBand,
       password,
       expiresAt
     });
