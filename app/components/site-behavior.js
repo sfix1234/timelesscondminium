@@ -210,6 +210,18 @@ export default function SiteBehavior() {
       });
     });
 
+    // Fallback: ensure artisan popup opens even if a browser/plugin interferes with button handlers.
+    on(document, 'click', (e) => {
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      const trigger = target.closest('[data-artisan]');
+      if (!trigger) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const idx = trigger.getAttribute('data-artisan');
+      if (idx) openArtisanDetail(idx);
+    }, true);
+
     on(artisanDetailClose, 'click', closeArtisanDetail);
     on(artisanDetailOverlay, 'click', closeArtisanDetail);
     on(document, 'keydown', (e) => {
