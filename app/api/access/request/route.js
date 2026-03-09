@@ -26,9 +26,23 @@ export async function POST(request) {
       devPassword: delivery.devPassword || null
     });
   } catch (error) {
-    console.error(error);
+    const code = error?.code || 'unexpected_error';
+    console.error('[access/request] failed', {
+      code,
+      message: error?.message || 'unknown error'
+    });
+
+    const messageMap = {
+      mail_config_missing: 'メール送信設定が未完了です。時間をおいて再度お試しください。',
+      mail_delivery_failed: 'メール送信に失敗しました。時間をおいて再度お試しください。'
+    };
+
     return NextResponse.json(
-      { ok: false, message: '送信に失敗しました。時間をおいて再度お試しください。' },
+      {
+        ok: false,
+        code,
+        message: messageMap[code] || '送信に失敗しました。時間をおいて再度お試しください。'
+      },
       { status: 500 }
     );
   }
