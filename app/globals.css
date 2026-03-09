@@ -2492,10 +2492,12 @@ html:not(.has-js) .craftsmen .craftsmen-photo__img {
   position: fixed;
   inset: 0;
   z-index: 9000;
+  visibility: hidden;
   pointer-events: none;
 }
 
 .detail-panel.is-open {
+  visibility: visible;
   pointer-events: auto;
 }
 
@@ -2504,11 +2506,13 @@ html:not(.has-js) .craftsmen .craftsmen-photo__img {
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.4s ease;
 }
 
 .detail-panel.is-open .detail-panel__overlay {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .detail-panel__body {
