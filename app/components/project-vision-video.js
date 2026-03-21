@@ -24,10 +24,10 @@ export default function ProjectVisionVideo() {
     <button
       className="project-vision__media"
       type="button"
-      aria-label="PROJECT VISION 動画を再生"
+      aria-label="STORY VIDEO 動画を再生"
       onClick={() => setIsPlaying(true)}
     >
-      <img src="/assets/images/artist_photo/KENGOKUMA.jpg" alt="隈研吾 インタビュー" className="project-vision__image" />
+      <img src="/assets/images/projectvision.jpg" alt="STORY VIDEO" className="project-vision__image" />
       <span className="project-vision__play" aria-hidden="true"></span>
     </button>
   );

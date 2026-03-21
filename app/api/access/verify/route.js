@@ -4,7 +4,8 @@ import {
   ACCESS_REQUEST_COOKIE,
   ACCESS_SESSION_COOKIE,
   normalizeEmail,
-  verifyAccessPassword
+  verifyAccessPassword,
+  verifyDirectAccessPassword
 } from '../../../../lib/access-control';
 
 export const dynamic = 'force-dynamic';
@@ -13,25 +14,34 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const email = normalizeEmail(body.email);
-    const password = String(body.password || '').trim().toUpperCase();
+    const password = String(body.password || '').trim();
+    const hostname = request.nextUrl.hostname;
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
     const cookieStore = await cookies();
     const pendingAccessToken = cookieStore.get(ACCESS_REQUEST_COOKIE)?.value;
 
-    if (!email || !password) {
+    if (!password) {
       return NextResponse.json(
-        { ok: false, message: 'メールアドレスとパスワードを入力してください。' },
+        { ok: false, message: email ? '認証パスワードを入力してください。' : 'パスワードを入力してください。' },
         { status: 400 }
       );
     }
 
-    const result = verifyAccessPassword(email, password, pendingAccessToken);
+    const result = email
+      ? verifyAccessPassword(email, password.toUpperCase(), pendingAccessToken)
+      : verifyDirectAccessPassword(password);
 
     if (!result.ok) {
-      const messageMap = {
-        not_found: '先にフォーム送信を完了してください。',
-        expired: 'パスワードの有効期限が切れています。再度フォーム送信を行ってください。',
-        invalid: 'パスワードが正しくありません。'
-      };
+      const messageMap = email
+        ? {
+            not_found: '先にフォーム送信を完了してください。',
+            expired: 'パスワードの有効期限が切れています。再度フォーム送信を行ってください。',
+            invalid: '認証パスワードが正しくありません。'
+          }
+        : {
+            config_missing: 'アクセスパスワードが未設定です。.env を確認してください。',
+            invalid: 'パスワードが正しくありません。'
+          };
 
       return NextResponse.json(
         { ok: false, message: messageMap[result.reason] || '認証に失敗しました。' },
@@ -42,11 +52,13 @@ export async function POST(request) {
     cookieStore.set(ACCESS_SESSION_COOKIE, result.sessionToken, {
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' && !isLocalhost,
       path: '/',
       expires: new Date(result.sessionExpiresAt)
     });
-    cookieStore.delete(ACCESS_REQUEST_COOKIE);
+    if (email) {
+      cookieStore.delete(ACCESS_REQUEST_COOKIE);
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {

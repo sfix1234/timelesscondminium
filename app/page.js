@@ -6,10 +6,129 @@ import SiteFooter from './components/site-footer';
 import SiteHeader from './components/site-header';
 import { ACCESS_SESSION_COOKIE, getSessionRecord } from '../lib/access-control';
 
+function VerticalRevealText({ text, colOffset = 0, ...props }) {
+  return (
+    <span className="story__vertical-col" style={{ '--col-offset': colOffset }} aria-label={text} {...props}>
+      {Array.from(text).map((char, index) => (
+        <span
+          key={`${text}-${index}`}
+          className="story__vertical-char"
+          style={{ '--char-index': index }}
+          aria-hidden="true"
+        >
+          {char}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+const artisanProfessionalGalleryMap = {
+  '0': [
+    '/assets/images/gallery/KengoKuma/fg8yibc4t0ueoljqxymg.webp',
+    '/assets/images/gallery/KengoKuma/gi4a2c9cejldzesqekee.webp',
+    '/assets/images/gallery/KengoKuma/k8ah8wuikadwbnkayojj.webp',
+    '/assets/images/gallery/KengoKuma/psuab9drddcciyojeygx.webp',
+    '/assets/images/gallery/KengoKuma/qhjm8a2zsn6p3zfzrgm2.webp',
+    '/assets/images/gallery/KengoKuma/qvn6pkyvi1y82wdfberd.webp',
+    '/assets/images/gallery/KengoKuma/uz10uv2zsizd9bwldvek.webp',
+    '/assets/images/gallery/KengoKuma/zmuou7lhrj8dicsrdn6i.webp',
+  ],
+  '1': [
+    '/assets/images/gallery/Kongogroup/agrryuzqfhombmxbpow7.webp',
+    '/assets/images/gallery/Kongogroup/c9fkjooikewdzfr985bs.webp',
+    '/assets/images/gallery/Kongogroup/gfpgfqbbpravv0ghluk2.webp',
+    '/assets/images/gallery/Kongogroup/jr0pu9h0lo4fz1xhkzjy.webp',
+    '/assets/images/gallery/Kongogroup/xzolzjek9wtoe5i9copl.webp',
+  ],
+  '2': [
+    '/assets/images/gallery/NakamuraSotojiConstruction/bequ3c6gjmf1lq88liix.webp',
+    '/assets/images/gallery/NakamuraSotojiConstruction/esfkn8cx5osyy3zoymkk.webp',
+    '/assets/images/gallery/NakamuraSotojiConstruction/kcmscvn38g4blzzzqqr8.webp',
+    '/assets/images/gallery/NakamuraSotojiConstruction/lrhlc4o29srujdxv5djr.webp',
+    '/assets/images/gallery/NakamuraSotojiConstruction/pkjw9diqcsttww3rzj8h.webp',
+    '/assets/images/gallery/NakamuraSotojiConstruction/u1oofvjajzmfjlii0r1d.webp',
+  ],
+  '3': [
+    '/assets/images/gallery/ARMANI/ih1de8xrxwb0ukwkg9ya.webp',
+    '/assets/images/gallery/ARMANI/lajktmwt8noo7lcel18e.webp',
+    '/assets/images/gallery/ARMANI/trbyw7vskzjnfsq7l3og.webp',
+    '/assets/images/gallery/ARMANI/yirc2ihypiizkbj6mqpg.webp',
+  ],
+  '4': [
+    '/assets/images/gallery/OniwaUeji/iy9mhp3lcsgtqyi2gmgp.webp',
+    '/assets/images/gallery/OniwaUeji/jlyrjwwjbrxvsa8chlpe.webp',
+    '/assets/images/gallery/OniwaUeji/ksthqsyh6tkfj5ahzvkg.webp',
+    '/assets/images/gallery/OniwaUeji/umpgkgztbwlng7y4myne.webp',
+    '/assets/images/gallery/OniwaUeji/wteuppyzgg48rrusydmt.webp',
+  ],
+  '5': [
+    '/assets/images/gallery/KoukeiEri/d5uiemusrocyirluvtwm.webp',
+    '/assets/images/gallery/KoukeiEri/e8r2ds4qydr7kursprrq.webp',
+    '/assets/images/gallery/KoukeiEri/lqvnvvrhimegb7e54dpx.webp',
+    '/assets/images/gallery/KoukeiEri/lxo5xexbu2pn7yuyt0hw.webp',
+    '/assets/images/gallery/KoukeiEri/sub6-32-810x424.webp',
+    '/assets/images/gallery/KoukeiEri/xclwat0tfqqilhbjimv8.webp',
+    '/assets/images/gallery/KoukeiEri/yjibobzxlgsplrja5tpu.webp',
+  ],
+  '6': [
+    '/assets/images/gallery/TomokoEri/img20170920041535349259.webp',
+    '/assets/images/gallery/TomokoEri/img20171005085217408958.webp',
+    '/assets/images/gallery/TomokoEri/img20171005085251911301.webp',
+    '/assets/images/gallery/TomokoEri/img20171005085253462958.webp',
+    '/assets/images/gallery/TomokoEri/img20171005085302409744.webp',
+  ],
+  '7': [
+    '/assets/images/gallery/ToryoIto/photo_2.webp',
+    '/assets/images/gallery/ToryoIto/photo_bio2.webp',
+    '/assets/images/gallery/ToryoIto/伊藤東凌_1.webp',
+  ],
+  '8': [
+    '/assets/images/gallery/HirotoRakusho/IMG_1554.webp',
+    '/assets/images/gallery/HirotoRakusho/IMG_1555.webp',
+    '/assets/images/gallery/HirotoRakusho/IMG_1561-1166x656.webp',
+    '/assets/images/gallery/HirotoRakusho/IMG_1567.webp',
+  ],
+  '9': [
+    '/assets/images/gallery/IzuminokamiKanesada/IZUMINOKAMIKANESADA.jpg',
+  ],
+};
+
+function ArtisanProfessionalsGallery({ artisanId, artisanName }) {
+  const images = artisanProfessionalGalleryMap[artisanId] || [];
+  if (!images.length) return null;
+
+  return (
+    <>
+      <div className="artisan-detail__section">
+        <p className="artisan-detail__section-title">Professionals</p>
+        <div className="artisan-detail__section-line"></div>
+      </div>
+      <div className="artisan-detail__gallery">
+        {images.map((src, index) => (
+          <img
+            key={`${artisanId}-${src}`}
+            src={src}
+            alt={`${artisanName} ${index + 1}`}
+            className="artisan-detail__gallery-image"
+            loading="lazy"
+          />
+        ))}
+      </div>
+    </>
+  );
+}
+
 export default async function HomePage() {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get(ACCESS_SESSION_COOKIE)?.value;
   const isUnlocked = Boolean(getSessionRecord(sessionToken));
+  const rightStoryText = '日本の“美”を、';
+  const leftStoryText = '千年先の世界へ紡ぐ。';
+
+  if (!isUnlocked) {
+    return <AccessGate initialUnlocked={false}><></></AccessGate>;
+  }
 
   return (
     <>
@@ -36,26 +155,19 @@ export default async function HomePage() {
       </div>
     </div>
     <div className="hero__content">
-      <SiteHeader
-        navItems={[
-          { labelJa: '構想', labelEn: 'Concept' },
-          { labelJa: '設計', labelEn: 'Design' },
-          { labelJa: '立地', labelEn: 'Location' },
-          { labelJa: '間取り', labelEn: 'Plan' },
-          { labelJa: 'アクセス', labelEn: 'Access' },
-        ]}
-      />
-      <div className="center-block">
-        <h1 className="center-block__title">
-          The Timeless<br />Condominium
-        </h1>
-        <span className="center-block__number">01</span>
-        <span className="center-block__line"></span>
-      </div>
-      <div className="bottom-logo">
-        <div className="bottom-logo__main">
-          <img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" className="bottom-logo__image" />
+        <SiteHeader
+          centerTitle="The Timeless Condominium"
+          navItems={[
+          { labelJa: 'TOP', labelEn: 'TOP', target: '.hero' },
+          { labelJa: 'PROPERTY', labelEn: 'PROPERTY', target: '.property-section' },
+          { labelJa: 'CONTACT', labelEn: 'CONTACT', target: '.registration' },
+          ]}
+        />
+      <div className="hero__bottom-logo">
+        <div className="center-block hero__logo-overlay">
+          <span className="center-block__number">CASE01</span>
         </div>
+        <img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" className="hero__bottom-logo-image" />
       </div>
     </div>
   </section>
@@ -66,8 +178,18 @@ export default async function HomePage() {
     <div className="story__overlay"></div>
     <div className="story__content">
       <div className="story__vertical-text">
-        <span className="story__vertical-col" data-ja="日本の素晴らしき物語を" data-en="A remarkable Japanese story">日本の素晴らしき物語を</span>
-        <span className="story__vertical-col" data-ja="一〇〇年後の世界に紡ぐ" data-en="Woven into the world 100 years from now">一〇〇年後の世界に紡ぐ</span>
+        <VerticalRevealText
+          text={rightStoryText}
+          colOffset={0}
+          data-ja={rightStoryText}
+          data-en="A remarkable Japanese story"
+        />
+        <VerticalRevealText
+          text={leftStoryText}
+          colOffset={Array.from(rightStoryText).length}
+          data-ja={leftStoryText}
+          data-en="Woven into the world 100 years from now"
+        />
       </div>
       <div className="story__brand">
         <span className="story__brand-name">
@@ -81,17 +203,14 @@ export default async function HomePage() {
 
   <section className="craftsmen">
     <div className="craftsmen__sticky">
-      <div className="craftsmen__line-top"></div>
-      <p className="craftsmen__heading" data-ja="世界初、<br />匠の技が結集した邸宅。" data-en="A world-first residence,<br />crafted by master artisans.">世界初、<br />匠の技が結集した邸宅。</p>
+      <p className="craftsmen__heading" data-ja="この志のもと、<br />世界の“匠”が一邸に集う。<br />それは、世界初の共創。" data-en="A world-first residence,<br />crafted by master artisans.">この志のもと、<br />世界の“匠”が一邸に集う。<br />それは、世界初の共創。</p>
       <ul className="craftsmen__list">
-        <li className="craftsmen__name">Kuma Kengo</li>
-        <li className="craftsmen__name">Kongo-Gumi</li>
-        <li className="craftsmen__name">Armani</li>
+        <li className="craftsmen__name">KENGO KUMA</li>
+        <li className="craftsmen__name">KONGO GUMI</li>
         <li className="craftsmen__name">Nakamura Sotoji</li>
-        <li className="craftsmen__name">Eri Koukei</li>
-        <li className="craftsmen__name">Oniwa Ueji</li>
+        <li className="craftsmen__name">KOKEI ERI</li>
+        <li className="craftsmen__name">ONIWA UEJI</li>
       </ul>
-      <div className="craftsmen__line-bottom"></div>
     </div>
     <div className="craftsmen__visual">
       <figure className="craftsmen-photo__frame">
@@ -116,19 +235,15 @@ export default async function HomePage() {
       <div className="stage__visual">
         <div className="stage__slide is-active" data-slide="0">
           <img src="/assets/images/culture/kyoto.jpg" alt="京都" />
-          <span className="stage__slide-label stage__slide-label--center">京都</span>
         </div>
         <div className="stage__slide" data-slide="1">
           <img src="/assets/images/culture/kitanotenmangu.jpg" alt="北野天満宮" />
-          <span className="stage__slide-label stage__slide-label--center">北野天満宮</span>
         </div>
         <div className="stage__slide" data-slide="2">
           <img src="/assets/images/culture/kamishichiken-kyuhasegawatei.jpg" alt="上七軒 - 旧長谷川邸" />
-          <span className="stage__slide-label stage__slide-label--center">上七軒 - 旧長谷川邸</span>
         </div>
         <div className="stage__slide" data-slide="3">
           <img src="/assets/images/culture/episodo.jpg" alt="エピソード" />
-          <span className="stage__slide-label stage__slide-label--center">エピソード</span>
         </div>
       </div>
       <div className="stage__info">
@@ -157,7 +272,7 @@ export default async function HomePage() {
 
   <section className="stage-photo">
     <figure className="stage-photo__frame">
-      <p className="stage-photo__text" data-ja="千年の美意識を、<br />現代に。" data-en="A millennium of aesthetics,<br />reimagined for today.">千年の美意識を、<br />現代に。</p>
+      <p className="stage-photo__text" data-ja="和の文化<br />「静寂」という名の至光品。" data-en="A millennium of aesthetics,<br />reimagined for today."><span className="stage-photo__text-top">和の文化</span><br /><span className="stage-photo__text-bottom">「静寂」という名の至光品。</span></p>
       <img src="/assets/images/stage-message.jpeg" alt="千年の美意識を表現した情景" className="stage-photo__image" />
     </figure>
   </section>
@@ -177,11 +292,12 @@ export default async function HomePage() {
         </div>
         <div className="detail-panel__text">
           <h4 className="detail-panel__lead">千年の都が育んだ、日本文化の集積地</h4>
-          <p className="detail-panel__paragraph">8世紀末、平安京遷都以来、千年以上もの間、日本の都としてあり続けた京都。宮廷文化、仏教、神道、茶道、庭園、建築、芸能、和食 ── 日本のアイデンティティの根幹を成す要素は、多くがこの地で磨かれ、体系化され、現代へと受け継がれています。</p>
+          <p className="detail-panel__paragraph">八世紀末、平安京遷都以来、千年以上もの間、日本の都としてあり続けた京都。宮廷文化、仏教、神道、茶道、庭園、建築、芸能、和食 ── 日本のアイデンティティの根幹を成すさまざまな要素はこの地で磨かれ、体系化され、現代へと受け継がれています。</p>
           <p className="detail-panel__paragraph">国宝・重要文化財に指定される社寺や庭園、町家建築の多くは「古都京都の文化財」として世界文化遺産にも登録されており、街そのものが貴重な歴史文化とひとつになった、大変稀有な存在です。</p>
-          <p className="detail-panel__paragraph">また京都は、和食文化の中心地としても知られています。四季折々の食材を生かし、繊細な味と美しい盛り付けとともに、おもてなしの心を伝える京料理は、日本の歴史や芸術性を雅やかに体現しています。その価値は、京都がミシュランの星付き店が世界有数の街であることからも見て取れます。</p>
-          <p className="detail-panel__paragraph">このように、歴史・文化・景観・食が高い次元で融合する京都は、世界的な観光都市ランキングにおいても常に高い評価を受け続けています。京都は、日本の美意識と精神性が最も凝縮された唯一無二の都市なのです。</p>
+          <p className="detail-panel__paragraph">また京都は、和食文化の中心地としても知られています。四季折々の食材を生かし、繊細な味と美しい盛り付けとともに、おもてなしの心を伝える京料理は、日本の歴史や芸術性を雅やかに体現。その価値は、京都にミシュランの星付き店が数多くあることからも見て取れます。</p>
+          <p className="detail-panel__paragraph">このように、歴史・文化・景観・食が高い次元で融合する京都は、世界的な観光都市ランキングにおいても常に高い評価を受け続けています。京都は、日本の美意識と精神性が最も凝縮された、唯一無二の都市なのです。</p>
         </div>
+        <button className="detail-panel__next" type="button" data-next-detail="1">次のセクションへ</button>
       </div>
       <div className="detail-panel__content" data-detail="1">
         <span className="detail-panel__label">02</span>
@@ -191,11 +307,12 @@ export default async function HomePage() {
           <img src="/assets/images/culture/kitanotenmangu.jpg" alt="北野天満宮" />
         </div>
         <div className="detail-panel__text">
-          <h4 className="detail-panel__lead">芸能文化が息づく、特別な聖地</h4>
+          <h4 className="detail-panel__lead">芸能文化が息づく、<br />特別な聖地</h4>
           <p className="detail-panel__paragraph">平安京の北に広がる地「北野」ー 北野は、天皇の住まう内裏に近く、宮廷の遊興の地として繁栄してきました。九世紀には天地の全ての神々・天神地祇（てんじんちぎ）が、十世紀初頭には雷神が、同じく十世紀中頃には学問の神・菅原道真公が祀られました。</p>
-          <p className="detail-panel__paragraph">これらがやがてひとつにまとまり、「北野天満宮」という大社に発展し、現在では日本全国の天満宮・天神社一万二千社の総本社として広く信仰を集めています。</p>
-          <p className="detail-panel__paragraph">十六世紀、北野の地をこよなく愛した時の天下人・豊臣秀吉がこの地で催した「北野大茶湯」では、後の芸事文化の源流となる女性芸能者・出雲阿国が招聘され、現代の歌舞伎の基礎となる「かぶき踊り」を披露しました。これらは、茶の湯のみならず、芸事文化が一体となって花開いた象徴的な出来事としても知られています。こうした歴史的背景から、北野天満宮は学問の神としてのみならず、“芸事文化の発祥地”としても、広く親しまれるようになりました。</p>
+          <p className="detail-panel__paragraph">これらがやがてひとつにまとまり、「北野天満宮」という大社に発展し、現在では日本全国の天満宮・天神社約一万二千社の総本社として広く信仰を集めています。</p>
+          <p className="detail-panel__paragraph">十六世紀、北野の地をこよなく愛した時の天下人・豊臣秀吉がこの地で催した「北野大茶湯」では、後の芸事文化の源流となる女性芸能者・出雲阿国が招聘され、現代の歌舞伎の基礎となる「かぶき踊り」を披露しました。これらは、茶の湯のみならず、芸事文化が一体となって花開いた象徴的な出来事としても知られています。こうした歴史的背景から、北野天満宮は学問の神として、また“芸事文化の発祥地”として、広く親しまれるようになりました。</p>
         </div>
+        <button className="detail-panel__next" type="button" data-next-detail="2">次のセクションへ</button>
       </div>
       <div className="detail-panel__content" data-detail="2">
         <span className="detail-panel__label">03</span>
@@ -206,10 +323,11 @@ export default async function HomePage() {
         </div>
         <div className="detail-panel__text">
           <h4 className="detail-panel__lead">世界最古のサステナブルな花街</h4>
-          <p className="detail-panel__paragraph">北野の地に創られた街・上七軒ー 北野天満宮は、その歴史の中で幾度もの火災や地震に見舞われ、十五世紀中頃の大災では、社殿などの貴重な文化財が焼失してしまいました。その再建工事の際に生じた余材は、北野天満宮の東門前に創建された、参拝客の休み処となる七軒の茶屋に使用されました。それこそが「上七軒」という、世界最古のサステナブル精神に基づいて創られた街の始まりと考えられています。</p>
+          <p className="detail-panel__paragraph">北野の地に創られた街・上七軒 ー 北野天満宮は、その歴史の中で幾度もの火災や地震に見舞われ、十五世紀中頃の大災では、社殿などの貴重な文化財が焼失してしまいました。その再建工事の際に生じた余材は、北野天満宮の東門前に創建された、参拝客の休み処となる七軒の茶屋建築の資材として使用されました。それこそが「上七軒」という、世界最古のサステナブル精神に基づいて創られた街の始まりと考えられています。</p>
           <p className="detail-panel__paragraph">十七世紀以降、芸舞妓の演舞を愛でながら食事やお酒を楽しむお茶屋遊びが流行したことで、上七軒は優雅な宮廷文化の流れを汲んだ “日本最古の花街” として、また織物の街・西陣の奥座敷として、繁栄に拍車をかけていきました。</p>
-          <p className="detail-panel__paragraph">その街に佇むのが「旧 長谷川邸」という一邸です。上七軒のお茶屋の中でも北野天満宮に最も近い場所に佇み、一際広い敷地を有する格式高い邸宅として、二〜三百年もの間賑わっていたといわれています。木造建築でありながら、現代にその姿を残している極めて歴史的価値の高い奇跡の邸宅です。</p>
+          <p className="detail-panel__paragraph">その街に佇むのが「旧 長谷川邸」という一邸です。上七軒のお茶屋の中でも北野天満宮に最も近い場所に佇み、一際広い敷地を有する格式高い邸宅として、二百年から三百年もの間賑わっていたと伝えられています。木造建築でありながら現代にその姿を残している、極めて歴史的価値の高い奇跡の邸宅です。</p>
         </div>
+        <button className="detail-panel__next" type="button" data-next-detail="3">次のセクションへ</button>
       </div>
       <div className="detail-panel__content" data-detail="3">
         <span className="detail-panel__label">04</span>
@@ -219,22 +337,21 @@ export default async function HomePage() {
           <img src="/assets/images/culture/episodo.jpg" alt="エピソード" />
         </div>
         <div className="detail-panel__text">
-          <h4 className="detail-panel__lead">剣豪・土方歳三と、文豪・水上勉</h4>
-          <p className="detail-panel__paragraph">幕末と呼ばれる19世紀半ばに、新選組副長として京都の治安を担ったのが土方歳三という「ラスト・サムライ」の一人です。激動の時代を駆け抜けた彼もまた、上七軒を訪れていたと伝えられており、上七軒の舞妓との儚くも悲しい物語は、今もなお現代に語り継がれています。剣と死が常に隣り合わせの日常で、この静かな花街に身を委ねるひとときは、土方にとってかけがえのない心の安らぎであったのかもしれません。しかし、近代化（大政奉還）の波に呑まれ、彼は京都を離れ戊辰戦争へと向かい、三十五歳の若さでその生涯を遂げました。</p>
-          <p className="detail-panel__paragraph">やがて時は下り、20世紀半ば、上七軒・旧 長谷川邸に深い関心を寄せていたのが、日本の近代文学を代表する直木賞作家・水上勉です。著書『雁の宿』では、上七軒を舞台とした情景が描かれており、独特の視点と豊かな表現で、他にも数々の作品を送り出しました。</p>
-          <p className="detail-panel__paragraph">上七軒・旧 長谷川邸は、多くの偉人、賢人、文化人たちに愛され、幾多の人生に寄り添ってきました。その歴史の面影を、今もなお感じさせています。</p>
+          <h4 className="detail-panel__lead">偉人たちが愛した<br />上七軒・旧 長谷川邸</h4>
+          <p className="detail-panel__paragraph">幕末と呼ばれる十九世紀半ばに、新選組副長として京都の治安を担ったのが、「ラスト・サムライ」の一人といわれる、土方歳三です。激動の時代を駆け抜けた彼もまた、上七軒を訪れていたと伝えられており、上七軒の舞妓との儚くも悲しい物語は、今もなお語り継がれています。剣と死が常に隣り合わせの日常で、この静かな花街に身を委ねるひとときは、土方にとってかけがえのない心の安らぎであったのかもしれません。しかし、近代化（大政奉還）の波に呑まれ、彼は京都を離れ戊辰戦争へと向かい、三十五歳の若さで武士としての生涯を遂げました。</p>
+          <p className="detail-panel__paragraph">やがて時は下り、二十世紀半ば、上七軒・旧 長谷川邸に深い関心を寄せていたのが、日本の近代文学を代表する直木賞作家・水上勉です。著書『雁の宿』には、上七軒を舞台とした情景が描かれており、独特の視点と豊かな表現で数々の作品を世に送り出しています。</p>
+          <p className="detail-panel__paragraph">上七軒、そして旧 長谷川邸は、多くの偉人、賢人、文化人たちに愛され、幾多の人生に寄り添ってきました。その歴史の面影は、今もなおこの地に息づいています。</p>
         </div>
+        <button className="detail-panel__next" type="button" data-next-detail="0">最初に戻る</button>
       </div>
     </div>
   </div>
 
-  <AccessGate initialUnlocked={isUnlocked}>
-  {isUnlocked ? (
   <>
 
   <section className="project-vision">
     <div className="project-vision__inner">
-      <h2 className="project-vision__title">PROJECT VISION</h2>
+      <h2 className="project-vision__title">STORY VIDEO</h2>
       <ProjectVisionVideo />
     </div>
   </section>
@@ -246,10 +363,7 @@ export default async function HomePage() {
         <p className="artisans-intro__count">十の匠</p>
       </div>
       <div className="artisans-intro__copy-row">
-        <p className="artisans-intro__lead">
-          建築の礎を築き、<br />
-          空間の在り方を整える美
-        </p>
+        <p className="artisans-intro__lead">普遍の美と、<br />現代の技を融合。</p>
         <p className="artisans-intro__jp">礎の匠</p>
       </div>
     </div>
@@ -259,12 +373,12 @@ export default async function HomePage() {
     <div className="artisans-five__inner">
       <article className="artisan-card">
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="0" aria-label="隈研吾の詳細を開く">
-          <img src="/assets/images/artist_photo/KENGOKUMA.jpg" alt="隈研吾" className="artisan-card__image" />
+          <img src="/assets/images/artisans/kengokuma.webp" alt="隈研吾" className="artisan-card__image" />
         </button>
         <div className="artisan-card__overlay artisan-card__overlay--light">
           <div className="artisan-card__copy">
             <p className="artisan-card__role">DESIGN SUPERVISOR</p>
-            <p className="artisan-card__sub">KUMA KENGO</p>
+            <p className="artisan-card__sub">KENGO KUMA</p>
             <h3 className="artisan-card__name">隈研吾</h3>
           </div>
           <button className="artisan-card__more" type="button" data-artisan="0" aria-label="隈研吾の詳細">+</button>
@@ -273,7 +387,7 @@ export default async function HomePage() {
 
       <article className="artisan-card">
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="1" aria-label="金剛組の詳細を開く">
-          <img src="/assets/images/artist_photo/KONGOGUMI.jpg" alt="金剛組" className="artisan-card__image" />
+          <img src="/assets/images/artisans/photo_1.jpg" alt="金剛組" className="artisan-card__image" />
         </button>
         <div className="artisan-card__overlay">
           <div className="artisan-card__copy">
@@ -287,12 +401,12 @@ export default async function HomePage() {
 
       <article className="artisan-card">
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="2" aria-label="中村外二工務店の詳細を開く">
-          <img src="/assets/images/artist_photo/NAKAMURASOTOJI.jpg" alt="中村外二工務店" className="artisan-card__image" />
+          <img src="/assets/images/artist_photo/photo_2.jpg" alt="中村外二工務店" className="artisan-card__image" />
         </button>
         <div className="artisan-card__overlay">
           <div className="artisan-card__copy">
             <p className="artisan-card__role">SUKIYA MASTER</p>
-            <p className="artisan-card__sub">NAKAMURA SOTOJI BUILDER</p>
+            <p className="artisan-card__sub">NAKAMURA SOTOJI</p>
             <h3 className="artisan-card__name">中村外二工務店</h3>
           </div>
           <button className="artisan-card__more" type="button" data-artisan="2" aria-label="中村外二工務店の詳細">+</button>
@@ -300,22 +414,8 @@ export default async function HomePage() {
       </article>
 
       <article className="artisan-card">
-        <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="3" aria-label="ARMANI CASAの詳細を開く">
-          <img src="/assets/images/artisans/armani:casa.jpg" alt="ARMANI/CASA" className="artisan-card__image" />
-        </button>
-        <div className="artisan-card__overlay">
-          <div className="artisan-card__copy">
-            <p className="artisan-card__role">INTERIOR DESIGN</p>
-            <p className="artisan-card__sub">ARMANI / CASA</p>
-            <h3 className="artisan-card__name">ARMANI / CASA</h3>
-          </div>
-          <button className="artisan-card__more" type="button" data-artisan="3" aria-label="ARMANI CASAの詳細">+</button>
-        </div>
-      </article>
-
-      <article className="artisan-card">
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="4" aria-label="御庭植治の詳細を開く">
-          <img src="/assets/images/artist_photo/ONIWAUEJI.jpg" alt="御庭植治" className="artisan-card__image" />
+          <img src="/assets/images/artist_photo/onniwaueji.jpg" alt="御庭植治" className="artisan-card__image" />
         </button>
         <div className="artisan-card__overlay">
           <div className="artisan-card__copy">
@@ -326,6 +426,20 @@ export default async function HomePage() {
           <button className="artisan-card__more" type="button" data-artisan="4" aria-label="御庭植治の詳細">+</button>
         </div>
       </article>
+
+      <article className="artisan-card">
+        <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="3" aria-label="ARMANI / CASAの詳細を開く">
+          <img src="/assets/images/artisans/armani:casa.webp" alt="ARMANI / CASA" className="artisan-card__image" />
+        </button>
+        <div className="artisan-card__overlay">
+          <div className="artisan-card__copy">
+            <p className="artisan-card__role">FURNITURE / ACCESSORIES</p>
+            <p className="artisan-card__sub">ARMANI / CASA</p>
+            <h3 className="artisan-card__name">ARMANI / CASA</h3>
+          </div>
+          <button className="artisan-card__more" type="button" data-artisan="3" aria-label="ARMANI / CASAの詳細">+</button>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -333,12 +447,12 @@ export default async function HomePage() {
     <div className="artisans-color__inner">
       <div className="artisans-color__head">
         <h2 className="artisans-color__title">彩の匠</h2>
-        <p className="artisans-color__lead">空間や作品に彩りを添え<br />品格を際立たせる華</p>
+        <p className="artisans-color__lead">芸術という技で、<br />邸宅に至高の美を。</p>
       </div>
       <div className="artisans-color__gallery">
         <article className="artisan-card">
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="5" aria-label="江里康慧の詳細を開く">
-            <img src="/assets/images/artist_photo/ERIKOUKEI.jpg" alt="江里康慧" className="artisan-card__image" />
+            <img src="/assets/images/artist_photo/koukei02-1.jpg" alt="江里康慧" className="artisan-card__image" />
           </button>
           <div className="artisan-card__overlay artisan-card__overlay--light">
             <div className="artisan-card__copy">
@@ -352,7 +466,7 @@ export default async function HomePage() {
 
         <article className="artisan-card">
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="6" aria-label="江里朋子の詳細を開く">
-            <img src="/assets/images/artist_photo/ERITOMOKO.jpg" alt="江里朋子" className="artisan-card__image" />
+            <img src="/assets/images/artist_photo/tomoko.jpg" alt="江里朋子" className="artisan-card__image" />
           </button>
           <div className="artisan-card__overlay">
             <div className="artisan-card__copy">
@@ -366,11 +480,11 @@ export default async function HomePage() {
 
         <article className="artisan-card">
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="7" aria-label="伊藤東凌の詳細を開く">
-            <img src="/assets/images/artist_photo/ITOTOURYO.webp" alt="伊藤東凌" className="artisan-card__image" />
+            <img src="/assets/images/artist_photo/toryo.jpg" alt="伊藤東凌" className="artisan-card__image" />
           </button>
           <div className="artisan-card__overlay">
             <div className="artisan-card__copy">
-              <p className="artisan-card__role">Vice-Abbot of Ryosokuin Temple</p>
+              <p className="artisan-card__role">ZEN MASTER & TECH INNOVATOR</p>
               <p className="artisan-card__sub">禅と現代文化の実践者</p>
               <h3 className="artisan-card__name">伊藤東凌</h3>
             </div>
@@ -380,7 +494,7 @@ export default async function HomePage() {
 
         <article className="artisan-card">
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="8" aria-label="裕人 礫翔の詳細を開く">
-            <img src="/assets/images/artist_photo/HIROTORAKUSHO.jpg" alt="裕人 礫翔" className="artisan-card__image" />
+            <img src="/assets/images/artist_photo/IMG_1555.jpg" alt="裕人 礫翔" className="artisan-card__image" />
           </button>
           <div className="artisan-card__overlay">
             <div className="artisan-card__copy">
@@ -394,12 +508,12 @@ export default async function HomePage() {
 
         <article className="artisan-card">
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="9" aria-label="和泉守兼定の詳細を開く">
-            <img src="/assets/images/culture/episodo.jpg" alt="和泉守兼定" className="artisan-card__image" />
+            <img src="/assets/images/artist_photo/IZUMINOKAMIKANESADA.jpg" alt="和泉守兼定" className="artisan-card__image" />
           </button>
-          <div className="artisan-card__overlay">
+          <div className="artisan-card__overlay artisan-card__overlay--light">
             <div className="artisan-card__copy">
               <p className="artisan-card__role">JAPANESE SWORD / 日本刀</p>
-              <p className="artisan-card__sub">最上大業物と称される名刀</p>
+              <p className="artisan-card__sub">IZUMINOKAMI KANESADA</p>
               <h3 className="artisan-card__name">和泉守兼定</h3>
             </div>
             <button className="artisan-card__more" type="button" data-artisan="9" aria-label="和泉守兼定の詳細">+</button>
@@ -414,11 +528,7 @@ export default async function HomePage() {
     <div className="property-section__inner">
       <h2 className="property-section__title">PROPERTY</h2>
       <p className="property-section__text">
-        十の匠が結集し、歴史ある「旧 長谷川 邸」を未来へと昇華させる。<br />
-        「静寂」という言葉がふさわしい上七軒の地に、<br />
-        このプロジェクトを「THE SILENCE Furnished by ARMANI/CASA」と名付けました。<br />
-        「日本」という至宝を「世界」の至光品へ。<br />
-        パースや間取りは、物件詳細をご覧ください。
+        「日本」という至宝を「世界」の至光品へ。 <br />完成予想図および間取りの詳細は、物件詳細ページにてご覧ください。
       </p>
       <a href="/property" className="property-section__button">詳細を確認する</a>
     </div>
@@ -449,7 +559,7 @@ export default async function HomePage() {
             <p className="artisan-detail__role">DESIGN SUPERVISOR</p>
             <p className="artisan-detail__jp">隈研吾</p>
           </div>
-          <p className="artisan-detail__en">KUMA KENGO</p>
+          <p className="artisan-detail__en">KENGO KUMA</p>
         </div>
         <p className="artisan-detail__text">
           1954年生まれ。1990年に隈研吾建築都市設計事務所を設立。慶應義塾大学教授、東京大学教授などを歴任し、現在は東京大学にて特別教授・名誉教授を務めるほか、多くの機関で教育・研究活動を推進。日本芸術院会員。世界50か国以上でプロジェクトを展開し、自然・技術・人間の新しい関係を切り開く建築を提案している。主な著書に『隈研吾 オノマトペ 建築 接地性』（エクスナレッジ）、『日本の建築』（岩波新書）、『全仕事』（大和書房）、『点・線・面』（岩波書店）、『負ける建築』（岩波書店）、『自然な建築』、『小さな建築』（岩波新書）、ほか多数。
@@ -471,6 +581,7 @@ export default async function HomePage() {
           <li>登米町伝統芸能伝承館（森の舞台）</li>
           <li>V&amp;Aダンディー（スコットランド） ほか多数</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="0" artisanName="KENGO KUMA" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="1">
@@ -504,6 +615,7 @@ export default async function HomePage() {
           <li>大阪市 和宗総本山四天王寺金堂再建工事（昭和34年施工）</li>
           <li>高野山真言宗 補陀洛山総持寺包丁式殿（開山堂）新築工事（平成18年）</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="1" artisanName="KONGO GUMI" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="2">
@@ -523,7 +635,7 @@ export default async function HomePage() {
             <p className="artisan-detail__role">SUKIYA MASTER</p>
             <p className="artisan-detail__jp">中村外二工務店</p>
           </div>
-          <p className="artisan-detail__en">NAKAMURA SOTOJI BUILDER</p>
+          <p className="artisan-detail__en">NAKAMURA SOTOJI</p>
         </div>
         <p className="artisan-detail__text">
           1931年、数寄屋大工の第一人者である棟梁・中村外二が創業した、京都を拠点とする伝統建築の工房。木肌がなめらかで材質に優れた北山磨き丸太などを用いた日本建築様式「数寄屋造り」を得意としている。中村氏は、裏千家御用達の作事方大工として伊勢神宮の茶室や海外の著名な茶室建築に携わり、材木への深い探求と精緻な仕事を融合させて独自の美意識を築き上げた。数寄屋建築の継承と発展に尽力したその精神は現代の職人にも脈々と受け継がれ、京都迎賓館をはじめ、数々の料亭・旅館、さらには空港施設や住宅建築に至るまで、本物の素材が持つ質感と空間美を活かした作品を手掛けている。
@@ -537,13 +649,14 @@ export default async function HomePage() {
           <li>裏千家今日庵 茶室（修復）</li>
           <li>大徳寺塔頭 茶室（新築・修復）</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="2" artisanName="NAKAMURA SOTOJI" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="3">
-        <img src="/assets/images/artisans/armani:casa.jpg" alt="ARMANI CASA" className="artisan-detail__portrait" />
+        <img src="/assets/images/artisans/armani:casa.webp" alt="ARMANI / CASA" className="artisan-detail__portrait artisan-detail__portrait--wide" />
         <div className="artisan-detail__meta">
           <div className="artisan-detail__meta-copy">
-            <p className="artisan-detail__role">INTERIOR DESIGN</p>
+            <p className="artisan-detail__role">FURNITURE / ACCESSORIES</p>
             <p className="artisan-detail__jp">ARMANI / CASA</p>
           </div>
           <p className="artisan-detail__en">ARMANI / CASA</p>
@@ -562,6 +675,7 @@ export default async function HomePage() {
           <li>高級ブティックホテル</li>
           <li>プレミアムマンション インテリア監修</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="3" artisanName="ARMANI / CASA" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="4">
@@ -595,6 +709,7 @@ export default async function HomePage() {
           <li>平安神宮神苑</li>
           <li>金地院庭園</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="4" artisanName="ONIWA UEJI" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="5">
@@ -614,7 +729,7 @@ export default async function HomePage() {
             <p className="artisan-detail__role">BUDDHIST SCULPTOR</p>
             <p className="artisan-detail__jp">江里康慧</p>
           </div>
-          <p className="artisan-detail__en">ERI KOUKEI</p>
+          <p className="artisan-detail__en">KOKEI ERI</p>
         </div>
         <p className="artisan-detail__text">
           1943年、仏師・江里宗平の長男として京都に生まれる。現代の仏師の中で人間国宝に最も近い人物の一人と称される、仏像彫刻の第一人者。伝統的な木彫技法に現代的な感性を融合させた、独創性と精神性の高い作品を制作。師匠から説かれた「仏は彫る前からすでに木の中にいらっしゃる。仏師は周りの余分な部分を払いのけるだけだ」という教えと、「仏師は修行者であり続ける」という思いのもとに活動を続け、国内外から高い評価を受けている。1989年に三千院から大仏師号を賜り、2003年には京都府文化功労賞、2007年には第41回仏教伝道文化賞を受賞。著書に「仏師という生き方」や「京都の仏師が語る　眼福の仏像」など。
@@ -630,6 +745,7 @@ export default async function HomePage() {
           <li>寺院 仏像（新作・修復 多数）</li>
           <li>美術館 展示作品（多数）</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="5" artisanName="KOKEI ERI" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="6">
@@ -665,6 +781,7 @@ export default async function HomePage() {
           <li>截金技法 継承・指導活動</li>
           <li>京都伝統工芸大学校 講師</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="6" artisanName="ERI TOMOKO" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="7">
@@ -681,7 +798,7 @@ export default async function HomePage() {
         </div>
         <div className="artisan-detail__meta">
           <div className="artisan-detail__meta-copy">
-            <p className="artisan-detail__role">Vice-Abbot of Ryosokuin Temple</p>
+            <p className="artisan-detail__role">ZEN MASTER & TECH INNOVATOR</p>
             <p className="artisan-detail__jp">伊藤東凌</p>
           </div>
           <p className="artisan-detail__en">ITO TORYO</p>
@@ -702,6 +819,7 @@ export default async function HomePage() {
           <li>Meta本社での禅セミナー開催</li>
           <li>著書：『忘我思考』『月曜瞑想』等</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="7" artisanName="ITO TORYO" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="8">
@@ -739,10 +857,11 @@ export default async function HomePage() {
           <li>ニューヨーク Bergdorf Goodman 個展・作品所蔵</li>
           <li>パリ市庁舎 作品所蔵</li>
         </ul>
+        <ArtisanProfessionalsGallery artisanId="8" artisanName="HIROTO RAKUSHO" />
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="9">
-        <img src="/assets/images/culture/episodo.jpg" alt="和泉守兼定" className="artisan-detail__portrait" />
+        <img src="/assets/images/artist_photo/IZUMINOKAMIKANESADA.jpg" alt="和泉守兼定" className="artisan-detail__portrait artisan-detail__portrait--wide" />
         <div className="artisan-detail__meta">
           <div className="artisan-detail__meta-copy">
             <p className="artisan-detail__role">JAPANESE SWORD / 日本刀</p>
@@ -757,8 +876,6 @@ export default async function HomePage() {
     </div>
   </div>
   </>
-  ) : null}
-  </AccessGate>
       <SiteBehavior />
     </>
   );

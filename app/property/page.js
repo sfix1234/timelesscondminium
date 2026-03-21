@@ -1,37 +1,50 @@
+import { cookies } from 'next/headers';
 import SiteBehavior from '../components/site-behavior';
-import PropertyCompare from '../components/property-compare';
+import Script from 'next/script';
 import PropertyKumaVideo from '../components/property-kuma-video';
-import PropertyPlanTabs from '../components/property-plan-tabs';
 import PropertyContactForm from '../components/property-contact-form';
+import PropertyFloorMapSwitcher from '../components/property-floor-map-switcher';
 import SiteFooter from '../components/site-footer';
 import SiteHeader from '../components/site-header';
+import AccessGate from '../components/access-gate';
+import { ACCESS_SESSION_COOKIE, getSessionRecord } from '../../lib/access-control';
 
-export default function PropertyPage() {
+export default async function PropertyPage() {
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get(ACCESS_SESSION_COOKIE)?.value;
+  const isUnlocked = Boolean(getSessionRecord(sessionToken));
+
+  if (!isUnlocked) {
+    return <AccessGate initialUnlocked={false}><></></AccessGate>;
+  }
+
   return (
     <div className="property-page">
       <main>
         <section className="property-hero property-hero--top">
           <div className="property-hero__bgvideo" aria-hidden="true">
-            <iframe
-              className="property-hero__bgvideo-embed"
-              src="https://player.vimeo.com/video/1171460708?background=1&autoplay=1&muted=1&loop=1&playsinline=1&title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479"
-              frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              title="THESILENCE_LPtakumi"
-            ></iframe>
+            <div className="property-hero__bgvideo-ratio">
+              <iframe
+                className="property-hero__bgvideo-embed"
+                src="https://player.vimeo.com/video/1171460708?background=1&autoplay=1&muted=1&loop=1&playsinline=1&title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="THESILENCE_LPtakumi"
+              ></iframe>
+            </div>
           </div>
           <div className="property-hero__overlay"></div>
-          <SiteHeader
-            headerClassName="property-page__header"
-            navItems={[
-              { labelJa: '構想', labelEn: 'Concept' },
-              { labelJa: '設計', labelEn: 'Design' },
-              { labelJa: '立地', labelEn: 'Location' },
-              { labelJa: '間取り', labelEn: 'Plan' },
-              { labelJa: 'アクセス', labelEn: 'Access' },
-            ]}
-          />
+          <div className="property-hero__header">
+            <SiteHeader
+              centerTitle="The Timeless Condominium"
+              navItems={[
+                { labelJa: 'TOP', labelEn: 'TOP', target: '.property-hero--top' },
+                { labelJa: 'PROPERTY', labelEn: 'PROPERTY', target: '#property-kuma' },
+                { labelJa: 'CONTACT', labelEn: 'CONTACT', target: '.property-contact-block' },
+              ]}
+            />
+          </div>
           <div className="property-hero__inner">
             <h1 className="property-hero__title">PROPERTY</h1>
             <div className="property-hero__number-wrap">
@@ -44,59 +57,35 @@ export default function PropertyPage() {
           </div>
         </section>
 
-        <section className="property-kuma">
-          <div className="property-kuma__inner">
-            <div className="property-kuma__name">
-              <p className="property-kuma__en">Kengo Kuma</p>
-              <h2 className="property-kuma__jp">隈研吾</h2>
-            </div>
-
-            <PropertyKumaVideo />
-
-            <p className="property-kuma__text">
-              Kengo Kuma, the design supervisor of this residence, speaks about<br />
-              THE SILENCE Furnished by ARMANI/CASA. Experience the special fusion of history,<br />
-              craftsmanship, and luxury brands.
-            </p>
-          </div>
-        </section>
-
-        <section className="property-info">
-          <div className="property-info__inner">
-            <h2 className="property-info__title">PROPERTY INFO</h2>
-
-            <PropertyPlanTabs />
-
-            <div className="property-info__meta">
-              <p className="property-info__room">DINING KITCHEN LIVING ROOM</p>
-              <p className="property-info__floor">主屋 1F</p>
-            </div>
-
-            <div className="property-info__switch">
-              <span className="property-info__arrow">◀</span>
-              <span className="property-info__line"></span>
-              <span className="property-info__label">Before</span>
-              <span className="property-info__dot"></span>
-              <span className="property-info__label">After</span>
-              <span className="property-info__line"></span>
-              <span className="property-info__arrow">▶</span>
-            </div>
-
-            <PropertyCompare
-              beforeSrc="/assets/images/propatyinfo/timelesscondminium-01.png"
-              afterSrc="/assets/images/propatyinfo/timelesscondminium-02.png"
-              beforeAlt="Before image"
-              afterAlt="After image"
-            />
-
-            <div className="property-info__foot">
-              <div className="property-info__skills">
-                <p className="property-info__skills-title">匠の技</p>
-                <p className="property-info__skill">⊕ 梁</p>
-                <p className="property-info__skill">⊕ 花道</p>
+        <section className="property-kuma" id="property-kuma">
+          <div className="property-kuma__sticky">
+            <div className="property-kuma__inner">
+              <div className="property-kuma__name">
+                <h2 className="property-kuma__en">Kengo Kuma Speaks</h2>
               </div>
-              <div className="property-info__mini-plan" aria-hidden="true"></div>
+
+              <PropertyKumaVideo />
+
+              <p className="property-kuma__text">
+                本邸のデザイン監修を務めた隈研吾が語る、THE SILENCE Furnished by ARMANI / CASA。<br />
+                悠久の歴史と匠の技、そしてラグジュアリーブランドが織りなす、格別な調和をご体感ください。
+              </p>
             </div>
+
+            <section className="property-info property-info--intrude" id="property-info" aria-label="Property Info">
+              <div className="property-info__inner">
+                <div className="property-info__intro">
+                  <img
+                    src="/assets/images/THE%20SILENCE_logo.png"
+                    alt="THE SILENCE Furnished by ARMANI / CASA"
+                    className="property-info__logo"
+                  />
+                </div>
+                <div className="property-info__details">
+                  <PropertyFloorMapSwitcher />
+                </div>
+              </div>
+            </section>
           </div>
         </section>
 
@@ -106,6 +95,7 @@ export default function PropertyPage() {
 
             <div className="property-access__layout">
               <div className="property-access__map-wrap">
+                <p className="property-access__map-label">Floor Map</p>
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1633.5179451028744!2d135.7359468179798!3d35.03083202741095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60010785c8c4b309%3A0xae717f7dc9101ed3!2z5LiK5LiD6LuSIOmVt-iwt-W3nQ!5e0!3m2!1sja!2sjp!4v1772979101337!5m2!1sja!2sjp"
                   className="property-access__map property-access__embed"
@@ -119,16 +109,21 @@ export default function PropertyPage() {
 
               <div className="property-access__info">
                 <div className="property-access__block">
-                  <p className="property-access__label">車をご利用の場合</p>
-                  <p className="property-access__text">新千歳空港から約90分</p>
+                  <p className="property-access__label">新幹線</p>
+                  <p className="property-access__text">
+                    東京駅から …… 約3時間<br />
+                    大阪駅から …… 約1.3時間
+                  </p>
                 </div>
 
                 <div className="property-access__block">
-                  <p className="property-access__label">新幹線をご利用の場合</p>
+                  <p className="property-access__label">飛行機</p>
                   <p className="property-access__text">
-                    新千歳空港ヘリポートから敷地内ヘリポートまで25分
+                    羽田空港から …… 約3時間（大阪国際空港から電車）<br />
+                    伊丹空港から …… 約1.6時間
                   </p>
                 </div>
+
               </div>
             </div>
           </div>
@@ -136,40 +131,53 @@ export default function PropertyPage() {
 
         <section className="property-spec">
           <div className="property-spec__inner">
-            <h2 className="property-spec__title">PROPERTY INFO</h2>
+            <h2 className="property-spec__title">「THE SILENCE - Furnished by ARMANI / CASA」物件概要</h2>
             <dl className="property-spec__table">
-              <div className="property-spec__row"><dt>種別</dt><dd>ヴィラ</dd></div>
-              <div className="property-spec__row"><dt>国</dt><dd>日本</dd></div>
-              <div className="property-spec__row"><dt>寝室</dt><dd>2</dd></div>
-              <div className="property-spec__row"><dt>浴室</dt><dd>2</dd></div>
-              <div className="property-spec__row"><dt>築年</dt><dd>1828</dd></div>
-              <div className="property-spec__row"><dt>構造</dt><dd>数寄屋造</dd></div>
-              <div className="property-spec__row"><dt>敷地</dt><dd>256.96 m²</dd></div>
-              <div className="property-spec__row"><dt>庭</dt><dd>66.55 m²</dd></div>
+              <div className="property-spec__row"><dt>物件概要</dt><dd>THE SILENCE - Furnished by ARMANI / CASA</dd></div>
+              <div className="property-spec__row"><dt>所在地</dt><dd>〒602-8381 京都府京都市上京区真盛町698</dd></div>
+              <div className="property-spec__row"><dt>交通</dt><dd>京福電気鉄道「北野白梅町駅」から徒歩約11分</dd></div>
+              <div className="property-spec__row"><dt>敷地面積</dt><dd>256.95 ㎡</dd></div>
+              <div className="property-spec__row"><dt>建築面積</dt><dd>155.00平米</dd></div>
+              <div className="property-spec__row"><dt>延床面積</dt><dd>284.26 ㎡（計画予定）</dd></div>
+              <div className="property-spec__row"><dt>建物用途</dt><dd>別荘及びホテルコンドミニアム</dd></div>
+              <div className="property-spec__row"><dt>着工時期</dt><dd>2026年夏秋（予定）</dd></div>
+              <div className="property-spec__row"><dt>竣工時期</dt><dd>2028年春夏（予定）</dd></div>
+              <div className="property-spec__row"><dt>デザイン監修</dt><dd>株式会社隈研吾建築都市設計事務所</dd></div>
+              <div className="property-spec__row"><dt>施工</dt><dd>株式会社金剛組</dd></div>
+              <div className="property-spec__row"><dt>茶室施工</dt><dd>中村外二工務店</dd></div>
+              <div className="property-spec__row"><dt>造園</dt><dd>御庭植治株式会社</dd></div>
+              <div className="property-spec__row"><dt>家具 / アクセサリー</dt><dd>アルマーニ / カーザ</dd></div>
+              <div className="property-spec__row"><dt>設計監理</dt><dd>株式会社アトリエ・プリコラージュ</dd></div>
+              <div className="property-spec__row"><dt>事業主</dt><dd>株式会社フィード</dd></div>
+              <div className="property-spec__row"><dt>販売価格</dt><dd>ASK</dd></div>
             </dl>
           </div>
         </section>
 
         <section className="property-director">
           <div className="property-director__inner">
-            <h2 className="property-director__title">PRINCIPAL DIRECTOR</h2>
+            <h2 className="property-director__title">General Supervisor</h2>
 
             <div className="property-director__image-wrap">
               <img
-                src="/assets/images/artist_photo/KENJINAKAMURA.webp"
+                src="/assets/images/nakamura_president.jpg"
                 alt="中村建治"
                 className="property-director__image"
               />
             </div>
 
-            <p className="property-director__role">総合監修</p>
-            <h3 className="property-director__name">中村 建治</h3>
+            <div className="property-director__identity">
+              <div className="property-director__meta">
+                <p className="property-director__company">株式会社フィード</p>
+              </div>
+              <h3 className="property-director__name">中村 建治</h3>
+            </div>
 
             <p className="property-director__text">
-              2007年設立。震災を機に不動産事業へ転換し、首都圏のシングル層向けマンション開発で
-              10年間に2,000戸超の供給実績を築いてきました。「人生の物語を紡ぐ空間」の創出を理念としています。<br />
-              本プロジェクトは、その知見を活かした新たな挑戦です。京都の歴史的建築を再生し、世界最高峰のデザインと職人技を融合。
-              日本の美意識が息づく次世代のラグジュアリー住宅を創造し、文化遺産を未来へと継承します。
+              2007年、株式会社フィードを創業。2013年、東日本大震災を契機として不動産事業へと軸足を移し、首都圏におけるブランドとコラボしたシングル層向け分譲マンションの開発・供給に注力。以来10年余で2,000戸を超える住まいを世に送り出してまいりました。<br />
+              「人生の物語を紡ぐ空間」この理念のもと、住まう方の人生に寄り添う空間の創出を使命として歩んでまいりました。<br />
+              本プロジェクトは、その知見と矜持を礎とした新たな挑戦です。京都に受け継がれてきた歴史的建築の精神を継承しながら、世界最高峰の匠の技を融合。日本古来の美意識を現代に昇華させた次世代の格調ある邸宅として結実させます。<br />
+              かけがえなき文化遺産を未来の世代へ受け渡すこと、それが私どもの揺るぎなき責務です。
             </p>
 
             <div className="property-director__book">
@@ -179,28 +187,15 @@ export default function PropertyPage() {
           </div>
         </section>
 
-        <section className="property-company">
-          <div className="property-company__inner">
-            <h2 className="property-company__title">COMPANY INFO</h2>
-            <dl className="property-company__table">
-              <div className="property-company__row"><dt>社名</dt><dd>株式会社フィード</dd></div>
-              <div className="property-company__row"><dt>英文社名</dt><dd>FIDO INC.</dd></div>
-              <div className="property-company__row"><dt>代表者</dt><dd>中村 建治</dd></div>
-              <div className="property-company__row"><dt>設立</dt><dd>2007年（平成19年）8月23日</dd></div>
-              <div className="property-company__row"><dt>資本金</dt><dd>9,900万円</dd></div>
-              <div className="property-company__row"><dt>本社</dt><dd>〒106-0041<br />東京都港区麻布台1-11-9 BPRプレイス神谷町8F</dd></div>
-              <div className="property-company__row"><dt>TEL</dt><dd>03-5545-8666</dd></div>
-              <div className="property-company__row"><dt>FAX</dt><dd>03-5545-8677</dd></div>
-              <div className="property-company__row"><dt>事業内容</dt><dd>不動産開発・売買・仲介 / 不動産リノベーション事業 / 建設事業 / 建物管理事業</dd></div>
-            </dl>
-          </div>
-        </section>
-
         <section className="property-contact-block">
           <div className="property-contact-block__inner">
             <div className="property-contact-block__intro">
               <h2 className="property-contact-block__title">CONTACT</h2>
-              <p className="property-contact-block__method">お問い合わせ方法</p>
+              <p className="property-contact-block__lead">
+                THE SILENCE Furnished by ARMANI / CASAに関するお問い合わせは、<br />
+                WHATSAPPにご連絡いただくか、下記フォームよりお気軽にご連絡ください。<br />
+                担当者より折り返しご連絡をさせていただきます。
+              </p>
               <div className="property-contact-block__apps">
                 <a href="#" className="property-contact-block__app" aria-label="WHATSAPPで問い合わせ">
                   <span className="property-contact-block__app-icon property-contact-block__app-icon--wa">☎</span>
@@ -212,13 +207,6 @@ export default function PropertyPage() {
               </div>
             </div>
 
-            <p className="property-contact-block__lead">
-              THE SILENCEに関するお問い合わせは、<br />
-              WHATSAPPにご連絡いただくか、下記フォームよりお気軽にご連絡ください。<br />
-              担当者より折り返し<br />
-              ご連絡させていただきます。
-            </p>
-
             <p className="property-contact-block__note">またはフォームにご記入ください</p>
 
             <PropertyContactForm />
@@ -229,20 +217,18 @@ export default function PropertyPage() {
           <div className="armani-homage__media"></div>
           <div className="armani-homage__overlay"></div>
           <div className="armani-homage__inner">
-            <h2 className="armani-homage__title">GIORGIO ARMANI</h2>
             <div className="armani-homage__copy">
-              <p>日本と京都をこよなく愛された</p>
-              <p className="armani-homage__copy-break">世界の巨匠として築き上げられた</p>
-              <p>美と気品に、深甚なる敬意を表します</p>
-              <p>本プロジェクトがささやかながらも、</p>
-              <p>オマージュとして捧げられることを、</p>
-              <p>心より願っております</p>
+              <p>日本と京都をこよなく愛されたジョルジオ・アルマーニ</p>
+              <p>世界の巨匠として築き上げられた美と気品に、深甚なる敬意を表します</p>
+              <p>本プロジェクトがささやかながらも</p>
+              <p>オマージュとして捧げられることを、心より願っております</p>
             </div>
           </div>
         </section>
 
         <SiteFooter />
       </main>
+      <Script src="https://player.vimeo.com/api/player.js" strategy="afterInteractive" />
       <SiteBehavior />
     </div>
   );

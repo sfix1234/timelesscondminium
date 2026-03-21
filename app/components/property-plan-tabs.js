@@ -44,7 +44,7 @@ function PlanCard({ title, firstSrc, secondSrc, firstAlt, secondAlt }) {
       <div className="property-plan-card__pair">
         <figure className="property-plan-card__pair-item" data-floor="1F">
           <div className="property-plan-card__pair-head">
-            <p className="property-plan-card__pair-kicker">主屋 1F</p>
+            <p className="property-plan-card__pair-kicker">1F 平面図</p>
           </div>
           <div className="property-plan-card__pair-media">
             <img src={firstSrc} alt={firstAlt} className="property-plan-card__media" />
@@ -52,7 +52,7 @@ function PlanCard({ title, firstSrc, secondSrc, firstAlt, secondAlt }) {
         </figure>
         <figure className="property-plan-card__pair-item" data-floor="2F">
           <div className="property-plan-card__pair-head">
-            <p className="property-plan-card__pair-kicker">主屋 2F</p>
+            <p className="property-plan-card__pair-kicker">2F 平面図</p>
           </div>
           <div className="property-plan-card__pair-media">
             <img src={secondSrc} alt={secondAlt} className="property-plan-card__media" />
@@ -67,11 +67,11 @@ export default function PropertyPlanTabs() {
   return (
     <div className="property-info__plans">
       <PlanCard
-        title="主屋 PLAN"
-        firstSrc="/assets/images/propatyinfo/timelesscondminium-01.png"
-        secondSrc="/assets/images/propatyinfo/timelesscondminium-02.png"
-        firstAlt="主屋 1F"
-        secondAlt="主屋 2F"
+        title="FLOOR PLANS"
+        firstSrc="/assets/images/propatyinfo/timelesscondminium-02.png"
+        secondSrc="/assets/images/propatyinfo/timelesscondminium-01.png"
+        firstAlt="1F 平面図"
+        secondAlt="2F 平面図"
       />
     </div>
   );

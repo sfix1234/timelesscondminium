@@ -1,4 +1,4 @@
-export default function SiteHeader({ headerClassName = '', navItems = [] }) {
+export default function SiteHeader({ headerClassName = '', navItems = [], centerTitle = '' }) {
   const headerClass = ['header', headerClassName].filter(Boolean).join(' ');
 
   return (
@@ -6,7 +6,6 @@ export default function SiteHeader({ headerClassName = '', navItems = [] }) {
       <nav className="nav-overlay" id="navOverlay">
         <div className="nav-overlay__bg"></div>
         <div className="nav-overlay__inner">
-          <button className="nav-overlay__close" id="navOverlayClose" type="button" aria-label="Close menu">×</button>
           <div className="nav-overlay__accent"></div>
           <ul className="nav-overlay__list">
             {navItems.map((item) => (
@@ -18,7 +17,7 @@ export default function SiteHeader({ headerClassName = '', navItems = [] }) {
                   data-ja={item.labelJa}
                   data-en={item.labelEn}
                 >
-                  {item.labelJa}
+                  {item.labelEn ?? item.labelJa}
                 </button>
               </li>
             ))}
@@ -41,9 +40,7 @@ export default function SiteHeader({ headerClassName = '', navItems = [] }) {
             <button className="jpn-badge__menu-item" type="button" data-lang="yue">広東語</button>
           </div>
         </div>
-        <div className="header__logo">
-          <img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" className="header__logo-image" />
-        </div>
+        {centerTitle ? <h1 className="center-block__title header__center-title">{centerTitle}</h1> : null}
         <div className="hamburger" role="button" aria-label="Menu">
           <span className="hamburger__line"></span>
           <span className="hamburger__line"></span>

@@ -99,7 +99,8 @@ export default function AccessGate({ children, initialUnlocked = false }) {
       }
 
       setStep('verify');
-      setRequestMessage('自動返信メールを送信しました。メールに記載された認証パスワードを入力してください。');
+      setPassword('');
+      setRequestMessage('確認メールを送信しました。メールに記載された認証パスワードを入力してください。');
       if (data.devPassword) {
         setDevPassword(data.devPassword);
       }
@@ -108,7 +109,7 @@ export default function AccessGate({ children, initialUnlocked = false }) {
 
   const handleVerify = () => {
     if (!password.trim()) {
-      setVerifyError('認証パスワードを入力してください。');
+      setVerifyError(step === 'verify' ? '認証パスワードを入力してください。' : 'パスワードを入力してください。');
       return;
     }
 
@@ -244,8 +245,8 @@ export default function AccessGate({ children, initialUnlocked = false }) {
                   </label>
                 </div>
 
-                <p className="access-modal__note">フォーム送信後、アクセス情報を含む自動返信メールが届きます。</p>
-                {requestMessage ? <p className="access-modal__message">{requestMessage}</p> : null}
+                <p className="access-modal__note">フォーム送信後、アクセス情報を含む確認メールが届きます。</p>
+                {requestMessage ? <p className={`access-modal__message${formErrors && Object.keys(formErrors).length ? ' is-error' : ''}`}>{requestMessage}</p> : null}
 
                 <button type="button" className="access-modal__submit" onClick={handleRequestAccess} disabled={isPending}>
                   {isPending ? '送信中...' : '続ける'}
@@ -254,7 +255,7 @@ export default function AccessGate({ children, initialUnlocked = false }) {
             ) : (
               <>
                 <p className="access-modal__note">
-                  自動返信メールに記載された認証パスワードをご入力ください。
+                  確認メールに記載された認証パスワードをご入力ください。
                 </p>
 
                 <label className="access-modal__field">

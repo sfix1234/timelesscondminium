@@ -5,11 +5,12 @@ export default function SiteFooter() {
         <nav className="site-footer__nav" aria-label="Footer Navigation">
           <a href="/" className="site-footer__link">HOME</a>
           <a href="/property" className="site-footer__link">PROPERTY</a>
-          <button className="site-footer__link site-footer__link--button" type="button">PRIVACY POLICY</button>
+          <a href="/privacy-policy" className="site-footer__link">PRIVACY POLICY</a>
+          <a href="/terms" className="site-footer__link">TERMS</a>
         </nav>
 
         <div className="site-footer__brand">
-          <img src="/assets/images/THE%20SILENCE_logo-color2.png" alt="THE SILENCE" className="site-footer__furnished-logo" />
+          <img src="/assets/images/THE%20SILENCE_logo_black.png" alt="THE SILENCE" className="site-footer__furnished-logo" />
         </div>
       </div>
     </footer>

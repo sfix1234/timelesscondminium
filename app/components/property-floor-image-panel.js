@@ -1,0 +1,324 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+const IMAGE_ANNOTATIONS = {
+  entrance: [
+    {
+      id: 'left',
+      copy: ['エントランス左側には、', '黒竹を映す意匠を凝らした', '漆喰を配し、趣を添える'],
+      point: { x: 16, y: 49 },
+      elbow: { x: 31, y: 20 },
+      anchor: { x: 43, y: 20 },
+      card: { top: '19%', left: '9%', width: '46%' }
+    },
+    {
+      id: 'top',
+      copy: ['京都の数寄屋造りの趣を', 'そのままに受け継いだ、', '吹き抜けのエントランス'],
+      point: { x: 50, y: 7 },
+      elbow: { x: 56, y: 18 },
+      anchor: { x: 63, y: 18 },
+      card: { top: '17%', left: '19%', width: '40%' }
+    },
+    {
+      id: 'right',
+      copy: [
+        'エントランスオブジェ　仏師・江里康慧',
+        '人間国宝に最も近い仏師と評される江里康慧の手により、',
+        '「旧長谷川邸」における祈りの象徴として、静かに据えられる。'
+      ],
+      point: { x: 87, y: 49 },
+      elbow: { x: 76, y: 22 },
+      anchor: { x: 66, y: 22 },
+      card: { top: '21%', left: '22%', width: '38%' }
+    }
+  ],
+  'dining-kitchen-living': [
+    {
+      id: 'main',
+      copy: ['エントランスの黒竹と対をなす白竹のスクリーンと、', '四季折々の花々がお出迎え'],
+      point: { x: 68.5, y: 42 },
+      elbow: { x: 57, y: 18 },
+      anchor: { x: 46, y: 18 },
+      card: { top: '17%', left: '8%', width: '38%' }
+    }
+  ],
+  'master-bedroom': [
+    {
+      id: 'main',
+      copy: ['裕人礫翔の金を使用したオリジナルアート'],
+      point: { x: 87, y: 39 },
+      elbow: { x: 74, y: 18 },
+      anchor: { x: 62, y: 18 },
+      card: { top: '16%', left: '18%', width: '40%' }
+    }
+  ],
+  'inner-garden-a': [
+    {
+      id: 'top',
+      copy: ['隈研吾氏の代名詞でもある', '連続したルーバーの大屋根'],
+      point: { x: 50.5, y: 11 },
+      elbow: { x: 41, y: 19 },
+      anchor: { x: 30, y: 19 },
+      card: { top: '18%', left: '7%', width: '40%' }
+    },
+    {
+      id: 'center',
+      copy: ['アルマーニ / カーザの', 'ファブリックをガラスに挟んだ壁面'],
+      point: { x: 50.8, y: 48 },
+      elbow: { x: 38, y: 27 },
+      anchor: { x: 27, y: 27 },
+      card: { top: '26%', left: '6%', width: '40%' }
+    }
+  ],
+  'hiroma-hanare': [
+    {
+      id: 'main',
+      copy: ['透かし障子を用いた、和の意匠'],
+      point: { x: 12.2, y: 49 },
+      elbow: { x: 28, y: 22 },
+      anchor: { x: 40, y: 22 },
+      card: { top: '21%', left: '12%', width: '40%' }
+    }
+  ],
+  'tea-room-hanare': [
+    {
+      id: 'top',
+      copy: ['茶室は千利休の時代から続く伝統工法を受け継ぎ、中村外二工務店の技で蘇る'],
+      point: { x: 71.6, y: 8 },
+      elbow: { x: 61, y: 18 },
+      anchor: { x: 50, y: 18 },
+      card: { top: '17%', left: '10%', width: '38%' }
+    },
+    {
+      id: 'center',
+      copy: ['禅師 伊藤東凌が心に留めた、一幅の掛け軸'],
+      point: { x: 62.8, y: 32 },
+      elbow: { x: 51, y: 28 },
+      anchor: { x: 40, y: 28 },
+      card: { top: '27%', left: '8%', width: '38%' }
+    }
+  ],
+  'bathroom-kura': [],
+  'bathroom-archive': [
+    {
+      id: 'main',
+      copy: ['青竹を用いた、みずみずしい竹のオブジェ'],
+      point: { x: 8.5, y: 46 },
+      elbow: { x: 27, y: 21 },
+      anchor: { x: 38, y: 21 },
+      card: { top: '20%', left: '10%', width: '40%' }
+    }
+  ]
+};
+
+const GALLERY_ITEMS = [
+  {
+    id: 'entrance',
+    label: 'ENTRANCE',
+    beforeSrc: '/assets/images/before/1before.jpg',
+    afterSrc: '/assets/images/propatyinfo/1entrance_after.jpg'
+  },
+  {
+    id: 'dining-kitchen-living',
+    label: 'DINING KITCHEN LIVING ROOM / 主屋 1F',
+    beforeSrc: '/assets/images/before/2before.jpg',
+    afterSrc: '/assets/images/propatyinfo/2dining_after.jpg'
+  },
+  {
+    id: 'dining',
+    label: 'DINING / 主屋 1F',
+    beforeSrc: '/assets/images/before/3before.jpg',
+    afterSrc: '/assets/images/propatyinfo/3dining1F_after.jpg'
+  },
+  {
+    id: 'bathroom-kura',
+    label: 'DINING KITCHEN LIVING ROOM / 主屋 1F',
+    beforeSrc: '/assets/images/before/4before.jpg',
+    afterSrc: '/assets/images/propatyinfo/4bathroom_after.jpg'
+  },
+  {
+    id: 'master-bedroom',
+    label: 'MASTER BEDROOM / 主屋 2F',
+    beforeSrc: '/assets/images/before/5before.jpg',
+    afterSrc: '/assets/images/propatyinfo/5MASTERBEDROOM.jpg'
+  },
+  {
+    id: 'inner-garden-a',
+    label: 'INNER GARDEN / 庭',
+    beforeSrc: '/assets/images/before/6before.jpg',
+    afterSrc: '/assets/images/propatyinfo/6innergarden_after.jpg'
+  },
+  {
+    id: 'inner-garden-b',
+    label: 'INNER GARDEN / 庭',
+    beforeSrc: '/assets/images/before/7before.jpg',
+    afterSrc: '/assets/images/propatyinfo/7INNERGARDEN.jpg'
+  },
+  {
+    id: 'hiroma-hanare',
+    label: '大広間 / 離れ',
+    beforeSrc: '/assets/images/before/8before.jpg',
+    afterSrc: '/assets/images/propatyinfo/8hiromahanare.jpg'
+  },
+  {
+    id: 'tea-room-hanare',
+    label: '茶室 / 離れ',
+    beforeSrc: '/assets/images/before/9before.jpg',
+    afterSrc: '/assets/images/propatyinfo/9tyayahanare.jpg'
+  },
+  {
+    id: 'bathroom-archive',
+    label: 'BATHROOM / 蔵',
+    beforeSrc: '/assets/images/before/10before.jpg',
+    afterSrc: '/assets/images/propatyinfo/10bathroom.jpg'
+  }
+];
+
+export default function PropertyFloorImagePanel({ embedded = false }) {
+  const [activeGalleryId, setActiveGalleryId] = useState(GALLERY_ITEMS[0].id);
+  const [activeView, setActiveView] = useState('after');
+  const [activeAnnotationId, setActiveAnnotationId] = useState('');
+  const activeGalleryItem = GALLERY_ITEMS.find((item) => item.id === activeGalleryId) ?? GALLERY_ITEMS[0];
+  const activeGallerySrc = activeView === 'before' ? activeGalleryItem.beforeSrc : activeGalleryItem.afterSrc;
+  const isCompactGalleryLabel = activeGalleryItem.label === 'BATHROOM / 蔵';
+  const activeAnnotations = activeView === 'after' ? IMAGE_ANNOTATIONS[activeGalleryId] || [] : [];
+  const activeAnnotation = activeAnnotations.find((annotation) => annotation.id === activeAnnotationId) ?? null;
+
+  useEffect(() => {
+    setActiveView('after');
+  }, [activeGalleryId]);
+
+  useEffect(() => {
+    setActiveAnnotationId('');
+  }, [activeGalleryId, activeView]);
+
+  return (
+    <div className={`property-floor-image__panel${embedded ? ' property-floor-image__panel--embedded' : ''}`}>
+      <h3 className="property-floor-image__heading">Floor Image</h3>
+
+        <div className="property-floor-gallery">
+          <div className="property-floor-gallery__meta">
+          <p className={`property-floor-gallery__current${isCompactGalleryLabel ? ' property-floor-gallery__current--compact' : ''}`}>{activeGalleryItem.label}</p>
+          <div className="property-floor-gallery__toggle" role="tablist" aria-label="Before after toggle">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeView === 'before'}
+              className={`property-floor-gallery__toggle-button${activeView === 'before' ? ' is-active' : ''}`}
+              onClick={() => setActiveView('before')}
+            >
+              Before
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeView === 'after'}
+              className={`property-floor-gallery__toggle-button${activeView === 'after' ? ' is-active' : ''}`}
+              onClick={() => setActiveView('after')}
+            >
+              After
+            </button>
+          </div>
+        </div>
+
+        <div className="property-floor-gallery__viewer">
+          <div className="property-floor-gallery__frame">
+            <img
+              key={`${activeGalleryId}-${activeView}`}
+              src={activeGallerySrc}
+              alt={`${activeGalleryItem.label} ${activeView}`}
+              className="property-floor-gallery__image"
+            />
+            {activeAnnotations.length ? (
+              <div className="property-floor-gallery__pointers">
+                {activeAnnotation ? (
+                  <svg
+                    className="property-floor-gallery__callout-line"
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d={`M ${activeAnnotation.point.x} ${activeAnnotation.point.y} L ${activeAnnotation.elbow.x} ${activeAnnotation.elbow.y} L ${activeAnnotation.anchor.x} ${activeAnnotation.anchor.y}`}
+                    />
+                  </svg>
+                ) : null}
+
+                {activeAnnotations.map((annotation) => {
+                  const isActive = annotation.id === activeAnnotation?.id;
+
+                  return (
+                    <button
+                      key={annotation.id}
+                      type="button"
+                      className={`property-floor-gallery__pointer${isActive ? ' is-active' : ''}`}
+                      style={{ left: `${annotation.point.x}%`, top: `${annotation.point.y}%` }}
+                      onClick={() =>
+                        setActiveAnnotationId((current) => (current === annotation.id ? '' : annotation.id))
+                      }
+                      aria-label={annotation.copy.join('')}
+                      aria-pressed={isActive}
+                    >
+                      <span className="property-floor-gallery__pointer-core"></span>
+                    </button>
+                  );
+                })}
+
+                {activeAnnotation ? (
+                  <div
+                    className="property-floor-gallery__callout"
+                    style={activeAnnotation.card}
+                  >
+                    <button
+                      type="button"
+                      className="property-floor-gallery__callout-close"
+                      onClick={() => setActiveAnnotationId('')}
+                      aria-label="注釈を閉じる"
+                    >
+                      <span></span>
+                      <span></span>
+                    </button>
+                    <span className="property-floor-gallery__callout-accent"></span>
+                    <div className="property-floor-gallery__callout-body">
+                      {activeAnnotation.copy.map((line) => (
+                        <p key={`${activeAnnotation.id}-${line}`} className="property-floor-gallery__callout-line-text">
+                          {line}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="property-floor-gallery__tabs-wrap">
+            <div className="property-floor-gallery__tabs" role="tablist" aria-label="Floor image gallery tabs">
+              {GALLERY_ITEMS.map((item) => {
+                const isActive = item.id === activeGalleryId;
+
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`property-floor-gallery__tab${item.id === 'dining-kitchen-living' ? ' property-floor-gallery__tab--wide' : ''}${item.label === 'BATHROOM / 蔵' ? ' property-floor-gallery__tab--compact' : ''}${isActive ? ' is-active' : ''}`}
+                    onClick={() => setActiveGalleryId(item.id)}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="property-floor-gallery__tabs-hint" aria-hidden="true">
+              <span className="property-floor-gallery__tabs-hint-text">Scroll</span>
+              <span className="property-floor-gallery__tabs-hint-arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -13,6 +13,8 @@ export const dynamic = 'force-dynamic';
 export async function POST(request) {
   try {
     const payload = await request.json();
+    const hostname = request.nextUrl.hostname;
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
     const validation = validateAccessPayload(payload);
 
     if (!validation.isValid) {
@@ -38,7 +40,7 @@ export async function POST(request) {
     cookieStore.set(ACCESS_REQUEST_COOKIE, pendingAccessToken, {
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' && !isLocalhost,
       path: '/',
       expires: new Date(expiresAt)
     });
@@ -57,6 +59,7 @@ export async function POST(request) {
 
     const messageMap = {
       mail_config_missing: 'メール送信設定が未完了です。時間をおいて再度お試しください。',
+      mail_from_unverified: '送信元メール設定が未完了です。時間をおいて再度お試しください。',
       mail_delivery_failed: 'メール送信に失敗しました。時間をおいて再度お試しください。',
       auth_config_missing: '認証設定が未完了です。時間をおいて再度お試しください。'
     };

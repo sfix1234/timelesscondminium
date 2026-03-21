@@ -28,6 +28,21 @@ function getReceivingEmails() {
     .filter(Boolean);
 }
 
+function describeMailConfig({ resendApiKey, fromEmail, receivingEmails }) {
+  const missing = [];
+
+  if (!resendApiKey) missing.push('RESEND_API_KEY');
+  if (!fromEmail) missing.push('ACCESS_FROM_EMAIL');
+  if (!receivingEmails || receivingEmails.length === 0) missing.push('ACCESS_RECEIVING_EMAIL');
+
+  return {
+    missing,
+    hasResendApiKey: Boolean(resendApiKey),
+    fromEmail: fromEmail || null,
+    receivingCount: Array.isArray(receivingEmails) ? receivingEmails.length : 0
+  };
+}
+
 function validatePayload(payload) {
   const errors = {};
   const name = String(payload.name || '').trim();
@@ -62,6 +77,7 @@ export async function POST(request) {
     const resendApiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.ACCESS_FROM_EMAIL;
     const receivingEmails = getReceivingEmails();
+    const configState = describeMailConfig({ resendApiKey, fromEmail, receivingEmails });
     const agreedAt = new Date();
     const agreedAtText = agreedAt.toLocaleString('ja-JP', {
       year: 'numeric',
@@ -74,8 +90,17 @@ export async function POST(request) {
     });
 
     if (!resendApiKey || !fromEmail || receivingEmails.length === 0) {
+      console.error('[contact/request] missing config', configState);
       return NextResponse.json(
         { ok: false, message: 'メール送信設定が未完了です。時間をおいて再度お試しください。' },
+        { status: 500 }
+      );
+    }
+
+    if (/@.*resend\.dev>?$/i.test(fromEmail)) {
+      console.error('[contact/request] invalid production sender', configState);
+      return NextResponse.json(
+        { ok: false, message: '送信元メール設定が未完了です。時間をおいて再度お試しください。' },
         { status: 500 }
       );
     }
@@ -94,24 +119,59 @@ export async function POST(request) {
       </div>
     `;
 
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: fromEmail,
-        to: receivingEmails,
-        reply_to: validation.clean.email,
-        subject: '【受信通知】THE SILENCE お問い合わせフォーム',
-        html
-      })
-    });
+    const confirmationHtml = `
+      <div style="font-family: 'Hiragino Sans', 'Noto Sans JP', sans-serif; color: #111; line-height: 1.8;">
+        <p>${escapeHtml(validation.clean.name)} 様</p>
+        <p>この度は THE SILENCE へお問い合わせいただき、誠にありがとうございます。</p>
+        <p>以下の内容でお問い合わせを受け付けました。担当者より順次ご連絡いたします。</p>
+        <p>お名前: ${escapeHtml(validation.clean.name)}</p>
+        <p>メールアドレス: ${escapeHtml(validation.clean.email)}</p>
+        <p>会社名: ${escapeHtml(validation.clean.company || '-')}</p>
+        <p>電話番号: ${escapeHtml(validation.clean.phoneNumber)}</p>
+        <p>受付時刻: ${escapeHtml(agreedAtText)} (JST)</p>
+        <p>お問い合わせ内容:</p>
+        <p style="white-space: pre-wrap;">${escapeHtml(validation.clean.message)}</p>
+      </div>
+    `;
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Contact email delivery failed: ${response.status} ${text}`);
+    const [notificationResponse, confirmationResponse] = await Promise.all([
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: fromEmail,
+          to: receivingEmails,
+          reply_to: validation.clean.email,
+          subject: '【受信通知】THE SILENCE お問い合わせフォーム',
+          html
+        })
+      }),
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: fromEmail,
+          to: [validation.clean.email],
+          subject: '【自動返信】THE SILENCE お問い合わせありがとうございます',
+          html: confirmationHtml
+        })
+      })
+    ]);
+
+    if (!notificationResponse.ok) {
+      const text = await notificationResponse.text();
+      throw new Error(`Contact email delivery failed: ${notificationResponse.status} ${text}`);
+    }
+
+    if (!confirmationResponse.ok) {
+      const text = await confirmationResponse.text();
+      throw new Error(`Contact confirmation delivery failed: ${confirmationResponse.status} ${text}`);
     }
 
     return NextResponse.json({ ok: true });
