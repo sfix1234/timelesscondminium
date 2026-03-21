@@ -11,7 +11,7 @@ async function fetchInboundEmailContent(emailId) {
     throw new Error('RESEND_API_KEY is required.');
   }
 
-  const response = await fetch(`https://api.resend.com/emails/${encodeURIComponent(emailId)}`, {
+  const response = await fetch(`https://api.resend.com/emails/receiving/${encodeURIComponent(emailId)}`, {
     headers: {
       Authorization: `Bearer ${apiKey}`
     }
