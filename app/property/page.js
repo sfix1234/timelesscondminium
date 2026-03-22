@@ -7,6 +7,7 @@ import PropertyFloorMapSwitcher from '../components/property-floor-map-switcher'
 import SiteFooter from '../components/site-footer';
 import SiteHeader from '../components/site-header';
 import AccessGate from '../components/access-gate';
+import MapPopupBehavior from '../components/map-popup-behavior';
 import { ACCESS_SESSION_COOKIE, getSessionRecord } from '../../lib/access-control';
 
 export default async function PropertyPage() {
@@ -95,37 +96,59 @@ export default async function PropertyPage() {
 
             <div className="property-access__layout">
               <div className="property-access__map-wrap">
-                <p className="property-access__map-label">Floor Map</p>
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1633.5179451028744!2d135.7359468179798!3d35.03083202741095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60010785c8c4b309%3A0xae717f7dc9101ed3!2z5LiK5LiD6LuSIOmVt-iwt-W3nQ!5e0!3m2!1sja!2sjp!4v1772979101337!5m2!1sja!2sjp"
+                <img
+                  src="/assets/images/map-image/map-image.jpg"
                   className="property-access__map property-access__embed"
-                  style={{ border: 0 }}
-                  allowFullScreen
+                  alt="上七軒 旧長谷川邸 地図"
                   loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="上七軒 旧長谷川邸 地図"
-                ></iframe>
+                />
+                <button className="property-access__pin" type="button" aria-label="北野天満宮の詳細を開く" data-map-pin></button>
               </div>
 
               <div className="property-access__info">
                 <div className="property-access__block">
                   <p className="property-access__label">新幹線</p>
-                  <p className="property-access__text">
-                    東京駅から …… 約3時間<br />
-                    大阪駅から …… 約1.3時間
-                  </p>
+                  <div className="property-access__rows">
+                    <div className="property-access__row">
+                      <span className="property-access__from">東京駅から</span>
+                      <span className="property-access__time">約 2.5 時間</span>
+                    </div>
+                    <div className="property-access__row">
+                      <span className="property-access__from">大阪駅から</span>
+                      <span className="property-access__time">約 1 時間</span>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="property-access__block">
                   <p className="property-access__label">飛行機</p>
-                  <p className="property-access__text">
-                    羽田空港から …… 約3時間（大阪国際空港から電車）<br />
-                    伊丹空港から …… 約1.6時間
-                  </p>
+                  <div className="property-access__rows">
+                    <div className="property-access__row">
+                      <span className="property-access__from">羽田空港から</span>
+                      <span className="property-access__time">約 3 時間</span>
+                    </div>
+                    <div className="property-access__row">
+                      <span className="property-access__from">伊丹空港から</span>
+                      <span className="property-access__time">約 1.6 時間</span>
+                    </div>
+                  </div>
                 </div>
 
               </div>
             </div>
+          </div>
+
+          <div className="map-popup" id="mapPopup">
+            <div className="map-popup__backdrop" data-map-close></div>
+            <div className="map-popup__body">
+              <div className="map-popup__center">
+                <img src="/assets/images/map-image/image-popup.png" alt="北野天満宮 周辺拡大" className="map-popup__circle" />
+              </div>
+            </div>
+            <button className="map-popup__close" type="button" data-map-close>
+              <span></span><span></span>
+              <p>CLOSE</p>
+            </button>
           </div>
         </section>
 
@@ -156,7 +179,7 @@ export default async function PropertyPage() {
 
         <section className="property-director">
           <div className="property-director__inner">
-            <h2 className="property-director__title">General Supervisor</h2>
+            <h2 className="property-director__title">THE TIMELESS CONDOMINIUM<br />Executive Producer</h2>
 
             <div className="property-director__image-wrap">
               <img
@@ -168,21 +191,32 @@ export default async function PropertyPage() {
 
             <div className="property-director__identity">
               <div className="property-director__meta">
-                <p className="property-director__company">株式会社フィード</p>
+                <p className="property-director__company">株式会社フィード 代表取締役</p>
               </div>
-              <h3 className="property-director__name">中村 建治</h3>
+              <h3 className="property-director__name">中村建治</h3>
             </div>
 
             <p className="property-director__text">
-              2007年、株式会社フィードを創業。2013年、東日本大震災を契機として不動産事業へと軸足を移し、首都圏におけるブランドとコラボしたシングル層向け分譲マンションの開発・供給に注力。以来10年余で2,000戸を超える住まいを世に送り出してまいりました。<br />
-              「人生の物語を紡ぐ空間」この理念のもと、住まう方の人生に寄り添う空間の創出を使命として歩んでまいりました。<br />
-              本プロジェクトは、その知見と矜持を礎とした新たな挑戦です。京都に受け継がれてきた歴史的建築の精神を継承しながら、世界最高峰の匠の技を融合。日本古来の美意識を現代に昇華させた次世代の格調ある邸宅として結実させます。<br />
-              かけがえなき文化遺産を未来の世代へ受け渡すこと、それが私どもの揺るぎなき責務です。
+              1972年生まれ、京都府出身。<br />
+              数々のBtoC営業でトップセールスの座を獲得。2007年、株式会社フィードを美容分野に従事した会社として設立。<br />
+              2011年、東日本大震災を契機に不動産事業へ業態転換。<br />
+              首都圏でのシングル層に向けた実需用コンパクトマンションの需要を開拓。<br />
+              2015年、デベロッパーとしてマンション開発事業を開始。<br />
+              「コンセプトブランディングデベロッパー」を標榜し、世界的ブランドとの連携によるマンション開発を次々と実現。<br />
+              日本市場における、「ブランデットレジデンス」の第一人者。<br />
+              実績として過去10年間で累計2000戸を超える分譲マンションを開発及び販売。
+            </p>
+
+            <p className="property-director__text">
+              現在は、今後の更なるインバウンド需要の増加を視野に、海外富裕層に向けたマーケットの開拓に着手。<br />
+              新プロジェクトの第一弾では、京都・上七軒に佇む「旧 長谷川邸」を舞台に、世界最高峰の匠を招聘。<br />
+              「日本に宿る本質的な価値を、"邸宅"という姿で、百年後の世界へと紡ぐ」という志のもと、「THE TIMELESS CONDOMINIUM」を推進する。
             </p>
 
             <div className="property-director__book">
-              <p className="property-director__book-label">著書</p>
-              <p className="property-director__book-title">営業道　人間力を磨き、自らの市場価値を高める極意</p>
+              <p className="property-director__book-label">【著書】</p>
+              <p className="property-director__book-title">『営業道』— 人間力を磨き、自らの市場価値を高める極意（幻冬舎刊）</p>
+              <p className="property-director__book-sub">主要書店において、販売実績首位を獲得。</p>
             </div>
           </div>
         </section>
@@ -230,6 +264,7 @@ export default async function PropertyPage() {
       </main>
       <Script src="https://player.vimeo.com/api/player.js" strategy="afterInteractive" />
       <SiteBehavior />
+      <MapPopupBehavior />
     </div>
   );
 }
