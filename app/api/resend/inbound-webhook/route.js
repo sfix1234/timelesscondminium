@@ -51,6 +51,10 @@ export async function POST(request) {
     }
 
     const email = await fetchInboundEmailContent(event.data.email_id);
+    const subject = email?.subject || '';
+    if (subject.includes('アクセス申請') || subject.includes('お問い合わせフォーム')) {
+      return NextResponse.json({ ok: true, ignored: true, reason: 'handled_by_direct_sync' });
+    }
     const row = formatInboundRow({ event, email });
     await appendInboundEmailRow(row);
 
