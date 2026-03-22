@@ -343,12 +343,8 @@ export default async function HomePage() {
     </div>
   </div>
 
-  <AccessGate initialUnlocked={isUnlocked}>
-    <></>
-  </AccessGate>
-
+  <AccessGate>
   <>
-
   <section className="project-vision">
     <div className="project-vision__inner">
       <h2 className="project-vision__title">STORY VIDEO</h2>
@@ -879,6 +875,7 @@ export default async function HomePage() {
     </div>
   </div>
   </>
+  </AccessGate>
       <SiteBehavior />
     </>
   );

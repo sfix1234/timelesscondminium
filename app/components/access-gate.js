@@ -37,9 +37,9 @@ function validateClient(form) {
   return errors;
 }
 
-export default function AccessGate({ children, initialUnlocked = false }) {
+export default function AccessGate({ children }) {
   const router = useRouter();
-  const [isUnlocked, setIsUnlocked] = useState(initialUnlocked);
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState('form');
   const [form, setForm] = useState(INITIAL_FORM);
@@ -51,8 +51,9 @@ export default function AccessGate({ children, initialUnlocked = false }) {
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    setIsUnlocked(initialUnlocked);
-  }, [initialUnlocked]);
+    const registered = document.cookie.split('; ').some((c) => c.startsWith('the_silence_registered=1'));
+    if (registered) setIsUnlocked(true);
+  }, []);
 
   const openModal = () => {
     setIsOpen(true);
@@ -132,6 +133,7 @@ export default function AccessGate({ children, initialUnlocked = false }) {
         return;
       }
 
+      document.cookie = 'the_silence_registered=1; path=/; max-age=86400';
       setIsUnlocked(true);
       setIsOpen(false);
       router.refresh();
