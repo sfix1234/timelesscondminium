@@ -50,15 +50,7 @@ export async function POST(request) {
       return NextResponse.json({ ok: true, ignored: true });
     }
 
-    const email = await fetchInboundEmailContent(event.data.email_id);
-    const subject = email?.subject || '';
-    if (subject.includes('アクセス申請') || subject.includes('お問い合わせフォーム')) {
-      return NextResponse.json({ ok: true, ignored: true, reason: 'handled_by_direct_sync' });
-    }
-    const row = formatInboundRow({ event, email });
-    await appendInboundEmailRow(row);
-
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, ignored: true });
   } catch (error) {
     console.error('[resend/inbound-webhook] failed', error);
     return NextResponse.json({ ok: false, message: 'Webhook handling failed.' }, { status: 500 });
