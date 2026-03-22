@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { appendContactRow } from '../../../../lib/google-sheets';
 
 export const dynamic = 'force-dynamic';
 
@@ -172,6 +173,20 @@ export async function POST(request) {
     if (!confirmationResponse.ok) {
       const text = await confirmationResponse.text();
       throw new Error(`Contact confirmation delivery failed: ${confirmationResponse.status} ${text}`);
+    }
+
+    try {
+      await appendContactRow([
+        agreedAtText,
+        validation.clean.name,
+        validation.clean.email,
+        validation.clean.company || '-',
+        validation.clean.phoneNumber,
+        validation.clean.message,
+        '同意済み'
+      ]);
+    } catch (sheetError) {
+      console.error('[contact/request] Google Sheets append failed', sheetError);
     }
 
     return NextResponse.json({ ok: true });
