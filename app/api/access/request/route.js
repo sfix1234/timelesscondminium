@@ -7,6 +7,7 @@ import {
   sendAccessEmail,
   validateAccessPayload
 } from '../../../../lib/access-control';
+import { appendRegistrationRow } from '../../../../lib/google-sheets';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,6 +45,25 @@ export async function POST(request) {
       path: '/',
       expires: new Date(expiresAt)
     });
+
+    const registeredAt = new Date().toLocaleString('ja-JP', {
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      timeZone: 'Asia/Tokyo'
+    });
+
+    try {
+      await appendRegistrationRow([
+        registeredAt,
+        validation.clean.name,
+        validation.clean.email,
+        validation.clean.countryCode,
+        validation.clean.phoneNumber,
+        validation.clean.wealthBand
+      ]);
+    } catch (sheetError) {
+      console.error('[access/request] Google Sheets append failed', sheetError.message);
+    }
 
     return NextResponse.json({
       ok: true,
