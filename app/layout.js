@@ -2,7 +2,29 @@ import './globals.css';
 
 export const metadata = {
   title: 'THE TIMELESS CONDOMINIUM',
-  description: 'Timeless Condominium promotional site',
+  description: '日本の"美"を、千年先の世界へ紡ぐ。京都・上七軒に佇む、世界最高峰の匠が手がける唯一無二の邸宅。',
+  openGraph: {
+    title: 'THE TIMELESS CONDOMINIUM',
+    description: '日本の"美"を、千年先の世界へ紡ぐ。京都・上七軒に佇む、世界最高峰の匠が手がける唯一無二の邸宅。',
+    url: 'https://timelesscondominium.com',
+    siteName: 'THE TIMELESS CONDOMINIUM',
+    images: [
+      {
+        url: 'https://timelesscondominium.com/assets/images/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'THE TIMELESS CONDOMINIUM',
+      },
+    ],
+    locale: 'ja_JP',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'THE TIMELESS CONDOMINIUM',
+    description: '日本の"美"を、千年先の世界へ紡ぐ。京都・上七軒に佇む、世界最高峰の匠が手がける唯一無二の邸宅。',
+    images: ['https://timelesscondominium.com/assets/images/og-image.jpg'],
+  },
   robots: {
     index: false,
     follow: false,
