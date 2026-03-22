@@ -176,6 +176,11 @@ export async function POST(request) {
     }
 
     try {
+      console.log('[contact/request] Attempting Google Sheets append...');
+      console.log('[contact/request] GOOGLE_SHEETS_CONTACT_ID:', process.env.GOOGLE_SHEETS_CONTACT_ID ? 'set' : 'not set');
+      console.log('[contact/request] GOOGLE_SHEETS_SPREADSHEET_ID:', process.env.GOOGLE_SHEETS_SPREADSHEET_ID ? 'set' : 'not set');
+      console.log('[contact/request] GOOGLE_SERVICE_ACCOUNT_EMAIL:', process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ? 'set' : 'not set');
+      console.log('[contact/request] GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:', process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY ? 'set (length: ' + process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.length + ')' : 'not set');
       await appendContactRow([
         agreedAtText,
         validation.clean.name,
@@ -185,8 +190,9 @@ export async function POST(request) {
         validation.clean.message,
         '同意済み'
       ]);
+      console.log('[contact/request] Google Sheets append succeeded');
     } catch (sheetError) {
-      console.error('[contact/request] Google Sheets append failed', sheetError);
+      console.error('[contact/request] Google Sheets append failed', sheetError.message, sheetError.stack);
     }
 
     return NextResponse.json({ ok: true });
