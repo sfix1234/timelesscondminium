@@ -5131,11 +5131,35 @@ html:not(.has-js) .craftsmen .craftsmen-photo__img {
   gap: 16px;
 }
 
-.property-contact-block__form label {
+.property-contact-block__form label,
+.property-contact-block__field {
   font-family: 'Noto Sans JP', sans-serif;
   font-size: clamp(12px, 1.8vw, 15px);
   display: grid;
   gap: 10px;
+}
+
+.property-contact-block__phone {
+  display: flex;
+  gap: 10px;
+}
+
+.property-contact-block__phone select {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 100px;
+  border: none;
+  border-bottom: 1px solid rgba(35, 30, 30, 0.45);
+  background: transparent;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(12px, 1.8vw, 15px);
+  color: inherit;
+  padding: 8px 4px;
+  outline: none;
+}
+
+.property-contact-block__phone input {
+  flex: 1;
 }
 
 .property-contact-block__form input,
