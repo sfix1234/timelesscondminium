@@ -6,6 +6,7 @@ export default function SiteBehavior() {
   useEffect(() => {
     let cancelled = false;
     let propertySceneTrigger = null;
+    let stagePhotoPinTrigger = null;
     let floatingLogo = null;
     let cleanupFns = [];
     let scrollObserver = null;
@@ -124,16 +125,24 @@ export default function SiteBehavior() {
       }
     });
 
-      scrollObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          scrollObserver.unobserve(entry.target);
-        }
-      });
-      }, { threshold: 0.2 });
+      const observeVisibleSection = (el) => {
+      if (!el) return;
+      const thresholdAttr = Number.parseFloat(el.getAttribute('data-visible-threshold') || '');
+      const threshold = Number.isFinite(thresholdAttr) ? thresholdAttr : 0.2;
+      const rootMargin = el.getAttribute('data-visible-root-margin') || '0px';
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold, rootMargin });
+      observer.observe(el);
+      cleanupFns.push(() => observer.disconnect());
+    };
 
-    document.querySelectorAll('.story, .craftsmen, .stage, .registration').forEach((el) => scrollObserver.observe(el));
+    document.querySelectorAll('.story, .craftsmen, .stage, .registration').forEach((el) => observeVisibleSection(el));
 
     const stageTabs = document.querySelectorAll('.stage__tab');
     const stageSlides = document.querySelectorAll('.stage__slide');
@@ -313,14 +322,16 @@ export default function SiteBehavior() {
     const verticalCols = document.querySelectorAll('.story__vertical-col');
     const heroBg = document.querySelector('.hero__bg');
     const craftsmenSection = document.querySelector('.craftsmen');
+    const stagePhotoSection = document.querySelector('.stage-photo');
+    const registrationSection = document.querySelector('.registration');
     const propertyKumaSection = document.getElementById('property-kuma');
       const updatePropertyScene = (sectionProgress, isSectionActive, isPinned) => {
       if (!propertyKumaSection) return;
 
-      const revealStart = 0.18;
-      const revealEnd = 0.6;
-      const detailStart = 0.58;
-      const detailEnd = 0.82;
+      const revealStart = 0.12;
+      const revealEnd = 0.5;
+      const detailStart = 0.38;
+      const detailEnd = 0.68;
       const floorImageStart = 0.8;
       const floorImageEnd = 0.99;
 
@@ -384,14 +395,15 @@ export default function SiteBehavior() {
               storySection.style.transform = `translateY(${offset}px)`;
             }
 
-            const revealStart = vh * 0.68;
-
             const setVerticalRevealed = (show) => {
               verticalCols.forEach((col) => col.classList.toggle('is-revealed', show));
             };
 
-            if (storyBrandName) {
-              if (scrollY <= revealStart) {
+            if (storySection && storyBrandName) {
+              const storyRect = storySection.getBoundingClientRect();
+              const storyRevealTriggered = storyRect.top <= vh * 0.78 && storyRect.bottom >= vh * 0.28;
+
+              if (!storyRevealTriggered) {
                 floatingLogo.style.opacity = '0';
                 storyBrandName.classList.remove('is-revealed');
                 setVerticalRevealed(false);
@@ -408,6 +420,10 @@ export default function SiteBehavior() {
               const span = Math.max(rect.height - vh * 0.24, vh * 0.95);
               const progress = Math.min(Math.max((start - rect.top) / span, 0), 1);
               craftsmenSection.style.setProperty('--craftsmen-overlay-progress', progress.toFixed(3));
+
+              if (!craftsmenSection.classList.contains('is-animated') && rect.top <= vh * 0.72) {
+                craftsmenSection.classList.add('is-animated');
+              }
             }
 
           } catch (error) {
@@ -424,7 +440,60 @@ export default function SiteBehavior() {
       on(window, 'resize', onScroll, { passive: true });
       onScroll();
 
-      if (propertyKumaSection) {
+      // 礎の匠カード: 左から順番にフェードイン
+      const artisanFiveSection = document.querySelector('.artisans-five');
+      if (artisanFiveSection) {
+        const artisanFiveCards = artisanFiveSection.querySelectorAll('.artisan-card');
+        if (artisanFiveCards.length) {
+          gsap.set(artisanFiveCards, { autoAlpha: 0, yPercent: 8, willChange: 'transform, opacity' });
+          const artisanObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                gsap.to(artisanFiveCards, {
+                  autoAlpha: 1,
+                  yPercent: 0,
+                  duration: 0.6,
+                  ease: 'sine.out',
+                  stagger: 0.1,
+                  onComplete: () => gsap.set(artisanFiveCards, { willChange: 'auto' }),
+                });
+                artisanObserver.disconnect();
+              }
+            });
+          }, { threshold: 0.15 });
+          artisanObserver.observe(artisanFiveSection);
+          cleanupFns.push(() => artisanObserver.disconnect());
+        }
+      }
+
+      // 彩の匠カード: 左から順番にフェードイン
+      const artisanColorSection = document.querySelector('.artisans-color');
+      if (artisanColorSection) {
+        const artisanColorCards = artisanColorSection.querySelectorAll('.artisan-card');
+        if (artisanColorCards.length) {
+          gsap.set(artisanColorCards, { autoAlpha: 0, yPercent: 8, willChange: 'transform, opacity' });
+          const colorObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                gsap.to(artisanColorCards, {
+                  autoAlpha: 1,
+                  yPercent: 0,
+                  duration: 0.6,
+                  ease: 'sine.out',
+                  stagger: 0.1,
+                  onComplete: () => gsap.set(artisanColorCards, { willChange: 'auto' }),
+                });
+                colorObserver.disconnect();
+              }
+            });
+          }, { threshold: 0.45 });
+          colorObserver.observe(artisanColorSection);
+          cleanupFns.push(() => colorObserver.disconnect());
+        }
+      }
+
+
+    if (propertyKumaSection) {
         const pinEnd = 0.985;
         updatePropertyScene(0, false, false);
         propertySceneTrigger = ScrollTrigger.create({
@@ -441,6 +510,7 @@ export default function SiteBehavior() {
           onLeaveBack: () => updatePropertyScene(0, false, false),
         });
       }
+
     };
 
     init();
@@ -450,6 +520,7 @@ export default function SiteBehavior() {
       scrollObserver?.disconnect();
       cleanupFns.forEach((fn) => fn());
       propertySceneTrigger?.kill();
+      stagePhotoPinTrigger?.kill();
       floatingLogo?.remove();
       const html = document.documentElement;
       html.classList.remove('no-scroll');

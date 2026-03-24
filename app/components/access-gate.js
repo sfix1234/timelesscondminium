@@ -204,9 +204,15 @@ export default function AccessGate({ children }) {
 
   return (
     <>
-      <section className="registration">
+      <section id="contact" className="registration" data-visible-threshold="0" data-visible-root-margin="0px 0px -5% 0px">
         <div className="registration__overlay"></div>
         <div className="registration__inner">
+          <div className="registration__gate-line" aria-hidden="true">
+            <span className="registration__gate-lock">
+              <span className="registration__gate-lock-shackle"></span>
+              <span className="registration__gate-lock-body"></span>
+            </span>
+          </div>
           <h2 className="registration__title">REGISTRATION</h2>
           <p className="registration__text">
             この先の内容をご覧いただくには、ご登録が必要となります。<br />
@@ -235,120 +241,14 @@ export default function AccessGate({ children }) {
               <span></span>
             </button>
 
-            <p className="access-modal__eyebrow">Exclusive Registration</p>
-            <h3 className="access-modal__title" id="accessModalTitle">
-              匠の情報をご覧いただくには、以下の情報をご入力ください
-            </h3>
-
-            {step === 'form' ? (
-              <>
-                <div className="access-modal__grid">
-                  <label className="access-modal__field">
-                    <span>お名前 *</span>
-                    <input
-                      type="text"
-                      value={form.name}
-                      onChange={(event) => updateField('name', event.target.value)}
-                      autoComplete="name"
-                    />
-                    {formErrors.name ? <small>{formErrors.name}</small> : null}
-                  </label>
-
-                  <label className="access-modal__field">
-                    <span>メールアドレス *</span>
-                    <input
-                      type="email"
-                      value={form.email}
-                      onChange={(event) => updateField('email', event.target.value)}
-                      autoComplete="email"
-                    />
-                    {formErrors.email ? <small>{formErrors.email}</small> : null}
-                  </label>
-
-                  <div className="access-modal__field">
-                    <span>電話番号 *</span>
-                    <div className="access-modal__phone">
-                      <select
-                        value={form.countryCode}
-                        onChange={(event) => updateField('countryCode', event.target.value)}
-                        aria-label="国際番号"
-                      >
-                        {COUNTRY_CODES.map((country) => (
-                          <option key={country.value} value={country.value}>
-                            {country.label}
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        type="tel"
-                        value={form.phoneNumber}
-                        onChange={(event) => updateField('phoneNumber', event.target.value)}
-                        autoComplete="tel-national"
-                        inputMode="tel"
-                      />
-                    </div>
-                    {formErrors.phoneNumber ? <small>{formErrors.phoneNumber}</small> : null}
-                  </div>
-
-                  <label className="access-modal__field">
-                    <span>資産額 *</span>
-                    <div className="access-modal__select-wrap">
-                      <select
-                        value={form.wealthBand}
-                        onChange={(event) => updateField('wealthBand', event.target.value)}
-                      >
-                        <option value="">選択してください</option>
-                        {WEALTH_OPTIONS.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {formErrors.wealthBand ? <small>{formErrors.wealthBand}</small> : null}
-                  </label>
-                </div>
-
-                <p className="access-modal__note">フォーム送信後、アクセス情報を含む確認メールが届きます。</p>
-                {requestMessage ? <p className={`access-modal__message${formErrors && Object.keys(formErrors).length ? ' is-error' : ''}`}>{requestMessage}</p> : null}
-
-                <button type="button" className="access-modal__submit" onClick={handleRequestAccess} disabled={isPending}>
-                  {isPending ? '送信中...' : '続ける'}
-                </button>
-              </>
-            ) : (
-              <>
-                <p className="access-modal__note">
-                  確認メールに記載された認証パスワードをご入力ください。
-                </p>
-
-                <label className="access-modal__field">
-                  <span>認証パスワード *</span>
-                  <input
-                    type="text"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    autoComplete="one-time-code"
-                  />
-                </label>
-
-                {verifyError ? <p className="access-modal__message is-error">{verifyError}</p> : null}
-                {devPassword ? (
-                  <p className="access-modal__message">
-                    開発環境用パスワード: <strong>{devPassword}</strong>
-                  </p>
-                ) : null}
-
-                <div className="access-modal__actions">
-                  <button type="button" className="access-modal__ghost" onClick={() => setStep('form')}>
-                    戻る
-                  </button>
-                  <button type="button" className="access-modal__submit" onClick={handleVerify} disabled={isPending}>
-                    {isPending ? '認証中...' : '認証して閲覧する'}
-                  </button>
-                </div>
-              </>
-            )}
+            <p className="access-modal__eyebrow">Exclusive Preview</p>
+            <div className="access-modal__coming-soon">
+              <h3 className="access-modal__coming-soon-title" id="accessModalTitle">Coming soon...</h3>
+              <p className="access-modal__coming-soon-text">
+                続きをご覧いただけるのは、4月6日以降となります。<br />
+                全貌につきましては、いましばらくお待ちください。
+              </p>
+            </div>
           </div>
         </div>
       ) : null}

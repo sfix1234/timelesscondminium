@@ -50,8 +50,8 @@ const artisanProfessionalGalleryMap = {
     '/assets/images/gallery/NakamuraSotojiConstruction/u1oofvjajzmfjlii0r1d.webp',
   ],
   '3': [
-    '/assets/images/gallery/ARMANI/ih1de8xrxwb0ukwkg9ya.webp',
-    '/assets/images/gallery/ARMANI/lajktmwt8noo7lcel18e.webp',
+    '/assets/images/gallery/ARMANI/ih1de8xrxwb0ukwkg9ya_sm.jpg',
+    '/assets/images/gallery/ARMANI/lajktmwt8noo7lcel18e_sm.jpg',
     '/assets/images/gallery/ARMANI/trbyw7vskzjnfsq7l3og.webp',
     '/assets/images/gallery/ARMANI/yirc2ihypiizkbj6mqpg.webp',
   ],
@@ -80,7 +80,7 @@ const artisanProfessionalGalleryMap = {
   ],
   '7': [
     '/assets/images/gallery/ToryoIto/photo_2.webp',
-    '/assets/images/gallery/ToryoIto/photo_bio2.webp',
+    '/assets/images/gallery/ToryoIto/photo_bio2_sm.jpg',
     '/assets/images/gallery/ToryoIto/伊藤東凌_1.webp',
   ],
   '8': [
@@ -197,20 +197,19 @@ export default async function HomePage() {
   </section>
 
 
-  <section className="craftsmen">
+  <section className="craftsmen" data-visible-threshold="0.3">
     <div className="craftsmen__sticky">
-      <p className="craftsmen__heading" data-ja="この志のもと、<br />世界の“匠”が一邸に集う。<br />それは、世界初の共創。" data-en="A world-first residence,<br />crafted by master artisans.">この志のもと、<br />世界の“匠”が一邸に集う。<br />それは、世界初の共創。</p>
-      <ul className="craftsmen__list">
-        <li className="craftsmen__name">KENGO KUMA</li>
-        <li className="craftsmen__name">KONGO GUMI</li>
-        <li className="craftsmen__name">Nakamura Sotoji</li>
-        <li className="craftsmen__name">KOKEI ERI</li>
-        <li className="craftsmen__name">ONIWA UEJI</li>
-      </ul>
+      <p className="craftsmen__heading" data-ja="この志のもと、世界の“匠”が一邸に集う。<br />それは、世界初の共創。" data-en="A world-first residence,<br />crafted by master artisans.">この志のもと、世界の“匠”が一邸に集う。<br />それは、世界初の共創。</p>
     </div>
     <div className="craftsmen__visual">
       <figure className="craftsmen-photo__frame">
-        <img src="/assets/images/craftsmen-group.jpg" alt="匠たちの集合写真" className="craftsmen-photo__img" />
+        <img src="/assets/images/craftsmen-group_sm.jpg" alt="匠たちの集合写真" className="craftsmen-photo__img" />
+        <div className="craftsmen-photo__labels" aria-hidden="true">
+          <span
+            className="craftsmen-photo__label"
+            dangerouslySetInnerHTML={{ __html: 'Ueji / Kongo Gumi / Kengo Kuma / Kenji Nakamura<br>Kokei Eri / Nakamura Sotoji Komuten' }}
+          />
+        </div>
       </figure>
     </div>
   </section>
@@ -230,47 +229,59 @@ export default async function HomePage() {
       </div>
       <div className="stage__visual">
         <div className="stage__slide is-active" data-slide="0">
-          <img src="/assets/images/culture/kyoto.jpg" alt="京都" />
+          <img src="/assets/images/culture/kyoto_sm.jpg" alt="京都" />
         </div>
         <div className="stage__slide" data-slide="1">
-          <img src="/assets/images/culture/kitanotenmangu.jpg" alt="北野天満宮" />
+          <img src="/assets/images/culture/kitanotenmangu_sm.jpg" alt="北野天満宮" />
         </div>
         <div className="stage__slide" data-slide="2">
-          <img src="/assets/images/culture/kamishichiken-kyuhasegawatei.jpg" alt="上七軒 - 旧長谷川邸" />
+          <img src="/assets/images/culture/kamishichiken-kyuhasegawatei_sm.jpg" alt="上七軒 - 旧長谷川邸" />
         </div>
         <div className="stage__slide" data-slide="3">
-          <img src="/assets/images/culture/episodo.jpg" alt="エピソード" />
+          <img src="/assets/images/culture/episodo_sm.jpg" alt="エピソード" />
         </div>
       </div>
       <div className="stage__info">
         <div className="stage__info-block is-active" data-info="0">
           <h3 className="stage__info-title">KYOTO</h3>
-          <p className="stage__info-text">千年の都・京都は、宮廷文化、宗教、茶道、庭園、建築、芸能、和食など日本文化の根幹を育み、世界へ継承し続ける稀有な都市。</p>
+          <div className="stage__info-body">
+            <p className="stage__info-text">千年の都・京都は、宮廷文化、宗教、茶道、庭園、建築、芸能、和食など日本文化の根幹を育み、世界へ継承し続ける稀有な都市。</p>
+            <button className="stage__more-link" type="button">VIEW MORE<span className="stage__more-arrow">→</span></button>
+          </div>
         </div>
         <div className="stage__info-block" data-info="1">
           <h3 className="stage__info-title">KITANO TENMANGU</h3>
-          <p className="stage__info-text">宮廷文化と信仰、茶の湯と芸能が交差し花開いた北野。北野天満宮は学問のみならず、芸事文化の源流を今に伝える特別な聖地。</p>
+          <div className="stage__info-body">
+            <p className="stage__info-text">宮廷文化と信仰、茶の湯と芸能が交差し花開いた北野。北野天満宮は学問のみならず、芸事文化の源流を今に伝える特別な聖地。</p>
+            <button className="stage__more-link" type="button">VIEW MORE<span className="stage__more-arrow">→</span></button>
+          </div>
         </div>
         <div className="stage__info-block" data-info="2">
           <h3 className="stage__info-title">KAMISHICHIKEN</h3>
-          <p className="stage__info-text">北野天満宮の再建余材から生まれた上七軒は、世界最古級のサステナブル精神を宿す日本最古の花街。旧長谷川邸はその象徴。</p>
+          <div className="stage__info-body">
+            <p className="stage__info-text">北野天満宮の再建余材から生まれた上七軒は、世界最古級のサステナブル精神を宿す日本最古の花街。旧長谷川邸はその象徴。</p>
+            <button className="stage__more-link" type="button">VIEW MORE<span className="stage__more-arrow">→</span></button>
+          </div>
         </div>
         <div className="stage__info-block" data-info="3">
           <h3 className="stage__info-title">EPISODE</h3>
-          <p className="stage__info-text">土方歳三と水上勉、時代を超えた人物が惹かれた上七軒。剣豪と文豪の物語が、この花街の静寂と奥行きを今に伝えています。</p>
+          <div className="stage__info-body">
+            <p className="stage__info-text">土方歳三と水上勉、時代を超えた人物が惹かれた上七軒。剣豪と文豪の物語が、この花街の静寂と奥行きを今に伝えています。</p>
+            <button className="stage__more-link" type="button">VIEW MORE<span className="stage__more-arrow">→</span></button>
+          </div>
         </div>
-      </div>
-      <div className="stage__more">
-        <button className="stage__more-link" type="button">VIEW MORE<span className="stage__more-arrow">→</span></button>
       </div>
     </div>
   </section>
 
-  <section className="stage-photo">
-    <figure className="stage-photo__frame">
+  <section className="stage-photo-text">
+    <div className="stage-photo-text__inner">
       <p className="stage-photo__text" data-ja="和の文化<br />「静寂」という名の至光品。" data-en="A millennium of aesthetics,<br />reimagined for today."><span className="stage-photo__text-top">和の文化</span><br /><span className="stage-photo__text-bottom">「静寂」という名の至光品。</span></p>
-      <img src="/assets/images/stage-message.jpeg" alt="千年の美意識を表現した情景" className="stage-photo__image" />
-    </figure>
+    </div>
+  </section>
+
+  <section className="stage-photo">
+    <img src="/assets/images/stage-message_sm.jpg" alt="千年の美意識を表現した情景" className="stage-photo__image" />
   </section>
 
   <div className="detail-panel" id="detailPanel">
@@ -284,7 +295,7 @@ export default async function HomePage() {
         <h3 className="detail-panel__title">KYOTO</h3>
         <div className="detail-panel__line"></div>
         <div className="detail-panel__img">
-          <img src="/assets/images/culture/kyoto.jpg" alt="京都" />
+          <img src="/assets/images/culture/kyoto_sm.jpg" alt="京都" />
         </div>
         <div className="detail-panel__text">
           <h4 className="detail-panel__lead">千年の都が育んだ、日本文化の集積地</h4>
@@ -300,7 +311,7 @@ export default async function HomePage() {
         <h3 className="detail-panel__title">KITANO TENMANGU</h3>
         <div className="detail-panel__line"></div>
         <div className="detail-panel__img">
-          <img src="/assets/images/culture/kitanotenmangu.jpg" alt="北野天満宮" />
+          <img src="/assets/images/culture/kitanotenmangu_sm.jpg" alt="北野天満宮" />
         </div>
         <div className="detail-panel__text">
           <h4 className="detail-panel__lead">芸能文化が息づく、<br />特別な聖地</h4>
@@ -315,7 +326,7 @@ export default async function HomePage() {
         <h3 className="detail-panel__title">KAMISHICHIKEN</h3>
         <div className="detail-panel__line"></div>
         <div className="detail-panel__img">
-          <img src="/assets/images/culture/kamishichiken-kyuhasegawatei.jpg" alt="上七軒 - 旧長谷川邸" />
+          <img src="/assets/images/culture/kamishichiken-kyuhasegawatei_sm.jpg" alt="上七軒 - 旧長谷川邸" />
         </div>
         <div className="detail-panel__text">
           <h4 className="detail-panel__lead">世界最古のサステナブルな花街</h4>
@@ -330,7 +341,7 @@ export default async function HomePage() {
         <h3 className="detail-panel__title">EPISODE</h3>
         <div className="detail-panel__line"></div>
         <div className="detail-panel__img">
-          <img src="/assets/images/culture/episodo.jpg" alt="エピソード" />
+          <img src="/assets/images/culture/episodo_sm.jpg" alt="エピソード" />
         </div>
         <div className="detail-panel__text">
           <h4 className="detail-panel__lead">偉人たちが愛した<br />上七軒・旧 長谷川邸</h4>
@@ -347,7 +358,7 @@ export default async function HomePage() {
   <>
   <section className="project-vision">
     <div className="project-vision__inner">
-      <h2 className="project-vision__title">STORY VIDEO</h2>
+      <h2 className="project-vision__title">THE HISTORY MOVIE</h2>
       <ProjectVisionVideo />
     </div>
   </section>
@@ -355,8 +366,8 @@ export default async function HomePage() {
   <section className="artisans-intro">
     <div className="artisans-intro__inner">
       <div className="artisans-intro__head">
-        <h2 className="artisans-intro__title">ARTISANS</h2>
-        <p className="artisans-intro__count">十の匠</p>
+        <h2 className="artisans-intro__title">THE <span className="artisans-intro__number">10</span> MASTERS</h2>
+
       </div>
       <div className="artisans-intro__copy-row">
         <p className="artisans-intro__lead">普遍の美と、<br />現代の技を融合。</p>
@@ -383,7 +394,7 @@ export default async function HomePage() {
 
       <article className="artisan-card">
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="1" aria-label="金剛組の詳細を開く">
-          <img src="/assets/images/artisans/photo_1.jpg" alt="金剛組" className="artisan-card__image" />
+          <img src="/assets/images/artisans/photo_1_sm.jpg" alt="金剛組" className="artisan-card__image" />
         </button>
         <div className="artisan-card__overlay">
           <div className="artisan-card__copy">
@@ -411,7 +422,7 @@ export default async function HomePage() {
 
       <article className="artisan-card">
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="4" aria-label="御庭植治の詳細を開く">
-          <img src="/assets/images/artist_photo/onniwaueji.jpg" alt="御庭植治" className="artisan-card__image" />
+          <img src="/assets/images/artist_photo/onniwaueji_sm.jpg" alt="御庭植治" className="artisan-card__image" />
         </button>
         <div className="artisan-card__overlay">
           <div className="artisan-card__copy">
@@ -425,7 +436,7 @@ export default async function HomePage() {
 
       <article className="artisan-card">
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="3" aria-label="ARMANI / CASAの詳細を開く">
-          <img src="/assets/images/artisans/armani:casa.webp" alt="ARMANI / CASA" className="artisan-card__image" />
+          <img src="/assets/images/artisans/armani:casa_sm.jpg" alt="ARMANI / CASA" className="artisan-card__image" />
         </button>
         <div className="artisan-card__overlay">
           <div className="artisan-card__copy">
@@ -448,7 +459,7 @@ export default async function HomePage() {
       <div className="artisans-color__gallery">
         <article className="artisan-card">
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="5" aria-label="江里康慧の詳細を開く">
-            <img src="/assets/images/artist_photo/koukei02-1.jpg" alt="江里康慧" className="artisan-card__image" />
+            <img src="/assets/images/artist_photo/koukei02-1_sm.jpg" alt="江里康慧" className="artisan-card__image" />
           </button>
           <div className="artisan-card__overlay artisan-card__overlay--light">
             <div className="artisan-card__copy">
@@ -462,7 +473,7 @@ export default async function HomePage() {
 
         <article className="artisan-card">
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="6" aria-label="江里朋子の詳細を開く">
-            <img src="/assets/images/artist_photo/tomoko.jpg" alt="江里朋子" className="artisan-card__image" />
+            <img src="/assets/images/artist_photo/tomoko_sm.jpg" alt="江里朋子" className="artisan-card__image" />
           </button>
           <div className="artisan-card__overlay">
             <div className="artisan-card__copy">
@@ -526,7 +537,10 @@ export default async function HomePage() {
       <p className="property-section__text">
         「日本」という至宝を「世界」の至光品へ。 <br />完成予想図および間取りの詳細は、物件詳細ページにてご覧ください。
       </p>
-      <a href="/property" className="property-section__button">詳細を確認する</a>
+      <div className="property-section__buttons">
+        <a href="/property" className="property-section__button">詳細を確認する</a>
+        <a href="/property#property-contact" className="property-section__button property-section__button--contact">お問い合わせ</a>
+      </div>
     </div>
   </section>
 
@@ -649,7 +663,7 @@ export default async function HomePage() {
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="3">
-        <img src="/assets/images/artisans/armani:casa.webp" alt="ARMANI / CASA" className="artisan-detail__portrait artisan-detail__portrait--wide" />
+        <img src="/assets/images/artisans/armani:casa_sm.jpg" alt="ARMANI / CASA" className="artisan-detail__portrait artisan-detail__portrait--wide" />
         <div className="artisan-detail__meta">
           <div className="artisan-detail__meta-copy">
             <p className="artisan-detail__role">FURNITURE / ACCESSORIES</p>
@@ -665,7 +679,7 @@ export default async function HomePage() {
           <div className="artisan-detail__section-line"></div>
         </div>
         <ul className="artisan-detail__list">
-          <li>アルマーニホテル（ミラノ、ドバイ、東京）</li>
+          <li>アルマーニホテル（ミラノ、ドバイ）</li>
           <li>世界各国の高級レジデンス</li>
           <li>プライベートヨット インテリア</li>
           <li>高級ブティックホテル</li>

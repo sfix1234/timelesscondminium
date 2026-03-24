@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const IMAGE_ANNOTATIONS = {
   entrance: [
@@ -116,61 +116,61 @@ const GALLERY_ITEMS = [
   {
     id: 'entrance',
     label: 'ENTRANCE',
-    beforeSrc: '/assets/images/before/1before.jpg',
+    beforeSrc: '/assets/images/before/1before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/1entrance_after.jpg'
   },
   {
     id: 'dining-kitchen-living',
     label: 'DINING KITCHEN LIVING ROOM / 主屋 1F',
-    beforeSrc: '/assets/images/before/2before.jpg',
+    beforeSrc: '/assets/images/before/2before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/2dining_after.jpg'
   },
   {
     id: 'dining',
     label: 'DINING / 主屋 1F',
-    beforeSrc: '/assets/images/before/3before.jpg',
+    beforeSrc: '/assets/images/before/3before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/3dining1F_after.jpg'
   },
   {
     id: 'bathroom-kura',
     label: 'DINING KITCHEN LIVING ROOM / 主屋 1F',
-    beforeSrc: '/assets/images/before/4before.jpg',
+    beforeSrc: '/assets/images/before/4before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/4bathroom_after.jpg'
   },
   {
     id: 'master-bedroom',
     label: 'MASTER BEDROOM / 主屋 2F',
-    beforeSrc: '/assets/images/before/5before.jpg',
+    beforeSrc: '/assets/images/before/5before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/5MASTERBEDROOM.jpg'
   },
   {
     id: 'inner-garden-a',
     label: 'INNER GARDEN / 庭',
-    beforeSrc: '/assets/images/before/6before.jpg',
+    beforeSrc: '/assets/images/before/6before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/6innergarden_after.jpg'
   },
   {
     id: 'inner-garden-b',
     label: 'INNER GARDEN / 庭',
-    beforeSrc: '/assets/images/before/7before.jpg',
+    beforeSrc: '/assets/images/before/7before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/7INNERGARDEN.jpg'
   },
   {
     id: 'hiroma-hanare',
     label: '大広間 / 離れ',
-    beforeSrc: '/assets/images/before/8before.jpg',
+    beforeSrc: '/assets/images/before/8before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/8hiromahanare.jpg'
   },
   {
     id: 'tea-room-hanare',
     label: '茶室 / 離れ',
-    beforeSrc: '/assets/images/before/9before.jpg',
+    beforeSrc: '/assets/images/before/9before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/9tyayahanare.jpg'
   },
   {
     id: 'bathroom-archive',
     label: 'BATHROOM / 蔵',
-    beforeSrc: '/assets/images/before/10before.jpg',
+    beforeSrc: '/assets/images/before/10before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/10bathroom.jpg'
   }
 ];
@@ -180,33 +180,36 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
   const [activeView, setActiveView] = useState('after');
   const [activeAnnotationId, setActiveAnnotationId] = useState('');
   const activeGalleryItem = GALLERY_ITEMS.find((item) => item.id === activeGalleryId) ?? GALLERY_ITEMS[0];
+  const activeGalleryIndex = GALLERY_ITEMS.findIndex((item) => item.id === activeGalleryId);
   const activeGallerySrc = activeView === 'before' ? activeGalleryItem.beforeSrc : activeGalleryItem.afterSrc;
-  const isCompactGalleryLabel = activeGalleryItem.label === 'BATHROOM / 蔵';
   const activeAnnotations = activeView === 'after' ? IMAGE_ANNOTATIONS[activeGalleryId] || [] : [];
   const activeAnnotation = activeAnnotations.find((annotation) => annotation.id === activeAnnotationId) ?? null;
+  const isLongGalleryLabel = activeGalleryItem.label.length > 20;
 
-  useEffect(() => {
+  const goToGalleryItem = (nextIndex) => {
+    const safeIndex = (nextIndex + GALLERY_ITEMS.length) % GALLERY_ITEMS.length;
+    setActiveGalleryId(GALLERY_ITEMS[safeIndex].id);
     setActiveView('after');
-  }, [activeGalleryId]);
-
-  useEffect(() => {
     setActiveAnnotationId('');
-  }, [activeGalleryId, activeView]);
+  };
 
   return (
     <div className={`property-floor-image__panel${embedded ? ' property-floor-image__panel--embedded' : ''}`}>
       <h3 className="property-floor-image__heading">Floor Image</h3>
 
-        <div className="property-floor-gallery">
-          <div className="property-floor-gallery__meta">
-          <p className={`property-floor-gallery__current${isCompactGalleryLabel ? ' property-floor-gallery__current--compact' : ''}`}>{activeGalleryItem.label}</p>
+      <div className="property-floor-gallery">
+        <div className="property-floor-gallery__meta">
+          <p className={`property-floor-gallery__current${isLongGalleryLabel ? ' property-floor-gallery__current--long' : ''}`}>{activeGalleryItem.label}</p>
           <div className="property-floor-gallery__toggle" role="tablist" aria-label="Before after toggle">
             <button
               type="button"
               role="tab"
               aria-selected={activeView === 'before'}
               className={`property-floor-gallery__toggle-button${activeView === 'before' ? ' is-active' : ''}`}
-              onClick={() => setActiveView('before')}
+              onClick={() => {
+                setActiveView('before');
+                setActiveAnnotationId('');
+              }}
             >
               Before
             </button>
@@ -224,12 +227,28 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
 
         <div className="property-floor-gallery__viewer">
           <div className="property-floor-gallery__frame">
+            <button
+              type="button"
+              className="property-floor-gallery__nav property-floor-gallery__nav--prev"
+              onClick={() => goToGalleryItem(activeGalleryIndex - 1)}
+              aria-label="前の画像へ"
+            >
+              <span aria-hidden="true">‹</span>
+            </button>
             <img
-              key={`${activeGalleryId}-${activeView}`}
+              key={activeGalleryId}
               src={activeGallerySrc}
-              alt={`${activeGalleryItem.label} ${activeView}`}
+              alt={activeGalleryItem.label}
               className="property-floor-gallery__image"
             />
+            <button
+              type="button"
+              className="property-floor-gallery__nav property-floor-gallery__nav--next"
+              onClick={() => goToGalleryItem(activeGalleryIndex + 1)}
+              aria-label="次の画像へ"
+            >
+              <span aria-hidden="true">›</span>
+            </button>
             {activeAnnotations.length ? (
               <div className="property-floor-gallery__pointers">
                 {activeAnnotation ? (
@@ -293,29 +312,27 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
             ) : null}
           </div>
 
-          <div className="property-floor-gallery__tabs-wrap">
-            <div className="property-floor-gallery__tabs" role="tablist" aria-label="Floor image gallery tabs">
-              {GALLERY_ITEMS.map((item) => {
-                const isActive = item.id === activeGalleryId;
+          <div className="property-floor-gallery__thumbnails" role="tablist" aria-label="Floor image gallery thumbnails">
+            {GALLERY_ITEMS.map((item) => {
+              const isActive = item.id === activeGalleryId;
 
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={`property-floor-gallery__tab${item.id === 'dining-kitchen-living' ? ' property-floor-gallery__tab--wide' : ''}${item.label === 'BATHROOM / 蔵' ? ' property-floor-gallery__tab--compact' : ''}${isActive ? ' is-active' : ''}`}
-                    onClick={() => setActiveGalleryId(item.id)}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="property-floor-gallery__tabs-hint" aria-hidden="true">
-              <span className="property-floor-gallery__tabs-hint-text">Scroll</span>
-              <span className="property-floor-gallery__tabs-hint-arrow">→</span>
-            </div>
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`property-floor-gallery__thumb${isActive ? ' is-active' : ''}`}
+                  onClick={() => goToGalleryItem(GALLERY_ITEMS.findIndex((galleryItem) => galleryItem.id === item.id))}
+                >
+                  <img
+                    src={item.afterSrc}
+                    alt={item.label}
+                    className="property-floor-gallery__thumb-image"
+                  />
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

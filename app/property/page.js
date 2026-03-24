@@ -4,6 +4,7 @@ import Script from 'next/script';
 import PropertyKumaVideo from '../components/property-kuma-video';
 import PropertyContactForm from '../components/property-contact-form';
 import PropertyFloorMapSwitcher from '../components/property-floor-map-switcher';
+
 import SiteFooter from '../components/site-footer';
 import SiteHeader from '../components/site-header';
 import AccessGate from '../components/access-gate';
@@ -21,6 +22,16 @@ export default async function PropertyPage() {
 
   return (
     <div className="property-page">
+      <div className="property-hero__header">
+        <SiteHeader
+          centerTitle="PROPERTY"
+          navItems={[
+            { labelJa: 'TOP', labelEn: 'TOP', target: '.property-hero--top' },
+            { labelJa: 'PROPERTY', labelEn: 'PROPERTY', target: '#property-kuma' },
+            { labelJa: 'CONTACT', labelEn: 'CONTACT', target: '.property-contact-block' },
+          ]}
+        />
+      </div>
       <main>
         <section className="property-hero property-hero--top">
           <div className="property-hero__bgvideo" aria-hidden="true">
@@ -36,25 +47,11 @@ export default async function PropertyPage() {
             </div>
           </div>
           <div className="property-hero__overlay"></div>
-          <div className="property-hero__header">
-            <SiteHeader
-              centerTitle="The Timeless Condominium"
-              navItems={[
-                { labelJa: 'TOP', labelEn: 'TOP', target: '.property-hero--top' },
-                { labelJa: 'PROPERTY', labelEn: 'PROPERTY', target: '#property-kuma' },
-                { labelJa: 'CONTACT', labelEn: 'CONTACT', target: '.property-contact-block' },
-              ]}
-            />
-          </div>
-          <div className="property-hero__inner">
-            <h1 className="property-hero__title">PROPERTY</h1>
-            <div className="property-hero__number-wrap">
-              <span className="property-hero__number">01</span>
-              <span className="property-hero__number-line"></span>
+          <div className="hero__bottom-logo">
+            <div className="center-block hero__logo-overlay">
+              <span className="center-block__number">CASE01</span>
             </div>
-            <div className="property-hero__brand">
-              <img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" className="property-hero__brand-logo" />
-            </div>
+            <img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" className="hero__bottom-logo-image" />
           </div>
         </section>
 
@@ -62,26 +59,15 @@ export default async function PropertyPage() {
           <div className="property-kuma__sticky">
             <div className="property-kuma__inner">
               <div className="property-kuma__name">
-                <h2 className="property-kuma__en">Kengo Kuma Speaks</h2>
+                <h2 className="property-kuma__en">THE PROJECT MOVIE</h2>
               </div>
 
               <PropertyKumaVideo />
 
-              <p className="property-kuma__text">
-                本邸のデザイン監修を務めた隈研吾が語る、THE SILENCE Furnished by ARMANI / CASA。<br />
-                悠久の歴史と匠の技、そしてラグジュアリーブランドが織りなす、格別な調和をご体感ください。
-              </p>
             </div>
 
             <section className="property-info property-info--intrude" id="property-info" aria-label="Property Info">
               <div className="property-info__inner">
-                <div className="property-info__intro">
-                  <img
-                    src="/assets/images/THE%20SILENCE_logo.png"
-                    alt="THE SILENCE Furnished by ARMANI / CASA"
-                    className="property-info__logo"
-                  />
-                </div>
                 <div className="property-info__details">
                   <PropertyFloorMapSwitcher />
                 </div>
@@ -95,45 +81,95 @@ export default async function PropertyPage() {
             <h2 className="property-access__title">ACCESS</h2>
 
             <div className="property-access__layout">
-              <div className="property-access__map-wrap">
-                <img
-                  src="/assets/images/map-image/map-image.jpg"
-                  className="property-access__map property-access__embed"
-                  alt="上七軒 旧長谷川邸 地図"
-                  loading="lazy"
-                />
-                <button className="property-access__pin" type="button" aria-label="北野天満宮の詳細を開く" data-map-pin></button>
+              <div className="property-access__map-column">
+                <div className="property-access__map-wrap">
+                  <img
+                    src="/assets/images/map-image/map-image.jpg"
+                    className="property-access__map property-access__embed"
+                    alt="上七軒 旧長谷川邸 地図"
+                    loading="lazy"
+                  />
+                  <div className="property-access__map-inset" aria-hidden="true">
+                    <img
+                      src="/assets/images/map-image/image-popup.png"
+                      className="property-access__map-inset-image"
+                      alt=""
+                      loading="lazy"
+                    />
+                  </div>
+                  <button className="property-access__pin" type="button" aria-label="北野天満宮の詳細を開く" data-map-pin></button>
+                </div>
               </div>
 
-              <div className="property-access__info">
-                <div className="property-access__block">
-                  <p className="property-access__label">新幹線</p>
-                  <div className="property-access__rows">
-                    <div className="property-access__row">
-                      <span className="property-access__from">東京駅から</span>
-                      <span className="property-access__time">約 2.5 時間</span>
+              <div className="property-access__side">
+                <div className="property-access__zoom-wrap">
+                  <img
+                    src="/assets/images/map-image/image-popup.png"
+                    className="property-access__zoom"
+                    alt="北野天満宮 周辺拡大図"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div className="property-access__info">
+                  <h3 className="property-access__subtitle">上七軒までのアクセス</h3>
+
+                  <div className="property-access__block">
+                    <p className="property-access__label">新幹線</p>
+                    <div className="property-access__rows">
+                      <div className="property-access__row">
+                        <span className="property-access__from">東京駅から</span>
+                        <span className="property-access__time">約 3 時間</span>
+                      </div>
+                      <div className="property-access__row">
+                        <span className="property-access__from">大阪駅から</span>
+                        <span className="property-access__time">約 1.3 時間</span>
+                      </div>
                     </div>
-                    <div className="property-access__row">
-                      <span className="property-access__from">大阪駅から</span>
-                      <span className="property-access__time">約 1 時間</span>
+                  </div>
+
+                  <div className="property-access__block">
+                    <p className="property-access__label">飛行機</p>
+                    <div className="property-access__rows">
+                      <div className="property-access__row">
+                        <span className="property-access__from">羽田空港から</span>
+                        <span className="property-access__time">約 3 時間</span>
+                      </div>
+                      <div className="property-access__row">
+                        <span className="property-access__from">伊丹空港から</span>
+                        <span className="property-access__time">約 1.6 時間</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="property-access__block">
+                    <p className="property-access__label">車</p>
+                    <div className="property-access__rows">
+                      <div className="property-access__row">
+                        <span className="property-access__from">京都駅から</span>
+                        <span className="property-access__time">約 17 分</span>
+                      </div>
+                      <div className="property-access__row">
+                        <span className="property-access__from">祇園エリアから</span>
+                        <span className="property-access__time">約 14 分</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="property-access__block">
+                    <p className="property-access__label">徒歩</p>
+                    <div className="property-access__rows">
+                      <div className="property-access__row">
+                        <span className="property-access__from">北野白梅町駅から</span>
+                        <span className="property-access__time">徒歩 約 11 分</span>
+                      </div>
+                      <div className="property-access__row">
+                        <span className="property-access__from">北野天満宮 東門から</span>
+                        <span className="property-access__time">徒歩 約 1 分</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-
-                <div className="property-access__block">
-                  <p className="property-access__label">飛行機</p>
-                  <div className="property-access__rows">
-                    <div className="property-access__row">
-                      <span className="property-access__from">羽田空港から</span>
-                      <span className="property-access__time">約 3 時間</span>
-                    </div>
-                    <div className="property-access__row">
-                      <span className="property-access__from">伊丹空港から</span>
-                      <span className="property-access__time">約 1.6 時間</span>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
@@ -221,7 +257,7 @@ export default async function PropertyPage() {
           </div>
         </section>
 
-        <section className="property-contact-block">
+        <section id="property-contact" className="property-contact-block">
           <div className="property-contact-block__inner">
             <div className="property-contact-block__intro">
               <h2 className="property-contact-block__title">CONTACT</h2>

@@ -68,8 +68,8 @@ export default function PropertyPlanTabs() {
     <div className="property-info__plans">
       <PlanCard
         title="FLOOR PLANS"
-        firstSrc="/assets/images/propatyinfo/timelesscondminium-02.png"
-        secondSrc="/assets/images/propatyinfo/timelesscondminium-01.png"
+        firstSrc="/assets/images/propatyinfo/timelesscondminium-02_sm.jpg"
+        secondSrc="/assets/images/propatyinfo/timelesscondminium-01_sm.jpg"
         firstAlt="1F 平面図"
         secondAlt="2F 平面図"
       />

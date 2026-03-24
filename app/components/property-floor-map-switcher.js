@@ -23,25 +23,27 @@ export default function PropertyFloorMapSwitcher() {
   return (
     <div className="property-info__detail-figure">
       <div className="property-info__detail-map">
-        <p className="property-info__detail-label">Floor Map</p>
+        <div className="property-info__detail-panel">
+          <p className="property-info__detail-label">Floor Map</p>
 
-        <div className="property-info__floor-switch" role="tablist" aria-label="Floor selector">
-          {FLOORS.map((floor) => {
-            const isActive = floor.id === activeFloor;
+          <div className="property-info__floor-switch" role="tablist" aria-label="Floor selector">
+            {FLOORS.map((floor) => {
+              const isActive = floor.id === activeFloor;
 
-            return (
-              <button
-                key={floor.id}
-                type="button"
-                className={`property-info__floor-button${isActive ? ' is-active' : ''}`}
-                onClick={() => setActiveFloor(floor.id)}
-                role="tab"
-                aria-selected={isActive}
-              >
-                {floor.label}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={floor.id}
+                  type="button"
+                  className={`property-info__floor-button${isActive ? ' is-active' : ''}`}
+                  onClick={() => setActiveFloor(floor.id)}
+                  role="tab"
+                  aria-selected={isActive}
+                >
+                  {floor.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="property-info__detail-image-frame">
