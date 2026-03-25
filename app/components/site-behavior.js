@@ -176,7 +176,7 @@ export default function SiteBehavior() {
     const detailOverlay = detailPanel?.querySelector('.detail-panel__overlay');
     const detailContents = detailPanel?.querySelectorAll('.detail-panel__content');
     const detailNextButtons = detailPanel?.querySelectorAll('.detail-panel__next');
-    const viewMoreLink = document.querySelector('.stage__more-link');
+    const viewMoreLinks = document.querySelectorAll('.stage__more-link');
     const artisanDetail = document.getElementById('artisanDetail');
     const artisanDetailClose = document.getElementById('artisanDetailClose');
     const artisanDetailOverlay = artisanDetail?.querySelector('.artisan-detail__overlay');
@@ -206,9 +206,11 @@ export default function SiteBehavior() {
       detailPanel?.classList.remove('is-open');
     }
 
-    on(viewMoreLink, 'click', (e) => {
-      e.preventDefault();
-      openDetail();
+    viewMoreLinks.forEach((link) => {
+      on(link, 'click', (e) => {
+        e.preventDefault();
+        openDetail();
+      });
     });
 
     on(detailClose, 'click', closeDetail);
