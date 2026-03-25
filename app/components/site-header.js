@@ -9,7 +9,7 @@ export default function SiteHeader({ headerClassName = '', navItems = [], center
           <div className="nav-overlay__accent"></div>
           <ul className="nav-overlay__list">
             {navItems.map((item) => (
-              <li className="nav-overlay__item" key={`${item.labelJa}-${item.labelEn}`}>
+              <li className="nav-overlay__item" key={`${item.labelJa}-${item.labelEn ?? item.labelJa}`}>
                 <button
                   className="nav-overlay__link"
                   type="button"
@@ -17,7 +17,7 @@ export default function SiteHeader({ headerClassName = '', navItems = [], center
                   data-ja={item.labelJa}
                   data-en={item.labelEn}
                 >
-                  {item.labelEn ?? item.labelJa}
+                  {item.labelJa}
                 </button>
               </li>
             ))}
@@ -31,14 +31,8 @@ export default function SiteHeader({ headerClassName = '', navItems = [], center
 
       <header className={headerClass}>
         <div className="jpn-badge">
-          <button className="jpn-badge__label" id="langToggle" type="button" aria-label="Switch language">JPN</button>
+          <span className="jpn-badge__label" aria-label="Language">JPN</span>
           <span className="jpn-badge__line"></span>
-          <div className="jpn-badge__menu" id="langMenu">
-            <button className="jpn-badge__menu-item" type="button" data-lang="ja">JPN</button>
-            <button className="jpn-badge__menu-item" type="button" data-lang="en">ENG</button>
-            <button className="jpn-badge__menu-item" type="button" data-lang="koto">江東語</button>
-            <button className="jpn-badge__menu-item" type="button" data-lang="yue">広東語</button>
-          </div>
         </div>
         {centerTitle ? <h1 className="center-block__title header__center-title">{centerTitle}</h1> : null}
         <div className="hamburger" role="button" aria-label="Menu">

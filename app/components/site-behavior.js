@@ -66,30 +66,12 @@ export default function SiteBehavior() {
       cleanupFns.push(() => el.removeEventListener(event, handler, options));
       };
 
-    const langToggle = document.getElementById('langToggle');
-    const langMenu = document.getElementById('langMenu');
-    const langItems = langMenu?.querySelectorAll('[data-lang]');
     const i18nElements = document.querySelectorAll('[data-ja][data-en]');
-    let currentLang = 'ja';
-
-    const applyLanguage = (lang) => {
-      if (lang === 'ja' || lang === 'en') {
-        i18nElements.forEach((el) => {
-          const next = lang === 'ja' ? el.getAttribute('data-ja') : el.getAttribute('data-en');
-          if (next) el.innerHTML = next;
-        });
-      }
-      currentLang = lang;
-      html.lang = lang;
-      if (langToggle) {
-        const labelMap = { ja: 'JPN', en: 'ENG', koto: '江東語', yue: '広東語' };
-        langToggle.textContent = labelMap[lang] || 'JPN';
-        langToggle.setAttribute('aria-label', 'Switch language');
-      }
-      langMenu?.classList.remove('is-open');
-    };
-
-    applyLanguage('ja');
+    i18nElements.forEach((el) => {
+      const text = el.getAttribute('data-ja');
+      if (text) el.innerHTML = text;
+    });
+    html.lang = 'ja';
 
     function playAfter(selector, delay) {
       setTimeout(() => {
@@ -105,25 +87,6 @@ export default function SiteBehavior() {
     playAfter('.hamburger', heroStart + 200);
     playAfter('.center-block__title', heroStart + 500);
     playAfter('.hero__logo-overlay', heroStart + 900);
-
-    on(langToggle, 'click', () => {
-      langMenu?.classList.toggle('is-open');
-    });
-
-    langItems?.forEach((item) => {
-      on(item, 'click', () => {
-        const lang = item.getAttribute('data-lang');
-        if (lang) applyLanguage(lang);
-      });
-    });
-
-    on(document, 'click', (e) => {
-      const target = e.target;
-      if (!(target instanceof Element)) return;
-      if (!target.closest('.jpn-badge')) {
-        langMenu?.classList.remove('is-open');
-      }
-    });
 
       const observeVisibleSection = (el) => {
       if (!el) return;

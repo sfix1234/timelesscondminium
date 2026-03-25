@@ -155,7 +155,7 @@ export default async function HomePage() {
           centerTitle="The Timeless Condominium"
           navItems={[
           { labelJa: 'TOP', labelEn: 'TOP', target: '.hero' },
-          { labelJa: 'PROPERTY', labelEn: 'PROPERTY', target: '.property-section' },
+          { labelJa: 'PROPERTY', labelEn: 'PROPERTY', target: isUnlocked ? '.property-section' : '.registration' },
           { labelJa: 'CONTACT', labelEn: 'CONTACT', target: '.registration' },
           ]}
         />
@@ -538,8 +538,8 @@ export default async function HomePage() {
         「日本」という至宝を「世界」の至光品へ。 <br />完成予想図および間取りの詳細は、物件詳細ページにてご覧ください。
       </p>
       <div className="property-section__buttons">
-        <a href="/property" className="property-section__button">詳細を確認する</a>
-        <a href="/property#property-contact" className="property-section__button property-section__button--contact">お問い合わせ</a>
+        <a href={isUnlocked ? '/property' : '#contact'} className="property-section__button">詳細を確認する</a>
+        <a href={isUnlocked ? '/property#property-contact' : '#contact'} className="property-section__button property-section__button--contact">お問い合わせ</a>
       </div>
     </div>
   </section>
