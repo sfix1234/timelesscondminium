@@ -6,15 +6,15 @@ const IMAGE_ANNOTATIONS = {
   entrance: [
     {
       id: 'left',
-      copy: ['エントランス左側には、', '黒竹を映す意匠を凝らした', '漆喰を配し、趣を添える'],
-      point: { x: 16, y: 49 },
+      copy: ['エントランス左側、', '黒竹を映す漆喰が趣を添える'],
+      point: { x: 35, y: 49 },
       elbow: { x: 31, y: 20 },
       anchor: { x: 43, y: 20 },
       card: { top: '19%', left: '9%', width: '46%' }
     },
     {
       id: 'top',
-      copy: ['京都の数寄屋造りの趣を', 'そのままに受け継いだ、', '吹き抜けのエントランス'],
+      copy: ['京都の数寄屋の趣を受け継ぐ、', '吹き抜けのエントランス'],
       point: { x: 50, y: 7 },
       elbow: { x: 56, y: 18 },
       anchor: { x: 63, y: 18 },
@@ -22,12 +22,8 @@ const IMAGE_ANNOTATIONS = {
     },
     {
       id: 'right',
-      copy: [
-        'エントランスオブジェ　仏師・江里康慧',
-        '人間国宝に最も近い仏師と評される江里康慧の手により、',
-        '「旧長谷川邸」における祈りの象徴として、静かに据えられる。'
-      ],
-      point: { x: 87, y: 49 },
+      copy: ['大仏師・江里康慧の手による、', '祈りを象徴するエントランスオブジェ'],
+      point: { x: 67, y: 53 },
       elbow: { x: 76, y: 22 },
       anchor: { x: 66, y: 22 },
       card: { top: '21%', left: '22%', width: '38%' }
@@ -36,17 +32,26 @@ const IMAGE_ANNOTATIONS = {
   'dining-kitchen-living': [
     {
       id: 'main',
-      copy: ['エントランスの黒竹と対をなす白竹のスクリーンと、', '四季折々の花々がお出迎え'],
+      copy: ['黒竹と白竹のスクリーンに、', '四季の花々が静かに迎える'],
       point: { x: 68.5, y: 42 },
       elbow: { x: 57, y: 18 },
       anchor: { x: 46, y: 18 },
       card: { top: '17%', left: '8%', width: '38%' }
+    },
+    {
+      id: 'pillar',
+      copy: ['無数の柱を、金剛組の技で二本へ。', '広々としたLDKを実現'],
+      point: { x: 44, y: 50 },
+      elbow: { x: 65, y: 68 },
+      anchor: { x: 78, y: 68 },
+      card: { top: '67%', left: '60%', width: '38%' }
     }
   ],
+  'dining': [],
   'master-bedroom': [
     {
       id: 'main',
-      copy: ['裕人礫翔の金を使用したオリジナルアート'],
+      copy: ['裕人礫翔のオリジナルアート'],
       point: { x: 87, y: 39 },
       elbow: { x: 74, y: 18 },
       anchor: { x: 62, y: 18 },
@@ -69,47 +74,67 @@ const IMAGE_ANNOTATIONS = {
       elbow: { x: 38, y: 27 },
       anchor: { x: 27, y: 27 },
       card: { top: '26%', left: '6%', width: '40%' }
+    },
+    {
+      id: 'bottom',
+      copy: ['透かし障子を用いた、和の意匠'],
+      point: { x: 12.2, y: 58 },
+      elbow: { x: 28, y: 43 },
+      anchor: { x: 40, y: 43 },
+      card: { top: '42%', left: '12%', width: '40%' }
+    }
+  ],
+  'inner-garden-b': [
+    {
+      id: 'main',
+      copy: ['壇落ちの滝より流れ出る水が、', '池へと満ちる'],
+      point: { x: 55, y: 95 },
+      elbow: { x: 65, y: 22 },
+      anchor: { x: 76, y: 22 },
+      card: { top: '21%', left: '55%', width: '38%' }
     }
   ],
   'hiroma-hanare': [
     {
       id: 'main',
-      copy: ['透かし障子を用いた、和の意匠'],
-      point: { x: 12.2, y: 49 },
-      elbow: { x: 28, y: 22 },
-      anchor: { x: 40, y: 22 },
-      card: { top: '21%', left: '12%', width: '40%' }
+      copy: ['十一代和泉守兼定によるディスプレイ'],
+      point: { x: 47, y: 60 },
+      elbow: { x: 55, y: 58 },
+      anchor: { x: 66, y: 58 },
+      card: { top: '58%', left: '55%', width: '38%' }
     }
   ],
   'tea-room-hanare': [
     {
       id: 'top',
-      copy: ['茶室は千利休の時代から続く伝統工法を受け継ぎ、中村外二工務店の技で蘇る'],
-      point: { x: 71.6, y: 8 },
-      elbow: { x: 61, y: 18 },
-      anchor: { x: 50, y: 18 },
-      card: { top: '17%', left: '10%', width: '38%' }
+      copy: ['竹をテーマとした茶室を、', '中村外二の技で蘇らせる'],
+      point: { x: 30, y: 8 },
+      elbow: { x: 20, y: 18 },
+      anchor: { x: 10, y: 18 },
+      card: { top: '17%', left: '2%', width: '38%' }
     },
+  ],
+  'bathroom-kura': [
     {
-      id: 'center',
-      copy: ['禅師 伊藤東凌が心に留めた、一幅の掛け軸'],
-      point: { x: 62.8, y: 32 },
-      elbow: { x: 51, y: 28 },
-      anchor: { x: 40, y: 28 },
-      card: { top: '27%', left: '8%', width: '38%' }
+      id: 'main',
+      copy: ['ここにしか存在しない、', 'アルマーニ / カーザの家具'],
+      point: { x: 68, y: 48 },
+      elbow: { x: 65, y: 68 },
+      anchor: { x: 76, y: 68 },
+      card: { top: '67%', left: '58%', width: '38%' }
     }
   ],
-  'bathroom-kura': [],
   'bathroom-archive': [
     {
       id: 'main',
-      copy: ['青竹を用いた、みずみずしい竹のオブジェ'],
+      copy: ['青竹による、みずみずしさを宿すオブジェ'],
       point: { x: 8.5, y: 46 },
       elbow: { x: 27, y: 21 },
       anchor: { x: 38, y: 21 },
       card: { top: '20%', left: '10%', width: '40%' }
     }
-  ]
+  ],
+  'gallery-12': []
 };
 
 const GALLERY_ITEMS = [
@@ -140,7 +165,7 @@ const GALLERY_ITEMS = [
   {
     id: 'master-bedroom',
     label: 'MASTER BEDROOM / 主屋 2F',
-    beforeSrc: '/assets/images/before/5before_sm.jpg',
+    beforeSrc: '/assets/images/before/5before_sm.png',
     afterSrc: '/assets/images/propatyinfo/5MASTERBEDROOM.jpg'
   },
   {
@@ -182,6 +207,10 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
   const activeGalleryItem = GALLERY_ITEMS.find((item) => item.id === activeGalleryId) ?? GALLERY_ITEMS[0];
   const activeGalleryIndex = GALLERY_ITEMS.findIndex((item) => item.id === activeGalleryId);
   const activeGallerySrc = activeView === 'before' ? activeGalleryItem.beforeSrc : activeGalleryItem.afterSrc;
+  const prevGalleryItem = GALLERY_ITEMS[(activeGalleryIndex - 1 + GALLERY_ITEMS.length) % GALLERY_ITEMS.length];
+  const nextGalleryItem = GALLERY_ITEMS[(activeGalleryIndex + 1) % GALLERY_ITEMS.length];
+  const prevGallerySrc = activeView === 'before' ? prevGalleryItem.beforeSrc : prevGalleryItem.afterSrc;
+  const nextGallerySrc = activeView === 'before' ? nextGalleryItem.beforeSrc : nextGalleryItem.afterSrc;
   const activeAnnotations = activeView === 'after' ? IMAGE_ANNOTATIONS[activeGalleryId] || [] : [];
   const activeAnnotation = activeAnnotations.find((annotation) => annotation.id === activeAnnotationId) ?? null;
   const isLongGalleryLabel = activeGalleryItem.label.length > 20;
@@ -226,114 +255,142 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
         </div>
 
         <div className="property-floor-gallery__viewer">
-          <div className="property-floor-gallery__frame">
-            <button
-              type="button"
-              className="property-floor-gallery__nav property-floor-gallery__nav--prev"
-              onClick={() => goToGalleryItem(activeGalleryIndex - 1)}
-              aria-label="前の画像へ"
-            >
-              <span aria-hidden="true">‹</span>
-            </button>
+          <button
+            type="button"
+            className="property-floor-gallery__preview property-floor-gallery__preview--prev"
+            onClick={() => goToGalleryItem(activeGalleryIndex - 1)}
+            aria-label={`${prevGalleryItem.label} へ移動`}
+          >
             <img
-              key={activeGalleryId}
-              src={activeGallerySrc}
-              alt={activeGalleryItem.label}
-              className="property-floor-gallery__image"
+              src={prevGallerySrc}
+              alt={prevGalleryItem.label}
+              className="property-floor-gallery__preview-image"
             />
-            <button
-              type="button"
-              className="property-floor-gallery__nav property-floor-gallery__nav--next"
-              onClick={() => goToGalleryItem(activeGalleryIndex + 1)}
-              aria-label="次の画像へ"
-            >
-              <span aria-hidden="true">›</span>
-            </button>
-            {activeAnnotations.length ? (
-              <div className="property-floor-gallery__pointers">
-                {activeAnnotation ? (
-                  <svg
-                    className="property-floor-gallery__callout-line"
-                    viewBox="0 0 100 100"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d={`M ${activeAnnotation.point.x} ${activeAnnotation.point.y} L ${activeAnnotation.elbow.x} ${activeAnnotation.elbow.y} L ${activeAnnotation.anchor.x} ${activeAnnotation.anchor.y}`}
-                    />
-                  </svg>
-                ) : null}
+          </button>
 
-                {activeAnnotations.map((annotation) => {
-                  const isActive = annotation.id === activeAnnotation?.id;
-
-                  return (
-                    <button
-                      key={annotation.id}
-                      type="button"
-                      className={`property-floor-gallery__pointer${isActive ? ' is-active' : ''}`}
-                      style={{ left: `${annotation.point.x}%`, top: `${annotation.point.y}%` }}
-                      onClick={() =>
-                        setActiveAnnotationId((current) => (current === annotation.id ? '' : annotation.id))
-                      }
-                      aria-label={annotation.copy.join('')}
-                      aria-pressed={isActive}
+          <div className="property-floor-gallery__stage">
+            <div className="property-floor-gallery__frame">
+              <button
+                type="button"
+                className="property-floor-gallery__nav property-floor-gallery__nav--prev"
+                onClick={() => goToGalleryItem(activeGalleryIndex - 1)}
+                aria-label="前の画像へ"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </button>
+              <img
+                key={activeGalleryId}
+                src={activeGallerySrc}
+                alt={activeGalleryItem.label}
+                className="property-floor-gallery__image"
+              />
+              <button
+                type="button"
+                className="property-floor-gallery__nav property-floor-gallery__nav--next"
+                onClick={() => goToGalleryItem(activeGalleryIndex + 1)}
+                aria-label="次の画像へ"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </button>
+              {activeAnnotations.length ? (
+                <div className="property-floor-gallery__pointers">
+                  {activeAnnotation ? (
+                    <svg
+                      className="property-floor-gallery__callout-line"
+                      viewBox="0 0 100 100"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
                     >
-                      <span className="property-floor-gallery__pointer-core"></span>
-                    </button>
-                  );
-                })}
+                      <path
+                        d={`M ${activeAnnotation.point.x} ${activeAnnotation.point.y} L ${activeAnnotation.elbow.x} ${activeAnnotation.elbow.y} L ${activeAnnotation.anchor.x} ${activeAnnotation.anchor.y}`}
+                      />
+                    </svg>
+                  ) : null}
 
-                {activeAnnotation ? (
-                  <div
-                    className="property-floor-gallery__callout"
-                    style={activeAnnotation.card}
-                  >
-                    <button
-                      type="button"
-                      className="property-floor-gallery__callout-close"
-                      onClick={() => setActiveAnnotationId('')}
-                      aria-label="注釈を閉じる"
+                  {activeAnnotations.map((annotation) => {
+                    const isActive = annotation.id === activeAnnotation?.id;
+
+                    return (
+                      <button
+                        key={annotation.id}
+                        type="button"
+                        className={`property-floor-gallery__pointer${isActive ? ' is-active' : ''}`}
+                        style={{ left: `${annotation.point.x}%`, top: `${annotation.point.y}%` }}
+                        onClick={() =>
+                          setActiveAnnotationId((current) => (current === annotation.id ? '' : annotation.id))
+                        }
+                        aria-label={annotation.copy.join('')}
+                        aria-pressed={isActive}
+                      >
+                        <span className="property-floor-gallery__pointer-core"></span>
+                      </button>
+                    );
+                  })}
+
+                  {activeAnnotation ? (
+                    <div
+                      className="property-floor-gallery__callout"
+                      style={activeAnnotation.card}
                     >
-                      <span></span>
-                      <span></span>
-                    </button>
-                    <span className="property-floor-gallery__callout-accent"></span>
-                    <div className="property-floor-gallery__callout-body">
-                      {activeAnnotation.copy.map((line) => (
-                        <p key={`${activeAnnotation.id}-${line}`} className="property-floor-gallery__callout-line-text">
-                          {line}
-                        </p>
-                      ))}
+                      <button
+                        type="button"
+                        className="property-floor-gallery__callout-close"
+                        onClick={() => setActiveAnnotationId('')}
+                        aria-label="注釈を閉じる"
+                      >
+                        <span></span>
+                        <span></span>
+                      </button>
+                      <span className="property-floor-gallery__callout-accent"></span>
+                      <div className="property-floor-gallery__callout-body">
+                        {activeAnnotation.copy.map((line) => (
+                          <p key={`${activeAnnotation.id}-${line}`} className="property-floor-gallery__callout-line-text">
+                            {line}
+                          </p>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
           </div>
 
-          <div className="property-floor-gallery__thumbnails" role="tablist" aria-label="Floor image gallery thumbnails">
-            {GALLERY_ITEMS.map((item) => {
-              const isActive = item.id === activeGalleryId;
+          <button
+            type="button"
+            className="property-floor-gallery__preview property-floor-gallery__preview--next"
+            onClick={() => goToGalleryItem(activeGalleryIndex + 1)}
+            aria-label={`${nextGalleryItem.label} へ移動`}
+          >
+            <img
+              src={nextGallerySrc}
+              alt={nextGalleryItem.label}
+              className="property-floor-gallery__preview-image"
+            />
+          </button>
+        </div>
 
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  className={`property-floor-gallery__thumb${isActive ? ' is-active' : ''}`}
-                  onClick={() => goToGalleryItem(GALLERY_ITEMS.findIndex((galleryItem) => galleryItem.id === item.id))}
-                >
-                  <img
-                    src={item.afterSrc}
-                    alt={item.label}
-                    className="property-floor-gallery__thumb-image"
-                  />
-                </button>
-              );
-            })}
-          </div>
+        <div className="property-floor-gallery__thumbnails" role="tablist" aria-label="Floor image gallery thumbnails">
+          {GALLERY_ITEMS.map((item) => {
+            const isActive = item.id === activeGalleryId;
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={`property-floor-gallery__thumb${isActive ? ' is-active' : ''}`}
+                onClick={() => goToGalleryItem(GALLERY_ITEMS.findIndex((galleryItem) => galleryItem.id === item.id))}
+              >
+                <img
+                  src={item.afterSrc}
+                  alt={item.label}
+                  className="property-floor-gallery__thumb-image"
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

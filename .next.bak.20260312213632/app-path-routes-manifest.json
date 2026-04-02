@@ -1,0 +1,11 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/access/session/route": "/api/access/session",
+  "/api/access/request/route": "/api/access/request",
+  "/api/contact/request/route": "/api/contact/request",
+  "/api/access/verify/route": "/api/access/verify",
+  "/privacy-policy/page": "/privacy-policy",
+  "/terms/page": "/terms",
+  "/property/page": "/property",
+  "/page": "/"
+}

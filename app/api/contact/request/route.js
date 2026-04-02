@@ -90,12 +90,18 @@ export async function POST(request) {
       timeZone: 'Asia/Tokyo'
     });
 
+    const isLocalDev = process.env.NODE_ENV !== 'production';
+
     if (!resendApiKey || !fromEmail || receivingEmails.length === 0) {
-      console.error('[contact/request] missing config', configState);
-      return NextResponse.json(
-        { ok: false, message: 'メール送信設定が未完了です。時間をおいて再度お試しください。' },
-        { status: 500 }
-      );
+      if (isLocalDev) {
+        console.log('[contact/request:dev] mail config missing — skipping email, recording to Sheets only');
+      } else {
+        console.error('[contact/request] missing config', configState);
+        return NextResponse.json(
+          { ok: false, message: 'メール送信設定が未完了です。時間をおいて再度お試しください。' },
+          { status: 500 }
+        );
+      }
     }
 
     if (/@.*resend\.dev>?$/i.test(fromEmail)) {
@@ -135,6 +141,9 @@ export async function POST(request) {
       </div>
     `;
 
+    if (isLocalDev && (!resendApiKey || !fromEmail || receivingEmails.length === 0)) {
+      console.log('[contact/request:dev] skipped email send');
+    } else {
     const [notificationResponse, confirmationResponse] = await Promise.all([
       fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -173,6 +182,7 @@ export async function POST(request) {
     if (!confirmationResponse.ok) {
       const text = await confirmationResponse.text();
       throw new Error(`Contact confirmation delivery failed: ${confirmationResponse.status} ${text}`);
+    }
     }
 
     try {

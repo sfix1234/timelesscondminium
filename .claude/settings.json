@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/taishu/timelesscondminium/timelesscondminium/**)",
+      "Bash(vercel env:*)",
+      "Bash(curl -s -X POST http://localhost:3002/api/access/request -H \"Content-Type: application/json\" -d '{\"\"\"\"name\"\"\"\":\"\"\"\"テスト太郎\"\"\"\",\"\"\"\"email\"\"\"\":\"\"\"\"test@example.com\"\"\"\",\"\"\"\"countryCode\"\"\"\":\"\"\"\"+81\"\"\"\",\"\"\"\"phoneNumber\"\"\"\":\"\"\"\"09012345678\"\"\"\",\"\"\"\"wealthBand\"\"\"\":\"\"\"\"500000000-1000000000\"\"\"\"}')",
+      "Bash(curl -s -X POST http://localhost:3002/api/access/request -H \"Content-Type: application/json\" -d '{\"\"name\"\":\"\"テスト太郎\"\",\"\"email\"\":\"\"test@example.com\"\",\"\"countryCode\"\":\"\"+81\"\",\"\"phoneNumber\"\":\"\"09012345678\"\",\"\"wealthBand\"\":\"\"500000000-1000000000\"\"}')",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s -X POST http://localhost:3000/api/access/request -H \"Content-Type: application/json\" -d '{\"\"name\"\":\"\"テスト太郎\"\",\"\"email\"\":\"\"test@example.com\"\",\"\"countryCode\"\":\"\"+81\"\",\"\"phoneNumber\"\":\"\"09012345678\"\",\"\"wealthBand\"\":\"\"500000000-1000000000\"\"}')",
+      "Bash(printf \"timeless-sheets@timelesscondominiumcom.iam.gserviceaccount.com\")",
+      "Bash(vercel --prod)",
+      "Bash(vercel)",
+      "Bash(vercel alias:*)",
+      "Bash(printf \"true\")",
+      "Bash(vercel -e CLIENT_PREVIEW_ENABLED=true)",
+      "Bash(vercel -e CLIENT_PREVIEW_ENABLED=true -e CLIENT_PREVIEW_USERNAME=timeless -e CLIENT_PREVIEW_PASSWORD=preview2026)",
+      "Bash(curl -s -u \"timeless:preview2026\" https://timelesscondminium-client-preview.vercel.app/)",
+      "Bash(ls -la /Users/taishu/timelesscondminium/timelesscondminium/public/assets/images/artist_photo/IZUMINOKAMIKANESADA*)",
+      "Bash(ls -la /Users/taishu/Downloads/IZUMINOKAMIKANESADA*)",
+      "Bash(ls -lt /Users/taishu/Downloads/*.jpg /Users/taishu/Downloads/*.jpeg /Users/taishu/Downloads/*.png /Users/taishu/Downloads/*.webp)",
+      "Bash(sed -n '150,162p' /Users/taishu/timelesscondminium/timelesscondminium/app/globals.css)",
+      "Bash(sed -n '622,635p' /Users/taishu/timelesscondminium/timelesscondminium/app/globals.css)"
+    ],
+    "additionalDirectories": [
+      "/Users/taishu/timelesscondminium/timelesscondminium/public/assets/images/gallery/IzuminokamiKanesada"
+    ]
+  }
+}

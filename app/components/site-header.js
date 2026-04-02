@@ -1,4 +1,4 @@
-export default function SiteHeader({ headerClassName = '', navItems = [], centerTitle = '' }) {
+export default function SiteHeader({ headerClassName = '', navItems = [], centerTitle = '', scrolledTitle = '' }) {
   const headerClass = ['header', headerClassName].filter(Boolean).join(' ');
 
   return (
@@ -31,10 +31,17 @@ export default function SiteHeader({ headerClassName = '', navItems = [], center
 
       <header className={headerClass}>
         <div className="jpn-badge">
-          <span className="jpn-badge__label" aria-label="Language">JPN</span>
+          <button className="jpn-badge__label" id="langToggle" type="button" aria-label="Switch language">JPN</button>
           <span className="jpn-badge__line"></span>
+          <div className="jpn-badge__menu" id="langMenu">
+            <button className="jpn-badge__menu-item" type="button" data-lang="ja">JPN</button>
+            <button className="jpn-badge__menu-item" type="button" data-lang="en">ENG</button>
+            <button className="jpn-badge__menu-item" type="button" data-lang="koto">江東語</button>
+            <button className="jpn-badge__menu-item" type="button" data-lang="yue">広東語</button>
+          </div>
         </div>
         {centerTitle ? <h1 className="center-block__title header__center-title">{centerTitle}</h1> : null}
+        {scrolledTitle ? <p className="header__scrolled-title">{scrolledTitle}</p> : null}
         <div className="hamburger" role="button" aria-label="Menu">
           <span className="hamburger__line"></span>
           <span className="hamburger__line"></span>

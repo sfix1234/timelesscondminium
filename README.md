@@ -43,6 +43,19 @@ npm run start
 - `ACCESS_RECEIVING_EMAIL` (推奨 / 受信用メールアドレス。複数はカンマ区切り)
 - `ACCESS_RECIVING_EMAIL` (任意 / 旧設定・誤記フォールバック)
 - `ACCESS_ADMIN_EMAIL` (任意 / 申請通知の送信先)
+- `CLIENT_PREVIEW_ENABLED` (任意 / クライアント配布用環境でのみ `true`)
+- `CLIENT_PREVIEW_USERNAME` (任意 / クライアント配布用Basic認証のユーザー名)
+- `CLIENT_PREVIEW_PASSWORD` (任意 / クライアント配布用Basic認証のパスワード)
+
+## クライアント配布用環境
+
+本番URLとは別に、クライアント共有専用のURLを作る場合は以下を設定します。
+
+- Vercelで別Projectまたは専用Previewドメインを用意する
+- その環境にだけ `CLIENT_PREVIEW_ENABLED=true` を設定する
+- `CLIENT_PREVIEW_USERNAME` と `CLIENT_PREVIEW_PASSWORD` を設定する
+
+有効化すると、その環境では全ページにBasic認証がかかり、あわせて `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex` が付与されます。
 
 ## 主要アセット
 

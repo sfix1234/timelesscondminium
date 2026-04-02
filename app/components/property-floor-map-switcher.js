@@ -19,6 +19,7 @@ const FLOORS = [
 export default function PropertyFloorMapSwitcher() {
   const [activeFloor, setActiveFloor] = useState('1f');
   const activeFloorMap = FLOORS.find((floor) => floor.id === activeFloor) ?? FLOORS[0];
+  const isFirstFloor = activeFloorMap.id === '1f';
 
   return (
     <div className="property-info__detail-figure">
@@ -50,8 +51,20 @@ export default function PropertyFloorMapSwitcher() {
           <img
             src={activeFloorMap.image}
             alt={`THE SILENCE floor map ${activeFloorMap.label}`}
-            className="property-info__detail-image"
+            className={`property-info__detail-image${isFirstFloor ? ' property-info__detail-image--floor-1f' : ''}`}
           />
+          <div className="property-info__road-overlay" aria-hidden="true" style={{ display: isFirstFloor ? undefined : 'none' }}>
+            <div className="property-info__road property-info__road--left">
+              <span className="property-info__road-line property-info__road-line--outer"></span>
+              <span className="property-info__road-label">上七軒通り</span>
+              <span className="property-info__road-line property-info__road-line--inner"></span>
+            </div>
+            <div className="property-info__road property-info__road--right">
+              <span className="property-info__road-line property-info__road-line--outer"></span>
+              <span className="property-info__road-label">五辻通り</span>
+              <span className="property-info__road-line property-info__road-line--inner"></span>
+            </div>
+          </div>
         </div>
       </div>
 

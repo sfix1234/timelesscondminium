@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 
 const COUNTRY_CODES = [
   { value: '+81', label: 'JP +81' },
@@ -110,6 +111,7 @@ function validate(form) {
 }
 
 export default function PropertyContactForm() {
+  const router = useRouter();
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('');
@@ -143,70 +145,74 @@ export default function PropertyContactForm() {
         return;
       }
 
-      setStatus('送信が完了しました。担当者より折り返しご連絡いたします。');
       setForm(INITIAL_FORM);
       setErrors({});
+      window.location.href = '/thanks';
     });
   };
 
   return (
     <form className="property-contact-block__form" onSubmit={handleSubmit}>
-      <label>
-        お名前 *
-        <input
-          type="text"
-          placeholder="山田 太郎"
-          value={form.name}
-          onChange={(event) => updateField('name', event.target.value)}
-          autoComplete="name"
-        />
-        {errors.name ? <small>{errors.name}</small> : null}
-      </label>
-      <label>
-        メールアドレス *
-        <input
-          type="email"
-          placeholder="example@email.com"
-          value={form.email}
-          onChange={(event) => updateField('email', event.target.value)}
-          autoComplete="email"
-        />
-        {errors.email ? <small>{errors.email}</small> : null}
-      </label>
-      <label>
-        会社名
-        <input
-          type="text"
-          placeholder="株式会社○○"
-          value={form.company}
-          onChange={(event) => updateField('company', event.target.value)}
-          autoComplete="organization"
-        />
-      </label>
-      <div className="property-contact-block__field">
-        電話番号 *
-        <div className="property-contact-block__phone">
-          <select
-            value={form.countryCode}
-            onChange={(event) => updateField('countryCode', event.target.value)}
-            aria-label="国際番号"
-          >
-            {COUNTRY_CODES.map((country) => (
-              <option key={country.value} value={country.value}>
-                {country.label}
-              </option>
-            ))}
-          </select>
+      <div className="property-contact-block__form-row property-contact-block__form-row--double">
+        <label>
+          お名前 *
           <input
-            type="tel"
-            placeholder="090-1234-5678"
-            value={form.phoneNumber}
-            onChange={(event) => updateField('phoneNumber', event.target.value)}
-            autoComplete="tel-national"
-            inputMode="tel"
+            type="text"
+            placeholder="山田 太郎"
+            value={form.name}
+            onChange={(event) => updateField('name', event.target.value)}
+            autoComplete="name"
           />
+          {errors.name ? <small>{errors.name}</small> : null}
+        </label>
+        <label>
+          メールアドレス *
+          <input
+            type="email"
+            placeholder="example@email.com"
+            value={form.email}
+            onChange={(event) => updateField('email', event.target.value)}
+            autoComplete="email"
+          />
+          {errors.email ? <small>{errors.email}</small> : null}
+        </label>
+      </div>
+      <div className="property-contact-block__form-row property-contact-block__form-row--double">
+        <label>
+          会社名
+          <input
+            type="text"
+            placeholder="株式会社○○"
+            value={form.company}
+            onChange={(event) => updateField('company', event.target.value)}
+            autoComplete="organization"
+          />
+        </label>
+        <div className="property-contact-block__field">
+          電話番号 *
+          <div className="property-contact-block__phone">
+            <select
+              value={form.countryCode}
+              onChange={(event) => updateField('countryCode', event.target.value)}
+              aria-label="国際番号"
+            >
+              {COUNTRY_CODES.map((country) => (
+                <option key={country.value} value={country.value}>
+                  {country.label}
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              placeholder="090-1234-5678"
+              value={form.phoneNumber}
+              onChange={(event) => updateField('phoneNumber', event.target.value)}
+              autoComplete="tel-national"
+              inputMode="tel"
+            />
+          </div>
+          {errors.phoneNumber ? <small>{errors.phoneNumber}</small> : null}
         </div>
-        {errors.phoneNumber ? <small>{errors.phoneNumber}</small> : null}
       </div>
       <label>
         お問い合わせ内容 *

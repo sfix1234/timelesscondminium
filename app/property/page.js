@@ -14,7 +14,8 @@ import { ACCESS_SESSION_COOKIE, getSessionRecord } from '../../lib/access-contro
 export default async function PropertyPage() {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get(ACCESS_SESSION_COOKIE)?.value;
-  const isUnlocked = Boolean(getSessionRecord(sessionToken));
+  const isClientPreview = String(process.env.CLIENT_PREVIEW_ENABLED || '').trim().toLowerCase() === 'true';
+  const isUnlocked = isClientPreview || Boolean(getSessionRecord(sessionToken));
 
   if (!isUnlocked) {
     return <AccessGate initialUnlocked={false}><></></AccessGate>;
@@ -24,7 +25,7 @@ export default async function PropertyPage() {
     <div className="property-page">
       <div className="property-hero__header">
         <SiteHeader
-          centerTitle="PROPERTY"
+          scrolledTitle="DETAILS"
           navItems={[
             { labelJa: 'TOP', labelEn: 'TOP', target: '.property-hero--top' },
             { labelJa: 'PROPERTY', labelEn: 'PROPERTY', target: '#property-kuma' },
@@ -49,7 +50,6 @@ export default async function PropertyPage() {
           <div className="property-hero__overlay"></div>
           <div className="hero__bottom-logo">
             <div className="center-block hero__logo-overlay">
-              <span className="center-block__number">CASE01</span>
             </div>
             <img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" className="hero__bottom-logo-image" />
           </div>
@@ -63,6 +63,7 @@ export default async function PropertyPage() {
               </div>
 
               <PropertyKumaVideo />
+              <p className="property-kuma__subcopy">Kengo Kuma Speaks</p>
 
             </div>
 
@@ -84,7 +85,7 @@ export default async function PropertyPage() {
               <div className="property-access__map-column">
                 <div className="property-access__map-wrap">
                   <img
-                    src="/assets/images/map-image/map-image.jpg"
+                    src="/assets/images/map-image/map-image.png"
                     className="property-access__map property-access__embed"
                     alt="上七軒 旧長谷川邸 地図"
                     loading="lazy"
@@ -173,32 +174,22 @@ export default async function PropertyPage() {
               </div>
             </div>
           </div>
-
-          <div className="map-popup" id="mapPopup">
-            <div className="map-popup__backdrop" data-map-close></div>
-            <div className="map-popup__body">
-              <div className="map-popup__center">
-                <img src="/assets/images/map-image/image-popup.png" alt="北野天満宮 周辺拡大" className="map-popup__circle" />
-              </div>
-            </div>
-            <button className="map-popup__close" type="button" data-map-close>
-              <span></span><span></span>
-              <p>CLOSE</p>
-            </button>
-          </div>
         </section>
 
         <section className="property-spec">
           <div className="property-spec__inner">
-            <h2 className="property-spec__title">「THE SILENCE - Furnished by ARMANI / CASA」物件概要</h2>
+            <h2 className="property-spec__title">Project Overview</h2>
             <dl className="property-spec__table">
-              <div className="property-spec__row"><dt>物件概要</dt><dd>THE SILENCE - Furnished by ARMANI / CASA</dd></div>
+              <div className="property-spec__row"><dt>プロジェクト名</dt><dd>THE SILENCE - Furnished by ARMANI / CASA</dd></div>
               <div className="property-spec__row"><dt>所在地</dt><dd>〒602-8381 京都府京都市上京区真盛町698</dd></div>
               <div className="property-spec__row"><dt>交通</dt><dd>京福電気鉄道「北野白梅町駅」から徒歩約11分</dd></div>
               <div className="property-spec__row"><dt>敷地面積</dt><dd>256.95 ㎡</dd></div>
               <div className="property-spec__row"><dt>建築面積</dt><dd>155.00平米</dd></div>
               <div className="property-spec__row"><dt>延床面積</dt><dd>284.26 ㎡（計画予定）</dd></div>
-              <div className="property-spec__row"><dt>建物用途</dt><dd>別荘及びホテルコンドミニアム</dd></div>
+              <div className="property-spec__row"><dt>構成</dt><dd>2BR ＋ 大広間（和の饗宴｜お座敷・宴席対応） ＋ 数寄屋造り茶室 ＋ サウナ＆スパ ＋ 水盤庭園</dd></div>
+              <div className="property-spec__row"><dt>物件種別</dt><dd>迎賓邸宅</dd></div>
+              <div className="property-spec__row"><dt>権利形態</dt><dd>所有権</dd></div>
+              <div className="property-spec__row"><dt>引渡条件</dt><dd>フルリノベーション済・現況有姿</dd></div>
               <div className="property-spec__row"><dt>着工時期</dt><dd>2026年夏秋（予定）</dd></div>
               <div className="property-spec__row"><dt>竣工時期</dt><dd>2028年春夏（予定）</dd></div>
               <div className="property-spec__row"><dt>デザイン監修</dt><dd>株式会社隈研吾建築都市設計事務所</dd></div>
@@ -207,8 +198,11 @@ export default async function PropertyPage() {
               <div className="property-spec__row"><dt>造園</dt><dd>御庭植治株式会社</dd></div>
               <div className="property-spec__row"><dt>家具 / アクセサリー</dt><dd>アルマーニ / カーザ</dd></div>
               <div className="property-spec__row"><dt>設計監理</dt><dd>株式会社アトリエ・プリコラージュ</dd></div>
+              <div className="property-spec__row"><dt>販売パートナー</dt><dd>TonTon Forbes Global Properties（株式会社TonTon）</dd></div>
+              <div className="property-spec__row"><dt>Executive Producer</dt><dd>中村建治</dd></div>
               <div className="property-spec__row"><dt>事業主</dt><dd>株式会社フィード</dd></div>
               <div className="property-spec__row"><dt>販売価格</dt><dd>ASK</dd></div>
+              <div className="property-spec__row"><dt>備考</dt><dd>一括決済をご希望される場合、価格交渉のご相談を承ります。</dd></div>
             </dl>
           </div>
         </section>
@@ -225,34 +219,38 @@ export default async function PropertyPage() {
               />
             </div>
 
-            <div className="property-director__identity">
-              <div className="property-director__meta">
-                <p className="property-director__company">株式会社フィード 代表取締役</p>
+            <div className="property-director__content">
+              <div className="property-director__identity">
+                <div className="property-director__meta">
+                  <p className="property-director__company">株式会社フィード 代表取締役</p>
+                </div>
+                <h3 className="property-director__name">中村建治</h3>
               </div>
-              <h3 className="property-director__name">中村建治</h3>
+
+              <div className="property-director__copy">
+                <p className="property-director__text">
+                  1972年生まれ、京都府出身。数々のBtoC営業でトップセールスの座を獲得。2007年、株式会社フィードを美容分野に従事した会社として設立。2011年、東日本大震災を契機に不動産事業へ業態転換。首都圏でのシングル層に向けた実需用コンパクトマンションの需要を開拓。2015年、デベロッパーとしてマンション開発事業を開始。「コンセプトブランディングデベロッパー」を標榜し、世界的ブランドとの連携によるマンション開発を次々と実現。日本市場における、「ブランデットレジデンス」の第一人者。実績として過去10年間で累計2000戸を超える分譲マンションを開発及び販売。<br />現在は、今後の更なるインバウンド需要の増加を視野に、海外富裕層に向けたマーケットの開拓に着手。新プロジェクトの第一弾では、京都・上七軒に佇む「旧 長谷川邸」を舞台に、世界最高峰の匠を招聘。「日本に宿る本質的な価値を、"邸宅"という姿で、百年後の世界へと紡ぐ」という志のもと、「THE TIMELESS CONDOMINIUM」を推進する。
+                </p>
+              </div>
+
+              <div className="property-director__book">
+                <p className="property-director__book-label">【著書】</p>
+                <p className="property-director__book-title">『営業道』— 人間力を磨き、自らの市場価値を高める極意（幻冬舎刊）</p>
+                <p className="property-director__book-sub">主要書店において、販売実績首位を獲得。</p>
+              </div>
             </div>
+          </div>
+        </section>
 
-            <p className="property-director__text">
-              1972年生まれ、京都府出身。<br />
-              数々のBtoC営業でトップセールスの座を獲得。2007年、株式会社フィードを美容分野に従事した会社として設立。<br />
-              2011年、東日本大震災を契機に不動産事業へ業態転換。<br />
-              首都圏でのシングル層に向けた実需用コンパクトマンションの需要を開拓。<br />
-              2015年、デベロッパーとしてマンション開発事業を開始。<br />
-              「コンセプトブランディングデベロッパー」を標榜し、世界的ブランドとの連携によるマンション開発を次々と実現。<br />
-              日本市場における、「ブランデットレジデンス」の第一人者。<br />
-              実績として過去10年間で累計2000戸を超える分譲マンションを開発及び販売。
-            </p>
-
-            <p className="property-director__text">
-              現在は、今後の更なるインバウンド需要の増加を視野に、海外富裕層に向けたマーケットの開拓に着手。<br />
-              新プロジェクトの第一弾では、京都・上七軒に佇む「旧 長谷川邸」を舞台に、世界最高峰の匠を招聘。<br />
-              「日本に宿る本質的な価値を、"邸宅"という姿で、百年後の世界へと紡ぐ」という志のもと、「THE TIMELESS CONDOMINIUM」を推進する。
-            </p>
-
-            <div className="property-director__book">
-              <p className="property-director__book-label">【著書】</p>
-              <p className="property-director__book-title">『営業道』— 人間力を磨き、自らの市場価値を高める極意（幻冬舎刊）</p>
-              <p className="property-director__book-sub">主要書店において、販売実績首位を獲得。</p>
+        <section className="armani-homage">
+          <div className="armani-homage__media"></div>
+          <div className="armani-homage__overlay"></div>
+          <div className="armani-homage__inner">
+            <div className="armani-homage__copy">
+              <p>日本と京都をこよなく愛されたジョルジオ・アルマーニ</p>
+              <p>世界の巨匠として築き上げられた美と気品に、深甚なる敬意を表します</p>
+              <p>本プロジェクトがささやかながらも</p>
+              <p>オマージュとして捧げられることを、心より願っております</p>
             </div>
           </div>
         </section>
@@ -262,7 +260,7 @@ export default async function PropertyPage() {
             <div className="property-contact-block__intro">
               <h2 className="property-contact-block__title">CONTACT</h2>
               <p className="property-contact-block__lead">
-                THE SILENCE Furnished by ARMANI / CASAに関するお問い合わせは、<br />
+                THE SILENCE - Furnished by ARMANI / CASAに関するお問い合わせは、<br />
                 WHATSAPPにご連絡いただくか、下記フォームよりお気軽にご連絡ください。<br />
                 担当者より折り返しご連絡をさせていただきます。
               </p>
@@ -280,19 +278,6 @@ export default async function PropertyPage() {
             <p className="property-contact-block__note">またはフォームにご記入ください</p>
 
             <PropertyContactForm />
-          </div>
-        </section>
-
-        <section className="armani-homage">
-          <div className="armani-homage__media"></div>
-          <div className="armani-homage__overlay"></div>
-          <div className="armani-homage__inner">
-            <div className="armani-homage__copy">
-              <p>日本と京都をこよなく愛されたジョルジオ・アルマーニ</p>
-              <p>世界の巨匠として築き上げられた美と気品に、深甚なる敬意を表します</p>
-              <p>本プロジェクトがささやかながらも</p>
-              <p>オマージュとして捧げられることを、心より願っております</p>
-            </div>
           </div>
         </section>
 

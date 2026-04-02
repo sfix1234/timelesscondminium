@@ -7,7 +7,6 @@ export default function SiteBehavior() {
     let cancelled = false;
     let propertySceneTrigger = null;
     let stagePhotoPinTrigger = null;
-    let floatingLogo = null;
     let cleanupFns = [];
     let scrollObserver = null;
 
@@ -66,12 +65,24 @@ export default function SiteBehavior() {
       cleanupFns.push(() => el.removeEventListener(event, handler, options));
       };
 
-    const i18nElements = document.querySelectorAll('[data-ja][data-en]');
-    i18nElements.forEach((el) => {
-      const text = el.getAttribute('data-ja');
-      if (text) el.innerHTML = text;
-    });
-    html.lang = 'ja';
+    const langToggle = document.getElementById('langToggle');
+    const langMenu = document.getElementById('langMenu');
+    const langItems = langMenu?.querySelectorAll('[data-lang]');
+    let currentLang = 'ja';
+
+    const applyLanguageBadge = (lang) => {
+      currentLang = lang;
+      const labelMap = { ja: 'JPN', en: 'ENG', koto: '江東語', yue: '広東語' };
+      const htmlLangMap = { ja: 'ja', en: 'en', koto: 'zh-Hans', yue: 'zh-Hant' };
+      if (langToggle) {
+        langToggle.textContent = labelMap[lang] || 'JPN';
+        langToggle.setAttribute('aria-label', 'Switch language');
+      }
+      html.lang = htmlLangMap[lang] || 'ja';
+      langMenu?.classList.remove('is-open');
+    };
+
+    applyLanguageBadge('ja');
 
     function playAfter(selector, delay) {
       setTimeout(() => {
@@ -87,6 +98,29 @@ export default function SiteBehavior() {
     playAfter('.hamburger', heroStart + 200);
     playAfter('.center-block__title', heroStart + 500);
     playAfter('.hero__logo-overlay', heroStart + 900);
+
+      on(langToggle, 'click', () => {
+      langMenu?.classList.toggle('is-open');
+      });
+
+      langItems?.forEach((item) => {
+      on(item, 'click', () => {
+        const lang = item.getAttribute('data-lang');
+        if (!lang || lang === currentLang) {
+          langMenu?.classList.remove('is-open');
+          return;
+        }
+        applyLanguageBadge(lang);
+      });
+      });
+
+      on(document, 'click', (e) => {
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      if (!target.closest('.jpn-badge')) {
+        langMenu?.classList.remove('is-open');
+      }
+      });
 
       const observeVisibleSection = (el) => {
       if (!el) return;
@@ -281,22 +315,58 @@ export default function SiteBehavior() {
       }
     });
 
+    const accessMapPin = document.querySelector('[data-map-pin]');
+    const accessZoomWrap = document.querySelector('.property-access__zoom-wrap');
+
+    on(accessMapPin, 'click', () => {
+      if (!accessZoomWrap) return;
+      accessZoomWrap.classList.add('is-visible');
+    });
+
     const centerBlock = document.querySelector('.center-block:not(.hero__logo-overlay)');
+    const floatingLogo = document.querySelector('.floating-logo');
     const storySection = document.querySelector('.story');
-    const storyBrandName = document.querySelector('.story__brand-name');
     const verticalCols = document.querySelectorAll('.story__vertical-col');
     const heroBg = document.querySelector('.hero__bg');
+    const propertyHeader = document.querySelector('.property-hero__header');
     const craftsmenSection = document.querySelector('.craftsmen');
     const stagePhotoSection = document.querySelector('.stage-photo');
     const registrationSection = document.querySelector('.registration');
     const propertyKumaSection = document.getElementById('property-kuma');
+    let stableViewportWidth = 0;
+    let stableViewportHeight = 0;
+    const measureViewport = () => ({
+      width:
+        window.visualViewport?.width
+        ?? document.documentElement.clientWidth
+        ?? window.innerWidth,
+      height:
+        window.visualViewport?.height
+        ?? document.documentElement.clientHeight
+        ?? window.innerHeight,
+    });
+    const getViewportHeight = () => {
+      const { width, height } = measureViewport();
+      const widthChanged = Math.abs(width - stableViewportWidth) > 1;
+
+      if (!stableViewportHeight || widthChanged) {
+        stableViewportWidth = width;
+        stableViewportHeight = height;
+        return stableViewportHeight;
+      }
+
+      // Keep the smallest viewport height on mobile so browser chrome changes
+      // do not cause fixed elements to jitter during scroll.
+      stableViewportHeight = Math.min(stableViewportHeight, height);
+      return stableViewportHeight;
+    };
       const updatePropertyScene = (sectionProgress, isSectionActive, isPinned) => {
       if (!propertyKumaSection) return;
 
       const revealStart = 0.12;
       const revealEnd = 0.5;
-      const detailStart = 0.38;
-      const detailEnd = 0.68;
+      const detailStart = 0.18;
+      const detailEnd = 0.48;
       const floorImageStart = 0.8;
       const floorImageEnd = 0.99;
 
@@ -322,18 +392,17 @@ export default function SiteBehavior() {
       propertyKumaSection.classList.toggle('is-property-floor-image-active', propertyFloorImageVisible);
     };
 
-      floatingLogo = document.createElement('div');
-      floatingLogo.className = 'floating-logo';
-      floatingLogo.innerHTML = '<div class="floating-logo__main"><img src="/assets/images/THE%20SILENCE_logo.png" alt="THE SILENCE" class="floating-logo__image" /></div>';
-      document.body.appendChild(floatingLogo);
-
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
           try {
             const scrollY = window.scrollY;
-            const vh = window.innerHeight;
+            const vh = getViewportHeight();
+
+            if (propertyHeader) {
+              propertyHeader.classList.toggle('is-scrolled', scrollY > 72);
+            }
 
             if (heroBg && !heroBg.classList.contains('hero__bg--video')) {
               heroBg.style.transform = `scale(${1 + scrollY * 0.0001}) translateY(${scrollY * 0.3}px)`;
@@ -352,31 +421,22 @@ export default function SiteBehavior() {
               }
             }
 
-            if (storySection) {
-              const rect = storySection.getBoundingClientRect();
-              const riseDistance = vh * 0.18;
-              const progress = Math.min(Math.max((vh - rect.top) / (vh * 0.82), 0), 1);
-              const offset = (1 - progress) * riseDistance;
-              storySection.style.transform = `translateY(${offset}px)`;
-            }
 
             const setVerticalRevealed = (show) => {
               verticalCols.forEach((col) => col.classList.toggle('is-revealed', show));
             };
 
-            if (storySection && storyBrandName) {
-              const storyRect = storySection.getBoundingClientRect();
+            // Read storyRect once and reuse
+            const heroStoryScene = document.querySelector('.hero-story-scene');
+            const sceneRect = heroStoryScene ? heroStoryScene.getBoundingClientRect() : null;
+            const storyRect = storySection ? storySection.getBoundingClientRect() : null;
+            if (floatingLogo && sceneRect) {
+              const releaseTriggered = sceneRect.bottom <= vh + 18;
+              floatingLogo.classList.toggle('is-released', releaseTriggered);
+            }
+            if (storyRect) {
               const storyRevealTriggered = storyRect.top <= vh * 0.78 && storyRect.bottom >= vh * 0.28;
-
-              if (!storyRevealTriggered) {
-                floatingLogo.style.opacity = '0';
-                storyBrandName.classList.remove('is-revealed');
-                setVerticalRevealed(false);
-              } else {
-                floatingLogo.style.opacity = '0';
-                storyBrandName.classList.add('is-revealed');
-                setVerticalRevealed(true);
-              }
+              setVerticalRevealed(storyRevealTriggered);
             }
 
             if (craftsmenSection) {
@@ -403,6 +463,7 @@ export default function SiteBehavior() {
 
       on(window, 'scroll', onScroll, { passive: true });
       on(window, 'resize', onScroll, { passive: true });
+      on(window.visualViewport, 'resize', onScroll, { passive: true });
       onScroll();
 
       // 礎の匠カード: 左から順番にフェードイン
@@ -486,7 +547,6 @@ export default function SiteBehavior() {
       cleanupFns.forEach((fn) => fn());
       propertySceneTrigger?.kill();
       stagePhotoPinTrigger?.kill();
-      floatingLogo?.remove();
       const html = document.documentElement;
       html.classList.remove('no-scroll');
       html.classList.remove('has-js');
