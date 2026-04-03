@@ -160,6 +160,30 @@ export default function SiteBehavior() {
       });
     });
 
+    const registrationPopup = document.getElementById('registrationPopup');
+    const openRegistrationPopup = () => {
+      registrationPopup?.classList.add('is-open');
+      html.classList.add('no-scroll');
+    };
+    const closeRegistrationPopup = () => {
+      registrationPopup?.classList.remove('is-open');
+      html.classList.remove('no-scroll');
+    };
+    registrationPopup?.querySelectorAll('[data-registration-close]').forEach((el) => {
+      on(el, 'click', closeRegistrationPopup);
+    });
+    document.querySelectorAll('a[href="#contact"]').forEach((el) => {
+      on(el, 'click', (e) => {
+        e.preventDefault();
+        openRegistrationPopup();
+      });
+    });
+    on(document, 'keydown', (e) => {
+      if (e.key === 'Escape' && registrationPopup?.classList.contains('is-open')) {
+        closeRegistrationPopup();
+      }
+    });
+
     const hamburger = document.querySelector('.hamburger');
     const navOverlay = document.getElementById('navOverlay');
     const closeNavOverlay = () => {
@@ -187,8 +211,10 @@ export default function SiteBehavior() {
           gatedRoot &&
           (gatedRoot.classList.contains('is-locked') || gatedRoot.classList.contains('is-checking'))
         );
-        if (isTargetLocked) {
-          target = document.querySelector('.registration');
+        if (isTargetLocked || targetSelector === '.registration') {
+          closeNavOverlay();
+          openRegistrationPopup();
+          return;
         }
 
         closeNavOverlay();

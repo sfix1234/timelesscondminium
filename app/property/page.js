@@ -48,6 +48,9 @@ export default async function PropertyPage() {
             </div>
           </div>
           <div className="property-hero__overlay"></div>
+          <div className="property-hero__center-title">
+            <span className="property-hero__center-title-text">TIMELESS CONDOMINIUM</span>
+          </div>
           <div className="hero__bottom-logo">
             <div className="center-block hero__logo-overlay">
             </div>
@@ -209,7 +212,7 @@ export default async function PropertyPage() {
 
         <section className="property-director">
           <div className="property-director__inner">
-            <h2 className="property-director__title">THE TIMELESS CONDOMINIUM<br />Executive Producer</h2>
+            <h2 className="property-director__title">THE TIMELESS CONDOMINIUM<br /><span className="property-director__subtitle">Executive Producer</span></h2>
 
             <div className="property-director__image-wrap">
               <img

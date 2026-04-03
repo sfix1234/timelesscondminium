@@ -47,31 +47,30 @@ const artisanProfessionalGalleryMap = {
   ],
   '3': [
     '/assets/images/gallery/ARMANI/ih1de8xrxwb0ukwkg9ya_sm.jpg',
+    '/assets/images/gallery/ARMANI/passadddasda.png',
     '/assets/images/gallery/ARMANI/lajktmwt8noo7lcel18e_sm.jpg',
-    '/assets/images/gallery/ARMANI/2_Soggiorno_24-03-25_ARMANI CASA Ambientato0296.jpg',
-    '/assets/images/gallery/ARMANI/6_Camera_24-03-25_ARMANI CASA Ambientato0477.jpg',
-    '/assets/images/gallery/ARMANI/trbyw7vskzjnfsq7l3og.webp',
+    '/assets/images/gallery/ARMANI/yirc2ihypiizkbj6mqpg.webp',
   ],
   '4': [
-    '/assets/images/gallery/OniwaUeji/oniwa1.JPG',
     '/assets/images/gallery/OniwaUeji/oniwa2.jpg',
     '/assets/images/gallery/OniwaUeji/oniwa3.JPEG',
+    '/assets/images/gallery/OniwaUeji/oniwa1.JPG',
     '/assets/images/gallery/OniwaUeji/oniwa4.JPEG',
     '/assets/images/gallery/OniwaUeji/oniwa5.JPG',
   ],
   '5': [
-    '/assets/images/gallery/KoukeiEri/erikoukei1.jpeg',
-    '/assets/images/gallery/KoukeiEri/350rgb_20260206_THE SILENCE_0277.jpg',
-    '/assets/images/gallery/KoukeiEri/erikoukei2.jpeg',
-    '/assets/images/gallery/KoukeiEri/350rgb_20260206_THE SILENCE_0278.jpg',
-    '/assets/images/gallery/KoukeiEri/350rgb_20260206_THE SILENCE_0279.jpg',
+    '/assets/images/gallery/KoukeiEri/2koukei.jpg',
+    '/assets/images/gallery/KoukeiEri/5koukei.jpg',
+    '/assets/images/gallery/KoukeiEri/3koukei.JPG',
+    '/assets/images/gallery/KoukeiEri/1koukei.jpg',
+    '/assets/images/gallery/KoukeiEri/4koukei.jpg',
   ],
   '6': [
-    '/assets/images/gallery/TomokoEri/img20170920041535349259.webp',
-    '/assets/images/gallery/TomokoEri/img20171005085217408958.webp',
-    '/assets/images/gallery/TomokoEri/img20171005085251911301.webp',
-    '/assets/images/gallery/TomokoEri/img20171005085253462958.webp',
-    '/assets/images/gallery/TomokoEri/img20171005085302409744.webp',
+    '/assets/images/gallery/TomokoEri/2TomokoEri.jpg',
+    '/assets/images/gallery/TomokoEri/3TomokoEri.jpg',
+    '/assets/images/gallery/TomokoEri/5TomokoEri.jpg',
+    '/assets/images/gallery/TomokoEri/4TomokoEri.jpg',
+    '/assets/images/gallery/TomokoEri/1TomokoEri.jpg',
   ],
   '7': [
     '/assets/images/gallery/ToryoIto/P1001331.jpg',
@@ -81,7 +80,7 @@ const artisanProfessionalGalleryMap = {
     '/assets/images/gallery/ToryoIto/kv-100.jpg',
   ],
   '8': [
-    '/assets/images/gallery/HirotoRakusho/IMG_1554.webp',
+    '/assets/images/gallery/HirotoRakusho/IMG_1554.jpg',
     '/assets/images/gallery/HirotoRakusho/IMG_1555.webp',
     '/assets/images/gallery/HirotoRakusho/IMG_1561-1166x656.webp',
     '/assets/images/gallery/HirotoRakusho/IMG_1589.png',
@@ -90,7 +89,7 @@ const artisanProfessionalGalleryMap = {
   '9': [
     '/assets/images/gallery/IzuminokamiKanesada/imag528.jpg',
     '/assets/images/gallery/IzuminokamiKanesada/imag529.jpg',
-    '/assets/images/gallery/IzuminokamiKanesada/toshizo4.jpg',
+    '/assets/images/gallery/IzuminokamiKanesada/i-img1097x1184-17732096951202lsfbxs9610-2.jpg',
     '/assets/images/gallery/IzuminokamiKanesada/toshizo3.jpg',
     '/assets/images/gallery/IzuminokamiKanesada/toshizo5.jpg',
   ],
@@ -154,6 +153,9 @@ export default async function HomePage() {
           <img src="/assets/images/THE%20SILENCE_logo.png" alt="" className="hero-intro__mark-logo" />
         </div>
       </div>
+      <div className="hero__center-title-wrap">
+        <span className="hero__center-title-text">TIMELESS CONDOMINIUM</span>
+      </div>
       <div className="hero__content">
           <SiteHeader
             navItems={[
@@ -202,10 +204,12 @@ export default async function HomePage() {
       <figure className="craftsmen-photo__frame">
         <img src="/assets/images/craftsmen-group_sm.jpg" alt="匠たちの集合写真" className="craftsmen-photo__img" />
         <div className="craftsmen-photo__labels" aria-hidden="true">
-          <span
-            className="craftsmen-photo__label"
-            dangerouslySetInnerHTML={{ __html: 'Ueji / Kongo Gumi / Kengo Kuma / Kenji Nakamura / Kokei Eri / Nakamura Sotoji Komuten' }}
-          />
+          <span className="craftsmen-photo__label">Ueji</span>
+          <span className="craftsmen-photo__label">Kongo Gumi</span>
+          <span className="craftsmen-photo__label">Kengo Kuma</span>
+          <span className="craftsmen-photo__label">Kenji Nakamura</span>
+          <span className="craftsmen-photo__label">Kokei Eri</span>
+          <span className="craftsmen-photo__label">Nakamura Sotoji Komuten</span>
         </div>
       </figure>
     </div>
@@ -216,7 +220,7 @@ export default async function HomePage() {
     <div className="stage__inner">
       <h2 className="stage__title">THE STAGE</h2>
       <div className="stage__row">
-        <p className="stage__lead">舞台は、京文化発祥の地上七軒。</p>
+        <p className="stage__lead">舞台は、京文化発祥の地、上七軒。</p>
         <nav className="stage__tabs">
           <button className="stage__tab is-active" type="button" data-tab="0">京都</button>
           <button className="stage__tab" type="button" data-tab="1">北野天満宮</button>
@@ -277,6 +281,23 @@ export default async function HomePage() {
     </div>
   </section>
 
+  <div className="registration-popup" id="registrationPopup">
+    <div className="registration-popup__overlay" data-registration-close></div>
+    <div className="registration-popup__body">
+      <button className="registration-popup__close" type="button" data-registration-close aria-label="閉じる">
+        <span></span><span></span>
+      </button>
+      <div className="registration-popup__inner">
+        <h2 className="registration__title">REGISTRATION</h2>
+        <p className="registration__text">
+          この先の内容をご覧いただくには、ご登録が必要となります。<br />
+          プロジェクトの詳細や世界の匠たちが織りなす物語を、ぜひご体感ください。<br />
+          ご登録は無料で承っております。
+        </p>
+        <a href="/property" className="registration__button">詳細を確認する</a>
+      </div>
+    </div>
+  </div>
 
   <div className="detail-panel" id="detailPanel">
     <div className="detail-panel__overlay"></div>
@@ -532,8 +553,8 @@ export default async function HomePage() {
           「日本」という至宝を「世界」の至光品へ。 <br />完成予想図および間取りの詳細は、物件詳細ページにてご覧ください。
         </p>
         <div className="property-section__buttons">
-          <a href={isUnlocked ? '/property' : '#contact'} className="property-section__button">詳細を確認する</a>
-          <a href={isUnlocked ? '/property#property-contact' : '#contact'} className="property-section__button property-section__button--contact">お問い合わせ</a>
+          <a href="/property" className="property-section__button">詳細を確認する</a>
+          <a href="/property#property-contact" className="property-section__button property-section__button--contact">お問い合わせ</a>
         </div>
       </div>
 
@@ -655,7 +676,7 @@ export default async function HomePage() {
         </div>
         <ul className="artisan-detail__list">
           <li>伊勢神宮茶室「霽月」</li>
-          <li>ロックフェラー邸</li>
+          <li>京都迎賓館（国の迎賓施設）※内部施工</li>
           <li>俵屋旅館（登録有形文化財）※改修・増築</li>
           <li>鶴屋吉信 本店「菓遊茶屋」</li>
           <li>松下幸之助邸茶室</li>
@@ -664,7 +685,7 @@ export default async function HomePage() {
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="3">
-        <img src="/assets/images/gallery/ARMANI/yirc2ihypiizkbj6mqpg.webp" alt="ARMANI / CASA" className="artisan-detail__portrait artisan-detail__portrait--wide" />
+        <img src="/assets/images/gallery/ARMANI/trbyw7vskzjnfsq7l3og.webp" alt="ARMANI / CASA" className="artisan-detail__portrait artisan-detail__portrait--wide" />
         <div className="artisan-detail__meta">
           <div className="artisan-detail__meta-copy">
             <p className="artisan-detail__role">Furniture / Accessories</p>
@@ -672,9 +693,8 @@ export default async function HomePage() {
           </div>
         </div>
         <p className="artisan-detail__text">
-          2000年にスタート。ジョルジオ・アルマーニの哲学が息づくインテリアホームコレクション。家具からホームアクセサリーに至るまで、ジョルジオ・アルマーニが築いた美意識が反映された幅広いラインナップを展開し、洗練された生活空間をグローバルな視点から提案している。<br /><br />
-          建築物のコンセプトや住まう人の上質な暮らしに寄り添うかたちで、家具やホームアクセサリー、照明、そしてエクスクルーシブなファブリックまでを一貫してデザイン。空間全体を統合的に演出することで、スタイリッシュでエレガントなクリエイティブ空間を創出している。<br /><br />
-          現在も、世界各国の高級レジデンスやホテル、プライベート空間のインテリアを手がけ、ライフスタイルそのものを提案するコレクションとして展開を続けている。
+          2000年に誕生。ARMANI / CASAは、ジョルジオ・アルマーニが手掛けるホームインテリアコレクションである。自身のスタイル哲学が息づく家具からホームアクセサリーに至るまで、幅広いラインアップを通じて洗練されたライフスタイルを提案している。<br /><br />
+          アルマーニ / カーザコレクションは、生活のあらゆるシーンに対応するアイテムを揃え、家具やホームアクセサリー、照明、さらにはエクスクルーシブなファブリックの提案によって、住空間全体をエレガンスに満ちた空間へと創り上げている。
         </p>
         <div className="artisan-detail__section">
           <p className="artisan-detail__section-title">代表的な実績</p>
@@ -709,9 +729,9 @@ export default async function HomePage() {
           </div>
         </div>
         <p className="artisan-detail__text">
-          19世紀後半から20世紀初頭にかけて近代日本庭園の礎を築いた、京都の作庭家・庭師一門。七代目・小川治兵衛（1860–1933）は、比叡山や東山、琵琶湖疏水といった周辺の自然景観を庭園構成に取り込み、地形や水の流れを生かした自然主義的な庭園様式を確立し、近代日本庭園の発展に大きな影響を与えた。<br /><br />
-          無鄰菴、平安神宮神苑、円山公園、南禅寺界隈の別邸庭園など、今日の京都の景観形成に深く関わる数多くの名庭を手がけ、その一部は庭園分野で最高位とされる国指定名勝に認定されている。<br /><br />
-          現在も、十一代目当主・小川治兵衛（雅史氏）のもと、次期十二代として御庭植治株式会社代表取締役を務める小川勝章氏を中心に、国指定名勝をはじめとする文化財庭園の修復・維持管理、ならびに歴史的建築と調和する庭園の作庭に尽力し、京都の庭園文化を継承する存在として活動を続けている。
+          江戸宝暦年間（約260年前）に創業。武士の身分から庭園の道を志し、帯刀を許される作庭家となった初代に端を発する。<br /><br />
+          代々「小川治兵衞」の名を襲名し、屋号を「植治（うえじ）」と称す。なかでも七代小川治兵衞は、山縣有朋邸（無鄰菴）や平安神宮、円山公園、東京都の旧古河庭園など、数多くの国指定名勝庭園を手掛け、自然風景の美を尊ぶ近代日本庭園の作風を確立した。<br /><br />
+          現在は次期十二代・小川勝章がその伝統を継承。「北野天満宮・風月の庭」や「実相院門跡・こころの庭」などの作庭を通じ、現代における庭園の在り方を追求している。
         </p>
         <div className="artisan-detail__section">
           <p className="artisan-detail__section-title">代表的な実績</p>
@@ -756,11 +776,11 @@ export default async function HomePage() {
           <div className="artisan-detail__section-line"></div>
         </div>
         <ul className="artisan-detail__list">
-          <li>釈迦如来三尊像</li>
-          <li>夢窓国師頂相像</li>
-          <li>京都迎賓館 仏像彫刻</li>
-          <li>中尊寺 奉納仏像（世界遺産関連）</li>
-          <li>平安仏所における仏像制作活動</li>
+          <li>阿弥陀如来像</li>
+          <li>釈迦三尊像</li>
+          <li>聖徳太子孝養像</li>
+          <li>聖武天皇御像</li>
+          <li>源頼朝像</li>
         </ul>
         <ArtisanProfessionalsGallery artisanId="5" artisanName="KOKEI ERI" />
       </article>
@@ -880,7 +900,7 @@ export default async function HomePage() {
       </article>
 
       <article className="artisan-detail__content" data-artisan-detail="9">
-        <img src="/assets/images/gallery/IzuminokamiKanesada/IZUMINOKAMIKANESADA.jpg" alt="和泉守兼定" className="artisan-detail__portrait artisan-detail__portrait--wide" />
+        <img src="/assets/images/gallery/IzuminokamiKanesada/toshizo4.jpg" alt="和泉守兼定" className="artisan-detail__portrait artisan-detail__portrait--wide" />
         <div className="artisan-detail__meta">
           <div className="artisan-detail__meta-copy">
             <p className="artisan-detail__role">Japanese Sword</p>

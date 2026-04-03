@@ -741,7 +741,7 @@ html.property-scroll-lock body {
   left: 50%;
   bottom: 18px;
   transform: translateX(-50%);
-  width: 60%;
+  width: 78%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -786,6 +786,26 @@ html.property-scroll-lock body {
   .floating-logo {
     width: 100%;
   }
+}
+
+.hero__center-title-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+  text-align: center;
+}
+
+.hero__center-title-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: clamp(14px, 1.8vw, 22px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
 }
 
 .floating-logo__main {
@@ -874,7 +894,7 @@ html.property-scroll-lock body {
   text-orientation: mixed;
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-weight: 300;
-  font-size: clamp(15px, 2.6vw, 24px);
+  font-size: clamp(12px, 1.8vw, 18px);
   letter-spacing: 0.24em;
   line-height: 1.9;
   color: rgba(255, 255, 255, 0.92);
@@ -1356,13 +1376,14 @@ html:not(.has-js) .story__vertical-char {
   flex: 1 1 auto;
   display: flex;
   align-items: center;
+  height: 100vh;
   min-height: 100vh;
 }
 
 .craftsmen__heading {
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-weight: 700;
-  font-size: clamp(15px, 2.6vw, 24px);
+  font-size: clamp(12px, 1.8vw, 18px);
   line-height: 1.9;
   letter-spacing: 0.24em;
   color: #fff;
@@ -1384,6 +1405,7 @@ html:not(.has-js) .story__vertical-char {
 .has-js .craftsmen.is-animated.is-visible {
   padding-top: 0;
   padding-bottom: 0;
+  background: #ebe6dc;
 }
 
 html:not(.has-js) .craftsmen__heading {
@@ -1394,7 +1416,7 @@ html:not(.has-js) .craftsmen__heading {
 .craftsmen-photo__frame {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   min-height: 100vh;
   margin: 0;
   display: flex;
@@ -1433,20 +1455,22 @@ html:not(.has-js) .craftsmen__heading {
   position: absolute;
   left: 0;
   bottom: 10px;
-  width: 100vw;
+  width: 100%;
   z-index: 2;
   pointer-events: none;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 1.5em;
   text-align: center;
   padding: 24px 0 0;
 }
 
 .craftsmen-photo__label {
   position: static;
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: auto;
   padding: 0;
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(12px, 1.4vw, 20px);
@@ -1509,6 +1533,7 @@ html:not(.has-js) .craftsmen__heading {
 .has-js .craftsmen.is-animated .craftsmen-photo__label:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.85s; }
 .has-js .craftsmen.is-animated .craftsmen-photo__label:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 1s; }
 .has-js .craftsmen.is-animated .craftsmen-photo__label:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 1.15s; }
+.has-js .craftsmen.is-animated .craftsmen-photo__label:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 1.3s; }
 
 .has-js .craftsmen.is-animated .craftsmen-photo__img {
   animation: craftsmenPhotoZoom 7s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -1537,6 +1562,11 @@ html:not(.has-js) .craftsmen .craftsmen-photo__img {
     transform: translateY(calc(var(--craftsmen-overlay-progress) * -3vh));
   }
 
+  .craftsmen__heading {
+    color: rgba(47, 37, 24, 0.82);
+    text-shadow: none;
+  }
+
   .craftsmen__visual {
     margin-top: 0;
     padding-top: 0;
@@ -1546,8 +1576,9 @@ html:not(.has-js) .craftsmen .craftsmen-photo__img {
 
   .craftsmen-photo__frame {
     width: 100%;
-    min-height: calc(100vh - 96px);
-    height: calc(100vh - 96px);
+    aspect-ratio: 16 / 9;
+    min-height: auto;
+    height: auto;
   }
 
   .craftsmen-photo__labels {
@@ -1555,17 +1586,25 @@ html:not(.has-js) .craftsmen .craftsmen-photo__img {
     right: 0;
     bottom: 10px;
     transform: none;
+    padding: 14px 0 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
-    padding: 14px 12px 0;
+    gap: 4px 1em;
+    width: 100%;
   }
 
   .craftsmen-photo__label {
-    width: min(100%, 92%);
+    width: auto;
     min-height: auto;
     padding: 0;
-    font-size: clamp(9px, 2.2vw, 12px);
-    letter-spacing: 0.16em;
+    font-size: clamp(8px, 2vw, 11px);
+    letter-spacing: 0.08em;
     transform: translateY(16px);
+    white-space: nowrap;
+    word-break: keep-all;
+    text-align: center;
   }
 
   .craftsmen-photo__label br {
@@ -1575,7 +1614,7 @@ html:not(.has-js) .craftsmen .craftsmen-photo__img {
   .craftsmen-photo__img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center center;
     transform: scale(1);
   }
@@ -1811,6 +1850,7 @@ html:not(.has-js) .craftsmen .craftsmen-photo__label {
   z-index: 3;
   padding: clamp(16px, 4vw, 32px);
   transform: translateY(-50%);
+  text-align: center;
   opacity: 0;
   filter: blur(8px);
   will-change: opacity, transform, filter;
@@ -1906,8 +1946,8 @@ html:not(.has-js) .stage__info {
 .stage__info-body {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 18px;
 }
 
@@ -1919,7 +1959,8 @@ html:not(.has-js) .stage__info {
   line-height: 2;
   color: rgba(255, 255, 255, 0.9);
   max-width: 600px;
-  margin: 0;
+  margin: 0 auto;
+  text-align: center;
   flex: 1 1 auto;
 }
 
@@ -1934,9 +1975,11 @@ html:not(.has-js) .stage__info {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
+  margin: 0 auto;
   transition: color 0.3s ease;
   cursor: pointer;
   flex: 0 0 auto;
@@ -1955,20 +1998,31 @@ html:not(.has-js) .stage__info {
 
 @media (max-width: 768px) {
   .stage__row {
-    align-items: flex-start;
+    align-items: center;
     gap: 14px;
     margin-top: 0;
   }
 
   .stage__lead {
-    text-align: left;
+    text-align: center;
     white-space: normal;
   }
 
   .stage__tabs {
-    flex-direction: column;
-    gap: 0;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    justify-items: center;
+    width: 100%;
+  }
+
+  .stage__tab {
+    width: 100%;
+  }
+
+  .stage__visual {
+    aspect-ratio: unset;
+    height: 450px;
   }
 
   .stage__info-body {
@@ -2010,7 +2064,7 @@ html:not(.has-js) .stage__info {
   padding: 0;
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-weight: 700;
-  font-size: clamp(15px, 2.6vw, 24px);
+  font-size: clamp(12px, 1.8vw, 18px);
   color: rgba(34, 28, 22, 0.88);
   writing-mode: vertical-rl;
   text-orientation: mixed;
@@ -2321,6 +2375,81 @@ html:not(.has-js) .stage__info {
   letter-spacing: 0.12em;
   color: rgba(236, 232, 224, 0.8);
   margin: 0;
+}
+
+/* Registration Popup */
+.registration-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.registration-popup.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.registration-popup__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  cursor: pointer;
+}
+
+.registration-popup__body {
+  position: relative;
+  width: min(90vw, 560px);
+  max-height: 90vh;
+  overflow-y: auto;
+  background:
+    linear-gradient(180deg, rgba(18, 20, 24, 0.96) 0%, rgba(18, 20, 24, 0.88) 42%, rgba(18, 20, 24, 0.96) 100%),
+    url('/assets/images/kamon-bg_sm.jpg') center 58% / cover no-repeat;
+  padding: clamp(40px, 8vh, 72px) clamp(24px, 6vw, 48px);
+  transform: translateY(30px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.registration-popup.is-open .registration-popup__body {
+  transform: translateY(0);
+}
+
+.registration-popup__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.registration-popup__close span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.registration-popup__close span:first-child {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.registration-popup__close span:last-child {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.registration-popup__inner {
+  position: relative;
 }
 
 .access-gate__content {
@@ -2652,7 +2781,7 @@ html:not(.has-js) .stage__info {
   position: relative;
   display: block;
   width: 100%;
-  max-width: none;
+  max-width: 900px;
   margin: clamp(22px, 3vh, 32px) auto 0;
   border: 0;
   padding: 0;
@@ -2664,6 +2793,7 @@ html:not(.has-js) .stage__info {
 .project-vision__placeholder {
   aspect-ratio: 16 / 9;
   background: #000;
+  max-width: 900px;
   margin-top: clamp(22px, 3vh, 32px);
   cursor: default;
   display: flex;
@@ -3107,6 +3237,12 @@ html:not(.has-js) .stage__info {
   justify-self: end;
   max-width: 18em;
   padding-bottom: clamp(4px, 1.2vh, 10px);
+}
+
+@media (max-width: 768px) {
+  .artisans-color__lead {
+    padding: 0;
+  }
 }
 
 .artisans-color__gallery {
@@ -4012,6 +4148,26 @@ html:not(.has-js) .stage__info {
   background:
     radial-gradient(circle at 50% 24%, rgba(200, 220, 234, 0.16), transparent 45%),
     linear-gradient(180deg, rgba(22, 31, 36, 0.24) 0%, rgba(18, 23, 28, 0.54) 65%, rgba(16, 20, 24, 0.72) 100%);
+}
+
+.property-hero__center-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+  text-align: center;
+}
+
+.property-hero__center-title-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: clamp(14px, 1.8vw, 22px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
 }
 
 .property-hero__header {
@@ -6190,6 +6346,13 @@ html:not(.has-js) .stage__info {
   font-weight: 300;
   font-size: clamp(42px, 7vw, 68px);
   letter-spacing: 0.03em;
+  line-height: 0.9;
+}
+
+.property-director__subtitle {
+  font-size: 0.7em;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
 }
 
 .property-director__image-wrap {
@@ -6232,6 +6395,7 @@ html:not(.has-js) .stage__info {
 
 .property-director__company {
   margin: 0;
+  padding-top: 10px;
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 400;
   font-size: clamp(15px, 1.8vw, 19px);
@@ -6524,25 +6688,30 @@ html:not(.has-js) .stage__info {
     width: min(78vw, 320px);
   }
 
+  .property-access__pin {
+    z-index: 1;
+  }
+
   .property-access__info {
     gap: 16px;
+    padding-top: 50px;
   }
 
   .property-access__subtitle {
-    font-size: clamp(18px, 5.8vw, 26px);
+    font-size: clamp(14px, 4.2vw, 20px);
     text-align: center;
   }
 
   .property-access__block {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .property-access__label {
-    padding: 0 0 8px;
+    padding: 0 0 6px;
     border-right: 0;
     border-bottom: 1px solid rgba(120, 104, 86, 0.38);
-    font-size: clamp(15px, 4.4vw, 18px);
+    font-size: clamp(13px, 3.8vw, 16px);
   }
 
   .property-access__rows {
@@ -6551,17 +6720,18 @@ html:not(.has-js) .stage__info {
   }
 
   .property-access__row {
-    grid-template-columns: 1fr;
-    gap: 0;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 12px;
   }
 
   .property-access__from,
   .property-access__time {
-    font-size: clamp(13px, 3.8vw, 15px);
+    font-size: clamp(12px, 3.4vw, 14px);
   }
 
   .property-access__time {
-    text-align: left;
+    text-align: right;
   }
 }
 
@@ -7273,11 +7443,13 @@ html:not(.has-js) .stage__info {
 
 .property-page #property-kuma .property-kuma__video {
   width: 100%;
+  max-width: 900px;
   margin: clamp(22px, 3vh, 32px) auto 0;
 }
 
 .property-page #property-kuma .property-kuma__video-frame {
   width: 100%;
+  max-width: 900px;
   aspect-ratio: 16 / 9;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
 }
@@ -7487,7 +7659,7 @@ html:not(.has-js) .stage__info {
   text-orientation: mixed;
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-weight: 300;
-  font-size: clamp(16px, 1.95vw, 24px);
+  font-size: clamp(11px, 1.3vw, 16px);
   letter-spacing: 0.35em;
   color: rgba(255, 255, 255, 0.75);
   white-space: nowrap;
@@ -8311,6 +8483,9 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
     margin-bottom: 8px;
     font-size: clamp(30px, 8vw, 40px);
     padding-bottom: 8px;
+    display: block;
+    width: 100%;
+    text-align: center;
   }
 
   .property-page #property-kuma #property-info .property-info__floor-switch {
@@ -8340,6 +8515,26 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-image__heading {
     font-size: clamp(24px, 7vw, 38px);
     margin-bottom: 14px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-gallery__meta {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-left: 0;
+    gap: 12px;
+  }
+
+  .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-gallery__current {
+    text-align: center;
+    font-size: clamp(13px, 3.8vw, 18px);
+  }
+
+  .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-gallery__toggle {
+    margin-left: 0;
   }
 
   .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-gallery {
@@ -8354,16 +8549,17 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
     max-height: min(42vh, 360px);
   }
 
-.property-page #property-kuma #property-info .property-info__detail-image {
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  object-position: center center;
-  transform: scale(1.08);
-  transform-origin: center center;
-}
+  .property-page #property-kuma #property-info .property-info__detail-image {
+    width: 85%;
+    height: auto;
+    max-width: 85%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    transform: none;
+    transform-origin: center center;
+    margin: 0 auto;
+  }
 
   .property-page #property-kuma #property-info .property-info__detail-map {
     display: flex;
@@ -8372,9 +8568,12 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
 
   .property-page #property-kuma #property-info .property-info__detail-panel {
     top: clamp(18px, 4vw, 28px);
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
     padding: 0 16px;
+    align-items: center;
+    text-align: center;
   }
 
   .property-page #property-kuma #property-info .property-info__detail-image-frame {
@@ -8382,17 +8581,17 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   }
 
   .property-page #property-kuma #property-info .property-info__road--left {
-    left: 1%;
-    top: 64%;
-    bottom: 0;
+    left: 4%;
+    top: 58%;
+    bottom: 2%;
     width: 24px;
   }
 
   .property-page #property-kuma #property-info .property-info__road--right {
-    right: 7%;
-    top: 40%;
-    bottom: 0;
-    width: 24px;
+    right: 0%;
+    top: 4%;
+    bottom: 2%;
+    width: 26px;
   }
 
   .property-page #property-kuma .property-floor-image {
@@ -8410,6 +8609,14 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   .property-page #property-kuma .property-floor-image__heading {
     font-size: clamp(30px, 8vw, 40px);
     margin-bottom: 18px;
+    text-align: center;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .property-page #property-kuma .property-floor-gallery__meta {
+    align-items: center;
+    text-align: center;
   }
 
   .property-page #property-kuma .property-floor-gallery {
@@ -8560,25 +8767,25 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   }
 
   .property-page #property-kuma #property-info .property-info__detail-image--floor-1f {
-    object-position: 60% center;
+    object-position: center center;
   }
 
   .property-page #property-kuma #property-info .property-info__road--left {
-    left: 0.5%;
-    top: 66%;
-    bottom: 0;
-    width: 20px;
+    left: 3%;
+    top: 8%;
+    bottom: 9%;
+    width: 24px;
   }
 
   .property-page #property-kuma #property-info .property-info__road--right {
-    right: 5%;
-    top: 42%;
-    bottom: 0;
-    width: 20px;
+    right: 3%;
+    top: 2%;
+    bottom: 26%;
+    width: 21px;
   }
 
   .property-page #property-kuma #property-info .property-info__road-label {
-    font-size: clamp(12px, 3.4vw, 18px);
+    font-size: clamp(9px, 2.5vw, 13px);
   }
 
   .property-page #property-kuma .property-floor-image {

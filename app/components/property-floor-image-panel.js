@@ -6,7 +6,7 @@ const IMAGE_ANNOTATIONS = {
   entrance: [
     {
       id: 'left',
-      copy: ['エントランス左側、', '黒竹を映す漆喰が趣を添える'],
+      copy: ['エントランス左側、黒竹を映す漆喰が趣を添える'],
       point: { x: 35, y: 49 },
       elbow: { x: 31, y: 20 },
       anchor: { x: 43, y: 20 },
@@ -14,7 +14,7 @@ const IMAGE_ANNOTATIONS = {
     },
     {
       id: 'top',
-      copy: ['京都の数寄屋の趣を受け継ぐ、', '吹き抜けのエントランス'],
+      copy: ['京都の数寄屋の趣を受け継ぐ、吹き抜けのエントランス'],
       point: { x: 50, y: 7 },
       elbow: { x: 56, y: 18 },
       anchor: { x: 63, y: 18 },
@@ -32,7 +32,7 @@ const IMAGE_ANNOTATIONS = {
   'dining-kitchen-living': [
     {
       id: 'main',
-      copy: ['黒竹と白竹のスクリーンに、', '四季の花々が静かに迎える'],
+      copy: ['黒竹と白竹のスクリーンに、四季の花々が静かに迎える'],
       point: { x: 68.5, y: 42 },
       elbow: { x: 57, y: 18 },
       anchor: { x: 46, y: 18 },
@@ -40,7 +40,7 @@ const IMAGE_ANNOTATIONS = {
     },
     {
       id: 'pillar',
-      copy: ['無数の柱を、金剛組の技で二本へ。', '広々としたLDKを実現'],
+      copy: ['無数の柱を、金剛組の技で二本へ', '広々としたLDKを実現'],
       point: { x: 44, y: 50 },
       elbow: { x: 65, y: 68 },
       anchor: { x: 78, y: 68 },
@@ -61,7 +61,7 @@ const IMAGE_ANNOTATIONS = {
   'inner-garden-a': [
     {
       id: 'top',
-      copy: ['隈研吾氏の代名詞でもある', '連続したルーバーの大屋根'],
+      copy: ['隈研吾氏の代名詞でもある連続したルーバーの大屋根'],
       point: { x: 50.5, y: 11 },
       elbow: { x: 41, y: 19 },
       anchor: { x: 30, y: 19 },
@@ -87,7 +87,7 @@ const IMAGE_ANNOTATIONS = {
   'inner-garden-b': [
     {
       id: 'main',
-      copy: ['壇落ちの滝より流れ出る水が、', '池へと満ちる'],
+      copy: ['壇落ちの滝より流れ出る水が、池へと満ちる'],
       point: { x: 55, y: 95 },
       elbow: { x: 65, y: 22 },
       anchor: { x: 76, y: 22 },
@@ -107,7 +107,7 @@ const IMAGE_ANNOTATIONS = {
   'tea-room-hanare': [
     {
       id: 'top',
-      copy: ['竹をテーマとした茶室を、', '中村外二の技で蘇らせる'],
+      copy: ['竹をテーマとした茶室を、中村外二の技で蘇らせる'],
       point: { x: 30, y: 8 },
       elbow: { x: 20, y: 18 },
       anchor: { x: 10, y: 18 },
@@ -117,7 +117,7 @@ const IMAGE_ANNOTATIONS = {
   'bathroom-kura': [
     {
       id: 'main',
-      copy: ['ここにしか存在しない、', 'アルマーニ / カーザの家具'],
+      copy: ['ここにしか存在しない、アルマーニ / カーザの家具'],
       point: { x: 68, y: 48 },
       elbow: { x: 65, y: 68 },
       anchor: { x: 76, y: 68 },
