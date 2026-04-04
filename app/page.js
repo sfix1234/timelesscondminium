@@ -369,7 +369,7 @@ export default async function HomePage() {
     </div>
   </div>
 
-  <AccessGate initialUnlocked={isUnlocked} isClientPreview={isClientPreview} isProduction={!isClientPreview && process.env.NODE_ENV === 'production'}>
+  <AccessGate initialUnlocked={isUnlocked} isClientPreview={isClientPreview}>
   <>
   <section className="project-vision">
     <div className="project-vision__inner">
