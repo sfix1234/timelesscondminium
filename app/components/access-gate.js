@@ -101,7 +101,7 @@ function validateClient(form) {
   return errors;
 }
 
-export default function AccessGate({ children, initialUnlocked = false, isClientPreview = false, isProduction = false }) {
+export default function AccessGate({ children, initialUnlocked = false, isClientPreview = false }) {
   const router = useRouter();
   const [isUnlocked, setIsUnlocked] = useState(initialUnlocked);
   const [isOpen, setIsOpen] = useState(false);
@@ -216,9 +216,7 @@ export default function AccessGate({ children, initialUnlocked = false, isClient
                 <span className="registration__gate-lock-body"></span>
               </span>
             </div>
-            {!isProduction ? (
-              <>
-                <h2 className="registration__title">REGISTRATION</h2>
+            <h2 className="registration__title">REGISTRATION</h2>
                 <p className="registration__text">
                   この先の内容をご覧いただくには、ご登録が必要となります。<br />
                   プロジェクトの詳細や世界の匠たちが織りなす物語を、ぜひご体感ください。<br />
@@ -227,16 +225,6 @@ export default function AccessGate({ children, initialUnlocked = false, isClient
                 <button type="button" className="registration__button" onClick={openModal}>
                   詳細を確認する
                 </button>
-              </>
-            ) : (
-              <div className="registration__coming-soon">
-                <h3 className="registration__coming-soon-title">Coming soon...</h3>
-                <p className="registration__coming-soon-text">
-                  続きをご覧いただけるのは、4月6日以降となります。<br />
-                  全貌につきましては、いましばらくお待ちください。
-                </p>
-              </div>
-            )}
           </div>
         </section>
       ) : null}
@@ -257,9 +245,7 @@ export default function AccessGate({ children, initialUnlocked = false, isClient
               <span></span>
             </button>
 
-            {!isProduction ? (
-              <>
-                <p className="access-modal__eyebrow">Exclusive Registration</p>
+            <p className="access-modal__eyebrow">Exclusive Registration</p>
                 <h3 className="access-modal__title" id="accessModalTitle">
                   匠の情報をご覧いただくには、以下の情報をご入力ください
                 </h3>
@@ -325,16 +311,6 @@ export default function AccessGate({ children, initialUnlocked = false, isClient
                     </div>
                   </>
                 )}
-              </>
-            ) : (
-              <div className="access-modal__coming-soon">
-                <h3 className="access-modal__coming-soon-title" id="accessModalTitle">Coming soon...</h3>
-                <p className="access-modal__coming-soon-text">
-                  続きをご覧いただけるのは、4月6日以降となります。<br />
-                  全貌につきましては、いましばらくお待ちください。
-                </p>
-              </div>
-            )}
           </div>
         </div>
       ) : null}
