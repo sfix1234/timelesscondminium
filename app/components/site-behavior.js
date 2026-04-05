@@ -72,14 +72,71 @@ export default function SiteBehavior() {
 
     const applyLanguageBadge = (lang) => {
       currentLang = lang;
-      const labelMap = { ja: 'JPN', en: 'ENG', koto: '江東語', yue: '広東語' };
-      const htmlLangMap = { ja: 'ja', en: 'en', koto: 'zh-Hans', yue: 'zh-Hant' };
+      const labelMap = { ja: '日本語', en: 'English', 'zh-hans': '中国語（簡体字）', 'zh-hant': '中国語（繁体字）' };
+      const htmlLangMap = { ja: 'ja', en: 'en', 'zh-hans': 'zh-Hans', 'zh-hant': 'zh-Hant' };
       if (langToggle) {
-        langToggle.textContent = labelMap[lang] || 'JPN';
+        langToggle.textContent = labelMap[lang] || '日本語';
         langToggle.setAttribute('aria-label', 'Switch language');
       }
       html.lang = htmlLangMap[lang] || 'ja';
       langMenu?.classList.remove('is-open');
+
+      // Switch text content for elements with data-ja / data-en / data-zh-hans attributes
+      const langAttrMap = { ja: 'data-ja', en: 'data-en', 'zh-hans': 'data-zh-hans', 'zh-hant': 'data-zh-hant' };
+      const attrKey = langAttrMap[lang] || 'data-en';
+      document.querySelectorAll('[data-ja]').forEach((el) => {
+        const text = el.getAttribute(attrKey) ?? el.getAttribute('data-en');
+        if (text == null) return;
+
+        // VerticalRevealText: rebuild individual character spans & toggle horizontal mode
+        if (el.classList.contains('story__vertical-col')) {
+          const isHorizontal = lang !== 'ja';
+          el.classList.toggle('is-horizontal', isHorizontal);
+          el.setAttribute('aria-label', text);
+          const existing = el.querySelectorAll('.story__vertical-char');
+          existing.forEach((c) => c.remove());
+          Array.from(text).forEach((char, i) => {
+            const span = document.createElement('span');
+            span.className = 'story__vertical-char';
+            span.style.setProperty('--char-index', i);
+            span.setAttribute('aria-hidden', 'true');
+            span.textContent = char;
+            el.appendChild(span);
+          });
+          return;
+        }
+
+        // stage-photo__text: toggle vertical/horizontal and update inner span
+        if (el.classList.contains('stage-photo__text')) {
+          const isHorizontal = lang !== 'ja';
+          el.classList.toggle('is-horizontal', isHorizontal);
+          const inner = el.querySelector('.stage-photo__text-top');
+          if (inner) inner.textContent = text;
+          return;
+        }
+
+        el.textContent = text;
+        if (text.includes('\n')) {
+          el.style.whiteSpace = 'pre-line';
+        } else {
+          el.style.whiteSpace = '';
+        }
+      });
+
+      // Switch placeholders for inputs/textareas with data-ja-placeholder / data-en-placeholder
+      const phLangMap = { ja: 'data-ja-placeholder', en: 'data-en-placeholder', 'zh-hans': 'data-zh-hans-placeholder', 'zh-hant': 'data-zh-hant-placeholder' };
+      const phKey = phLangMap[lang] || 'data-en-placeholder';
+      document.querySelectorAll('[data-ja-placeholder][data-en-placeholder]').forEach((el) => {
+        const ph = el.getAttribute(phKey);
+        if (ph != null) el.placeholder = ph;
+      });
+
+      // Switch image src for elements with data-ja-src / data-en-src (non-ja uses en image)
+      const srcKey = lang === 'ja' ? 'data-ja-src' : 'data-en-src';
+      document.querySelectorAll('[data-ja-src][data-en-src]').forEach((el) => {
+        const src = el.getAttribute(srcKey);
+        if (src) el.src = src;
+      });
     };
 
     applyLanguageBadge('ja');
@@ -335,6 +392,17 @@ export default function SiteBehavior() {
 
     on(artisanDetailClose, 'click', closeArtisanDetail);
     on(artisanDetailOverlay, 'click', closeArtisanDetail);
+
+    // Fallback: delegate close click from document so nothing can swallow it
+    on(document, 'click', (e) => {
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest('#artisanDetailClose')) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeArtisanDetail();
+      }
+    }, true);
     on(document, 'keydown', (e) => {
       if (e.key === 'Escape' && artisanDetail?.classList.contains('is-open')) {
         closeArtisanDetail();
@@ -547,6 +615,14 @@ export default function SiteBehavior() {
 
     if (propertyKumaSection) {
         const pinEnd = 0.985;
+        const getPropertyKumaPinnedState = (sectionProgress, isSectionActive) => {
+          if (!isSectionActive) return false;
+
+          const sectionRect = propertyKumaSection.getBoundingClientRect();
+          const hasReachedViewportTop = sectionRect.top <= 1;
+
+          return hasReachedViewportTop && sectionProgress < pinEnd;
+        };
         updatePropertyScene(0, false, false);
         propertySceneTrigger = ScrollTrigger.create({
           trigger: propertyKumaSection,
@@ -555,12 +631,27 @@ export default function SiteBehavior() {
           scrub: 1.9,
           onUpdate: (self) => {
             const sectionProgress = clamp(self.progress, 0, 1);
-            const isPinned = self.isActive && sectionProgress < pinEnd;
+            const isPinned = getPropertyKumaPinnedState(sectionProgress, self.isActive);
             updatePropertyScene(sectionProgress, self.isActive, isPinned);
           },
           onLeave: () => updatePropertyScene(1, false, false),
           onLeaveBack: () => updatePropertyScene(0, false, false),
         });
+
+        // Sync state after layout settles (fonts/images loaded)
+        const syncProgress = () => {
+          ScrollTrigger.refresh();
+          if (propertySceneTrigger) {
+            const p = clamp(propertySceneTrigger.progress, 0, 1);
+            const isPinned = getPropertyKumaPinnedState(p, propertySceneTrigger.isActive);
+            updatePropertyScene(p, propertySceneTrigger.isActive, isPinned);
+          }
+        };
+        if (document.readyState === 'complete') {
+          requestAnimationFrame(syncProgress);
+        } else {
+          window.addEventListener('load', syncProgress, { once: true });
+        }
       }
 
     };
