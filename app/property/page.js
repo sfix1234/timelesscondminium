@@ -62,7 +62,7 @@ export default async function PropertyPage() {
           <div className="hero__bottom-logo">
             <div className="center-block hero__logo-overlay">
             </div>
-            <img src="/assets/images/THE%20SILENCE_logo_white.png" alt="THE SILENCE" className="hero__bottom-logo-image" />
+            <img src="/assets/images/thesilence_logo_white.png" alt="THE SILENCE" className="hero__bottom-logo-image" />
           </div>
         </section>
 

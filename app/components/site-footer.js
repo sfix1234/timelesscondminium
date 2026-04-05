@@ -3,7 +3,7 @@ export default function SiteFooter() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__logo">
-          <img src="/assets/images/THE%20SILENCE_logo_white.png" alt="THE SILENCE" className="site-footer__logo-image" />
+          <img src="/assets/images/thesilence_logo_white.png" alt="THE SILENCE" className="site-footer__logo-image" />
         </div>
 
         <nav className="site-footer__nav" aria-label="Footer Navigation">
