@@ -51,17 +51,17 @@ export default function PropertyFloorMapSwitcher() {
           <img
             src={activeFloorMap.image}
             alt={`THE SILENCE floor map ${activeFloorMap.label}`}
-            className={`property-info__detail-image${isFirstFloor ? ' property-info__detail-image--floor-1f' : ''}`}
+            className={`property-info__detail-image${isFirstFloor ? ' property-info__detail-image--floor-1f' : ' property-info__detail-image--floor-2f'}`}
           />
           <div className="property-info__road-overlay" aria-hidden="true" style={{ display: isFirstFloor ? undefined : 'none' }}>
             <div className="property-info__road property-info__road--left">
               <span className="property-info__road-line property-info__road-line--outer"></span>
-              <span className="property-info__road-label">上七軒通り</span>
+              <span className="property-info__road-label" data-ja="上七軒通り" data-en="Kamishichiken Street" data-zh-hans="上七轩通" data-zh-hant="上七軒通">上七軒通り</span>
               <span className="property-info__road-line property-info__road-line--inner"></span>
             </div>
             <div className="property-info__road property-info__road--right">
               <span className="property-info__road-line property-info__road-line--outer"></span>
-              <span className="property-info__road-label">五辻通り</span>
+              <span className="property-info__road-label" data-ja="五辻通り" data-en="Itsutsuji Street" data-zh-hans="五辻通" data-zh-hant="五辻通">五辻通り</span>
               <span className="property-info__road-line property-info__road-line--inner"></span>
             </div>
           </div>

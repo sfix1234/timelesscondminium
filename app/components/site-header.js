@@ -31,13 +31,13 @@ export default function SiteHeader({ headerClassName = '', navItems = [], center
 
       <header className={headerClass}>
         <div className="jpn-badge">
-          <button className="jpn-badge__label" id="langToggle" type="button" aria-label="Switch language">JPN</button>
+          <button className="jpn-badge__label" id="langToggle" type="button" aria-label="Switch language">日本語</button>
           <span className="jpn-badge__line"></span>
           <div className="jpn-badge__menu" id="langMenu">
-            <button className="jpn-badge__menu-item" type="button" data-lang="ja">JPN</button>
-            <button className="jpn-badge__menu-item" type="button" data-lang="en">ENG</button>
-            <button className="jpn-badge__menu-item" type="button" data-lang="koto">江東語</button>
-            <button className="jpn-badge__menu-item" type="button" data-lang="yue">広東語</button>
+            <button className="jpn-badge__menu-item" type="button" data-lang="ja">日本語</button>
+            <button className="jpn-badge__menu-item" type="button" data-lang="en">English</button>
+            <button className="jpn-badge__menu-item" type="button" data-lang="zh-hans">中国語（簡体字）</button>
+            <button className="jpn-badge__menu-item" type="button" data-lang="zh-hant">中国語（繁体字）</button>
           </div>
         </div>
         {centerTitle ? <h1 className="center-block__title header__center-title">{centerTitle}</h1> : null}

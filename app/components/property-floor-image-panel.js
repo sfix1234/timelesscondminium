@@ -1,12 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const IMAGE_ANNOTATIONS = {
   entrance: [
     {
       id: 'left',
       copy: ['エントランス左側、黒竹を映す漆喰が趣を添える'],
+      copyEn: ['Plaster walls reflecting black bamboo lend an air of elegance to the entrance'],
+      copyZhHans: ['玄关左侧，映照黑竹的灰泥墙增添雅趣'],
+      copyZhHant: ['玄關左側，映照黑竹的灰泥牆增添雅趣'],
       point: { x: 35, y: 49 },
       elbow: { x: 31, y: 20 },
       anchor: { x: 43, y: 20 },
@@ -15,6 +18,9 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'top',
       copy: ['京都の数寄屋の趣を受け継ぐ、吹き抜けのエントランス'],
+      copyEn: ['A double-height entrance inheriting the spirit of Kyoto sukiya design'],
+      copyZhHans: ['承袭京都数寄屋之趣的挑高玄关'],
+      copyZhHant: ['承襲京都數寄屋之趣的挑高玄關'],
       point: { x: 50, y: 7 },
       elbow: { x: 56, y: 18 },
       anchor: { x: 63, y: 18 },
@@ -23,6 +29,9 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'right',
       copy: ['大仏師・江里康慧の手による、', '祈りを象徴するエントランスオブジェ'],
+      copyEn: ['An entrance object symbolizing prayer,', 'crafted by master sculptor K\u014Dkei Eri'],
+      copyZhHans: ['出自大佛师江里康慧之手，', '象征祈愿的玄关艺术品'],
+      copyZhHant: ['出自大佛師江里康慧之手，', '象徵祈願的玄關藝術品'],
       point: { x: 67, y: 53 },
       elbow: { x: 76, y: 22 },
       anchor: { x: 66, y: 22 },
@@ -33,6 +42,9 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'main',
       copy: ['黒竹と白竹のスクリーンに、四季の花々が静かに迎える'],
+      copyEn: ['Seasonal flowers greet quietly through a screen of black and white bamboo'],
+      copyZhHans: ['黑竹与白竹构成的屏风间，四季花卉静然相迎'],
+      copyZhHant: ['黑竹與白竹構成的屏風間，四季花卉靜然相迎'],
       point: { x: 68.5, y: 42 },
       elbow: { x: 57, y: 18 },
       anchor: { x: 46, y: 18 },
@@ -41,6 +53,9 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'pillar',
       copy: ['無数の柱を、金剛組の技で二本へ', '広々としたLDKを実現'],
+      copyEn: ['Countless pillars reduced to two', 'by Kong\u014D Gumi\u2019s craftsmanship, creating a spacious LDK'],
+      copyZhHans: ['以金刚组之技艺将无数立柱精减为两根，', '实现开阔宽敞的客餐厨空间'],
+      copyZhHant: ['以金剛組之技藝將無數立柱精減為兩根，', '實現開闊寬敞的客餐廚空間'],
       point: { x: 44, y: 50 },
       elbow: { x: 65, y: 68 },
       anchor: { x: 78, y: 68 },
@@ -52,6 +67,9 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'main',
       copy: ['裕人礫翔のオリジナルアート'],
+      copyEn: ['Original artwork by Rakush\u014D Hiroto'],
+      copyZhHans: ['裕人砾翔的原创艺术作品'],
+      copyZhHant: ['裕人礫翔的原創藝術作品'],
       point: { x: 87, y: 39 },
       elbow: { x: 74, y: 18 },
       anchor: { x: 62, y: 18 },
@@ -62,7 +80,10 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'top',
       copy: ['隈研吾氏の代名詞でもある連続したルーバーの大屋根'],
-      point: { x: 50.5, y: 11 },
+      copyEn: ['The signature continuous louver roof by Kengo Kuma'],
+      copyZhHans: ['隈研吾标志性的连续百叶大屋顶'],
+      copyZhHant: ['隈研吾標誌性的連續百葉大屋頂'],
+      point: { x: 50, y: 16 },
       elbow: { x: 41, y: 19 },
       anchor: { x: 30, y: 19 },
       card: { top: '18%', left: '7%', width: '40%' }
@@ -70,6 +91,9 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'center',
       copy: ['アルマーニ / カーザの', 'ファブリックをガラスに挟んだ壁面'],
+      copyEn: ['Armani / Casa fabric', 'sandwiched within glass wall panels'],
+      copyZhHans: ['将Armani / Casa的织物', '夹于玻璃之中的壁面'],
+      copyZhHant: ['將Armani / Casa的織物', '夾於玻璃之中的壁面'],
       point: { x: 50.8, y: 48 },
       elbow: { x: 38, y: 27 },
       anchor: { x: 27, y: 27 },
@@ -78,6 +102,9 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'bottom',
       copy: ['透かし障子を用いた、和の意匠'],
+      copyEn: ['Japanese design with openwork sh\u014Dji screens'],
+      copyZhHans: ['运用镂空障子的和风意匠'],
+      copyZhHant: ['運用鏤空障子的和風意匠'],
       point: { x: 12.2, y: 58 },
       elbow: { x: 28, y: 43 },
       anchor: { x: 40, y: 43 },
@@ -88,7 +115,10 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'main',
       copy: ['壇落ちの滝より流れ出る水が、池へと満ちる'],
-      point: { x: 55, y: 95 },
+      copyEn: ['Water flowing from the cascading falls fills the pond'],
+      copyZhHans: ['从坛落瀑布涌出的水流，注满池中'],
+      copyZhHant: ['從壇落瀑布湧出的水流，注滿池中'],
+      point: { x: 45, y: 80 },
       elbow: { x: 65, y: 22 },
       anchor: { x: 76, y: 22 },
       card: { top: '21%', left: '55%', width: '38%' }
@@ -98,7 +128,10 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'main',
       copy: ['十一代和泉守兼定によるディスプレイ'],
-      point: { x: 47, y: 60 },
+      copyEn: ['Display featuring the sword of Izuminokami Kanesada, 11th generation'],
+      copyZhHans: ['以第十一代和泉守兼定之刀为主题的陈列'],
+      copyZhHant: ['以第十一代和泉守兼定之刀為主題的陳列'],
+      point: { x: 41, y: 53 },
       elbow: { x: 55, y: 58 },
       anchor: { x: 66, y: 58 },
       card: { top: '58%', left: '55%', width: '38%' }
@@ -108,7 +141,10 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'top',
       copy: ['竹をテーマとした茶室を、中村外二の技で蘇らせる'],
-      point: { x: 30, y: 8 },
+      copyEn: ['A bamboo-themed tea room revived by Nakamura Sotoji\u2019s craftsmanship'],
+      copyZhHans: ['以竹为主题的茶室，经中村外二之技艺重现'],
+      copyZhHant: ['以竹為主題的茶室，經中村外二之技藝重現'],
+      point: { x: 30, y: 15 },
       elbow: { x: 20, y: 18 },
       anchor: { x: 10, y: 18 },
       card: { top: '17%', left: '2%', width: '38%' }
@@ -118,6 +154,9 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'main',
       copy: ['ここにしか存在しない、アルマーニ / カーザの家具'],
+      copyEn: ['Armani / Casa furniture, exclusive to this residence'],
+      copyZhHans: ['仅此一处的Armani / Casa家具'],
+      copyZhHant: ['僅此一處的Armani / Casa家具'],
       point: { x: 68, y: 48 },
       elbow: { x: 65, y: 68 },
       anchor: { x: 76, y: 68 },
@@ -128,7 +167,10 @@ const IMAGE_ANNOTATIONS = {
     {
       id: 'main',
       copy: ['青竹による、みずみずしさを宿すオブジェ'],
-      point: { x: 8.5, y: 46 },
+      copyEn: ['A fresh green bamboo objet, imbued with vitality'],
+      copyZhHans: ['以青竹构成、蕴含鲜润生机的艺术品'],
+      copyZhHant: ['以青竹構成、蘊含鮮潤生機的藝術品'],
+      point: { x: 13.5, y: 50 },
       elbow: { x: 27, y: 21 },
       anchor: { x: 38, y: 21 },
       card: { top: '20%', left: '10%', width: '40%' }
@@ -204,6 +246,28 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
   const [activeGalleryId, setActiveGalleryId] = useState(GALLERY_ITEMS[0].id);
   const [activeView, setActiveView] = useState('after');
   const [activeAnnotationId, setActiveAnnotationId] = useState('');
+  const [lang, setLang] = useState('ja');
+  const thumbsRef = useRef(null);
+
+  useEffect(() => {
+    const updateLang = () => setLang((document.documentElement.lang || 'ja').toLowerCase());
+    updateLang();
+    const observer = new MutationObserver(updateLang);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const container = thumbsRef.current;
+    if (!container) return;
+    const activeThumb = container.querySelector('.is-active');
+    if (!activeThumb) return;
+    // Only scroll the horizontal thumbnail strip, never the window.
+    const target = activeThumb.offsetLeft + activeThumb.offsetWidth / 2 - container.clientWidth / 2;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    const next = Math.max(0, Math.min(maxScroll, target));
+    container.scrollTo({ left: next, behavior: 'smooth' });
+  }, [activeGalleryId]);
   const activeGalleryItem = GALLERY_ITEMS.find((item) => item.id === activeGalleryId) ?? GALLERY_ITEMS[0];
   const activeGalleryIndex = GALLERY_ITEMS.findIndex((item) => item.id === activeGalleryId);
   const activeGallerySrc = activeView === 'before' ? activeGalleryItem.beforeSrc : activeGalleryItem.afterSrc;
@@ -319,7 +383,7 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
                         onClick={() =>
                           setActiveAnnotationId((current) => (current === annotation.id ? '' : annotation.id))
                         }
-                        aria-label={annotation.copy.join('')}
+                        aria-label={(lang === 'zh-hant' && annotation.copyZhHant ? annotation.copyZhHant : lang === 'zh-hans' && annotation.copyZhHans ? annotation.copyZhHans : lang !== 'ja' && annotation.copyEn ? annotation.copyEn : annotation.copy).join('')}
                         aria-pressed={isActive}
                       >
                         <span className="property-floor-gallery__pointer-core"></span>
@@ -343,7 +407,7 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
                       </button>
                       <span className="property-floor-gallery__callout-accent"></span>
                       <div className="property-floor-gallery__callout-body">
-                        {activeAnnotation.copy.map((line) => (
+                        {(lang === 'zh-hant' && activeAnnotation.copyZhHant ? activeAnnotation.copyZhHant : lang === 'zh-hans' && activeAnnotation.copyZhHans ? activeAnnotation.copyZhHans : lang !== 'ja' && activeAnnotation.copyEn ? activeAnnotation.copyEn : activeAnnotation.copy).map((line) => (
                           <p key={`${activeAnnotation.id}-${line}`} className="property-floor-gallery__callout-line-text">
                             {line}
                           </p>
@@ -370,7 +434,7 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
           </button>
         </div>
 
-        <div className="property-floor-gallery__thumbnails" role="tablist" aria-label="Floor image gallery thumbnails">
+        <div className="property-floor-gallery__thumbnails" ref={thumbsRef} role="tablist" aria-label="Floor image gallery thumbnails">
           {GALLERY_ITEMS.map((item) => {
             const isActive = item.id === activeGalleryId;
 
@@ -392,6 +456,7 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
             );
           })}
         </div>
+
       </div>
     </div>
   );

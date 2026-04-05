@@ -50,7 +50,11 @@ export async function POST(request) {
       return NextResponse.json({ ok: true, ignored: true });
     }
 
-    return NextResponse.json({ ok: true, ignored: true });
+    const email = await fetchInboundEmailContent(event.data.email_id);
+    const row = formatInboundRow({ event, email });
+    await appendInboundEmailRow(row);
+
+    return NextResponse.json({ ok: true });
   } catch (error) {
     console.error('[resend/inbound-webhook] failed', error);
     return NextResponse.json({ ok: false, message: 'Webhook handling failed.' }, { status: 500 });
