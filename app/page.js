@@ -165,7 +165,7 @@ export default async function HomePage() {
         <div className="hero-intro__flare"></div>
         <div className="hero-intro__mark">
           <span className="hero-intro__mark-ring"></span>
-          <img src="/assets/images/THE%20SILENCE_Logo_white.png" alt="" className="hero-intro__mark-logo" />
+          <img src="/assets/images/THE%20SILENCE_logo_white.png" alt="" className="hero-intro__mark-logo" />
         </div>
       </div>
       <div className="hero__center-title-wrap">
@@ -179,7 +179,7 @@ export default async function HomePage() {
           <div className="center-block hero__logo-overlay">
           </div>
           <div className="floating-logo__main">
-            <img src="/assets/images/THE%20SILENCE_Logo_white.png" alt="" className="floating-logo__image" />
+            <img src="/assets/images/THE%20SILENCE_logo_white.png" alt="" className="floating-logo__image" />
           </div>
         </div>
       </div>

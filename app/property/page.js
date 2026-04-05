@@ -62,7 +62,7 @@ export default async function PropertyPage() {
           <div className="hero__bottom-logo">
             <div className="center-block hero__logo-overlay">
             </div>
-            <img src="/assets/images/THE%20SILENCE_Logo_white.png" alt="THE SILENCE" className="hero__bottom-logo-image" />
+            <img src="/assets/images/THE%20SILENCE_logo_white.png" alt="THE SILENCE" className="hero__bottom-logo-image" />
           </div>
         </section>
 
@@ -270,8 +270,7 @@ export default async function PropertyPage() {
             <div className="armani-homage__copy">
               <p data-ja="日本と京都をこよなく愛されたジョルジオ・アルマーニ" data-en="To Giorgio Armani, who held Japan, and Kyoto, in the deepest of affections." data-zh-hans="谨以此篇，献予挚爱日本与京都的乔治·阿玛尼" data-zh-hant="謹以此篇，獻予摯愛日本與京都的喬治·阿瑪尼。">日本と京都をこよなく愛されたジョルジオ・アルマーニ</p>
               <p data-ja="世界の巨匠として築き上げられた美と気品に、深甚なる敬意を表します" data-en="We offer our most profound respect to the beauty and elegance you built for the world." data-zh-hans="其所成就之美与气度，谨致以深切敬意。" data-zh-hant="其所成就之美與氣度，謹致以深切敬意。">世界の巨匠として築き上げられた美と気品に、深甚なる敬意を表します</p>
-              <p data-ja="本プロジェクトがささやかながらもオマージュとして捧げられることを、心より願っております" data-en="It is our most sincere wish that this project may stand, however humbly, as a tribute to your honor." data-zh-hans="愿此番呈现，化作一份致意，静然流转。" data-zh-hant="願此番呈現，化作一份致意，靜然流轉。">本プロジェクトがささやかながらも</p>
-              <p className="armani-homage__copy-ja-only" data-ja="オマージュとして捧げられることを、心より願っております" data-en="">オマージュとして捧げられることを、心より願っております</p>
+              <p data-ja="本プロジェクトがささやかながらもオマージュとして捧げられることを、心より願っております" data-en="It is our most sincere wish that this project may stand, however humbly, as a tribute to your honor." data-zh-hans="愿此番呈现，化作一份致意，静然流转。" data-zh-hant="願此番呈現，化作一份致意，靜然流轉。">本プロジェクトがささやかながらもオマージュとして捧げられることを、心より願っております</p>
             </div>
           </div>
         </section>
