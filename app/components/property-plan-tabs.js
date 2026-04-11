@@ -18,7 +18,7 @@ function PlanCard({ title, firstSrc, secondSrc, firstAlt, secondAlt }) {
             className={`property-plan-card__tab ${isFirst ? 'is-active' : ''}`}
             onClick={() => setTab('first')}
           >
-            <span className="property-plan-card__tab-main">1F</span>
+            <span className="property-plan-card__tab-main"><span className="property-plan-card__tab-num">1</span>F</span>
             <span className="property-plan-card__tab-sub">1階平面図</span>
           </button>
           <button
@@ -28,7 +28,7 @@ function PlanCard({ title, firstSrc, secondSrc, firstAlt, secondAlt }) {
             className={`property-plan-card__tab ${!isFirst ? 'is-active' : ''}`}
             onClick={() => setTab('second')}
           >
-            <span className="property-plan-card__tab-main">2F</span>
+            <span className="property-plan-card__tab-main"><span className="property-plan-card__tab-num">2</span>F</span>
             <span className="property-plan-card__tab-sub">2階平面図</span>
           </button>
         </div>
@@ -44,7 +44,7 @@ function PlanCard({ title, firstSrc, secondSrc, firstAlt, secondAlt }) {
       <div className="property-plan-card__pair">
         <figure className="property-plan-card__pair-item" data-floor="1F">
           <div className="property-plan-card__pair-head">
-            <p className="property-plan-card__pair-kicker">1F 平面図</p>
+            <p className="property-plan-card__pair-kicker"><span className="property-plan-card__tab-num">1</span>F 平面図</p>
           </div>
           <div className="property-plan-card__pair-media">
             <img src={firstSrc} alt={firstAlt} className="property-plan-card__media" />
@@ -52,7 +52,7 @@ function PlanCard({ title, firstSrc, secondSrc, firstAlt, secondAlt }) {
         </figure>
         <figure className="property-plan-card__pair-item" data-floor="2F">
           <div className="property-plan-card__pair-head">
-            <p className="property-plan-card__pair-kicker">2F 平面図</p>
+            <p className="property-plan-card__pair-kicker"><span className="property-plan-card__tab-num">2</span>F 平面図</p>
           </div>
           <div className="property-plan-card__pair-media">
             <img src={secondSrc} alt={secondAlt} className="property-plan-card__media" />

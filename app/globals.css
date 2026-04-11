@@ -2930,6 +2930,109 @@ html:not(.has-js) .stage__info {
   border-left: clamp(12px, 2.2vw, 16px) solid rgba(242, 242, 242, 0.95);
 }
 
+.cookie-consent {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1200;
+  width: 100%;
+}
+
+.cookie-consent__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  padding: 18px clamp(16px, 2.8vw, 32px) 16px;
+  background: rgba(17, 16, 14, 0.94);
+  border-top: 1px solid rgba(214, 198, 172, 0.28);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(18px);
+}
+
+.cookie-consent__copy {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cookie-consent__title {
+  margin: 0;
+  color: rgba(255, 248, 238, 0.92);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  letter-spacing: 0.16em;
+}
+
+.cookie-consent__text {
+  margin: 0;
+  color: rgba(255, 248, 238, 0.76);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.cookie-consent__link {
+  color: rgba(214, 198, 172, 0.94);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.cookie-consent__actions {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cookie-consent__button {
+  appearance: none;
+  min-width: 128px;
+  border: 1px solid rgba(214, 198, 172, 0.36);
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.cookie-consent__button:hover {
+  transform: translateY(-1px);
+}
+
+.cookie-consent__button--ghost {
+  background: transparent;
+  color: rgba(255, 248, 238, 0.82);
+}
+
+.cookie-consent__button--solid {
+  background: rgba(214, 198, 172, 0.92);
+  color: #161311;
+}
+
+@media (max-width: 640px) {
+  .cookie-consent__inner {
+    display: grid;
+    gap: 14px;
+    padding: 16px 14px 14px;
+  }
+
+  .cookie-consent__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cookie-consent__button {
+    min-width: 0;
+    width: 100%;
+    padding: 11px 14px;
+  }
+}
+
 .artisans-intro {
   position: relative;
   z-index: 13;
@@ -3083,11 +3186,26 @@ html:not(.has-js) .stage__info {
 }
 
 .artisan-card__media-button {
+  position: relative;
   width: 100%;
   border: 0;
   padding: 0;
   display: block;
   cursor: pointer;
+}
+
+.artisan-card__credit {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
 }
 
 .artisan-card__image {
@@ -3728,9 +3846,9 @@ html:not(.has-js) .stage__info {
 }
 
 .detail-panel__close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  position: fixed;
+  right: clamp(18px, 3vw, 28px);
+  bottom: clamp(18px, 3vw, 28px);
   width: 32px;
   height: 32px;
   background: none;
@@ -4097,16 +4215,39 @@ html:not(.has-js) .stage__info {
   column-gap: 10px;
 }
 
+.artisan-detail__gallery-item {
+  position: relative;
+  margin: 0 0 10px;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+}
+
 .artisan-detail__gallery-image {
   display: block;
   width: 100%;
   height: auto;
   object-fit: contain;
   border-radius: 2px;
-  margin: 0 0 10px;
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;
+  margin: 0;
+}
+
+.artisan-detail__gallery-credit {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.artisan-detail__gallery-item--full {
+  column-span: all;
 }
 
 .artisan-detail__gallery-image--full {
@@ -4129,7 +4270,7 @@ html:not(.has-js) .stage__info {
     column-gap: 12px;
   }
 
-  .artisan-detail__gallery-image {
+  .artisan-detail__gallery-item {
     margin-bottom: 12px;
   }
 }
@@ -4858,9 +4999,12 @@ html:not(.has-js) .stage__info {
 }
 
 .property-plan-card__tab-main {
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: clamp(13px, 1.7vw, 16px);
   letter-spacing: 0.1em;
   line-height: 1.2;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
 }
 
 .property-plan-card__tab-sub {
@@ -4915,10 +5059,12 @@ html:not(.has-js) .stage__info {
 
 .property-plan-card__pair-kicker {
   margin: 0;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: clamp(12px, 1.4vw, 14px);
   letter-spacing: 0.12em;
   color: #fff;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
 }
 
 .property-plan-card__pair-label {
@@ -7380,7 +7526,6 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 .property-page .property-kuma__jp,
 .property-page .property-plan-card__floor,
 .property-page .property-plan-card__tab-sub,
-.property-page .property-plan-card__pair-kicker,
 .property-page .property-info__compare-title,
 .property-page .property-info__skills-title,
 .property-page .property-info__skill,
@@ -7417,6 +7562,24 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
 }
 
+.property-page .property-plan-card__tab-main,
+.property-page .property-plan-card__pair-kicker {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+}
+
+.property-page .property-plan-card__tab-num,
+.property-plan-card__tab-num {
+  font-family: 'Helvetica Neue', Arial, system-ui, sans-serif !important;
+  font-size: 1.2em;
+  font-weight: 500;
+  display: inline-block;
+  vertical-align: baseline;
+  letter-spacing: 0;
+  margin-right: 0.08em;
+}
+
 html[lang='en'] .property-page .armani-homage__copy {
   width: min(100%, 72rem);
 }
@@ -7429,6 +7592,10 @@ html[lang='ja'] .property-page .armani-homage__copy p {
   font-size: clamp(10px, 0.95vw, 13px);
   line-height: 1.85;
   letter-spacing: 0.06em;
+}
+
+html[lang='ja'] .property-page .property-spec__row--note {
+  display: none;
 }
 
 html[lang='en'] .property-page .armani-homage__copy p {
@@ -7971,6 +8138,16 @@ html[lang='en'] .property-page .armani-homage__copy p {
   text-transform: uppercase;
 }
 
+.property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-gallery__floor-number {
+  font-family: 'Yu Mincho', 'Hiragino Mincho ProN', 'Noto Serif JP', serif;
+  font-size: 1em;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: 'lnum' 1;
+}
+
 .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-gallery__current--long {
   font-size: clamp(14px, 1.15vw, 18px);
 }
@@ -8077,8 +8254,31 @@ html[lang='en'] .property-page .armani-homage__copy p {
   line-height: 1;
   min-width: 64px;
   padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.04em;
   cursor: pointer;
   transition: color 180ms ease, background-color 180ms ease, opacity 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.property-page #property-kuma #property-info .property-info__floor-button-number,
+.property-page #property-kuma #property-info .property-info__floor-button-suffix {
+  display: inline-block;
+  font-size: 1em;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: 1;
+}
+
+.property-page #property-kuma #property-info .property-info__floor-button-number {
+  font-family: 'Yu Mincho', 'Hiragino Mincho ProN', 'Noto Serif JP', serif;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: 'lnum' 1;
+}
+
+.property-page #property-kuma #property-info .property-info__floor-button-suffix {
+  font-size: 1em;
 }
 
 .property-page #property-kuma #property-info .property-info__floor-button.is-active {

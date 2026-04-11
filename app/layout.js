@@ -1,4 +1,5 @@
 import './globals.css';
+import CookieConsentBanner from './components/cookie-consent-banner';
 
 export const metadata = {
   title: 'THE TIMELESS CONDOMINIUM',
@@ -41,34 +42,20 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const isGtmEnabled = String(process.env.CLIENT_PREVIEW_ENABLED || '').trim().toLowerCase() === 'true';
-
   return (
     <html lang="ja">
       <head>
-        {isGtmEnabled && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i,c){var loaded=false;function hasConsent(){return d.cookie.split('; ').some(function(item){return item.trim().indexOf(c+'=accepted')===0;});}function load(){if(loaded){return;}loaded=true;w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-M4JZ5P3P');`
-            }}
-          />
-        )}
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}w.__loadGTM=load;if(hasConsent()){load();}})(window,document,'script','dataLayer','GTM-M4JZ5P3P','ttc_cookie_consent');`
+          }}
+        />
       </head>
       <body>
-        {isGtmEnabled && (
-          <noscript>
-            <iframe
-              src="https://www.googletagmanager.com/ns.html?id=GTM-M4JZ5P3P"
-              height="0"
-              width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
-            />
-          </noscript>
-        )}
+        <CookieConsentBanner />
         {children}
       </body>
     </html>

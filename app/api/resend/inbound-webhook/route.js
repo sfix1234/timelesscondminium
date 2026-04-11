@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { appendInboundEmailRow } from '../../../../lib/google-sheets';
-import { decodeWebhookPayload, formatInboundRow, verifyResendWebhookSignature } from '../../../../lib/resend-webhook';
+import {
+  decodeWebhookPayload,
+  formatInboundRow,
+  shouldIgnoreInboundEmail,
+  verifyResendWebhookSignature
+} from '../../../../lib/resend-webhook';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -51,6 +56,10 @@ export async function POST(request) {
     }
 
     const email = await fetchInboundEmailContent(event.data.email_id);
+    if (shouldIgnoreInboundEmail(email)) {
+      return NextResponse.json({ ok: true, ignored: true, reason: 'internal_notification' });
+    }
+
     const row = formatInboundRow({ event, email });
     await appendInboundEmailRow(row);
 

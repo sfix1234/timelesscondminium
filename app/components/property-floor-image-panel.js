@@ -242,6 +242,24 @@ const GALLERY_ITEMS = [
   }
 ];
 
+function renderGalleryLabel(label) {
+  return label.split(/(\d)(F)/g).map((part, index) => {
+    if (part === 'F') {
+      return <span key={`gallery-floor-suffix-${index}`}>{part}</span>;
+    }
+
+    if (/^\d$/.test(part)) {
+      return (
+        <span key={`gallery-floor-number-${index}`} className="property-floor-gallery__floor-number">
+          {part}
+        </span>
+      );
+    }
+
+    return <span key={`gallery-floor-text-${index}`}>{part}</span>;
+  });
+}
+
 export default function PropertyFloorImagePanel({ embedded = false }) {
   const [activeGalleryId, setActiveGalleryId] = useState(GALLERY_ITEMS[0].id);
   const [activeView, setActiveView] = useState('after');
@@ -292,7 +310,7 @@ export default function PropertyFloorImagePanel({ embedded = false }) {
 
       <div className="property-floor-gallery">
         <div className="property-floor-gallery__meta">
-          <p className={`property-floor-gallery__current${isLongGalleryLabel ? ' property-floor-gallery__current--long' : ''}`}>{activeGalleryItem.label}</p>
+          <p className={`property-floor-gallery__current${isLongGalleryLabel ? ' property-floor-gallery__current--long' : ''}`}>{renderGalleryLabel(activeGalleryItem.label)}</p>
           <div className="property-floor-gallery__toggle" role="tablist" aria-label="Before after toggle">
             <button
               type="button"

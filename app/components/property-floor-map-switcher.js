@@ -40,7 +40,8 @@ export default function PropertyFloorMapSwitcher() {
                   role="tab"
                   aria-selected={isActive}
                 >
-                  {floor.label}
+                  <span className="property-info__floor-button-number">{floor.label.slice(0, -1)}</span>
+                  <span className="property-info__floor-button-suffix">{floor.label.slice(-1)}</span>
                 </button>
               );
             })}
