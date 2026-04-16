@@ -207,7 +207,7 @@ const GALLERY_ITEMS = [
   {
     id: 'master-bedroom',
     label: 'MASTER BEDROOM / 主屋 2F',
-    beforeSrc: '/assets/images/before/5before_sm.png',
+    beforeSrc: '/assets/images/before/5before_sm.jpg',
     afterSrc: '/assets/images/propatyinfo/5MASTERBEDROOM.jpg'
   },
   {

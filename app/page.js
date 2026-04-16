@@ -90,14 +90,6 @@ const artisanProfessionalGalleryMap = {
   ],
 };
 
-const kengoKumaGalleryCredits = {
-  'kumakengo-1.jpg': '© LUXIGON',
-  'kumakengo-2.jpg': '© 藤塚光政',
-  'kumakengo-3.jpeg': '© nacasa&partner',
-  'kumakengo-4.jpeg': '© Takumi Ota',
-  'kumakengo-5.jpeg': '© Ross Fraser McLean',
-};
-
 function ArtisanProfessionalsGallery({ artisanId, artisanName }) {
   const images = artisanProfessionalGalleryMap[artisanId] || [];
   if (!images.length) return null;
@@ -109,25 +101,15 @@ function ArtisanProfessionalsGallery({ artisanId, artisanName }) {
         <div className="artisan-detail__section-line"></div>
       </div>
       <div className="artisan-detail__gallery">
-        {images.map((src, index) => {
-          const imageName = src.split('/').pop() || '';
-          const imageCredit = kengoKumaGalleryCredits[imageName] || '';
-
-          return (
-            <figure
-              key={`${artisanId}-${src}`}
-              className={`artisan-detail__gallery-item${src.includes('kv-100') ? ' artisan-detail__gallery-item--full' : ''}`}
-            >
-              <img
-                src={src}
-                alt={`${artisanName} ${index + 1}`}
-                className={`artisan-detail__gallery-image${src.includes('kv-100') ? ' artisan-detail__gallery-image--full' : ''}${src.includes('toshizo0') ? ' artisan-detail__gallery-image--portrait' : ''}`}
-                loading="lazy"
-              />
-              {imageCredit ? <span className="artisan-detail__gallery-credit">{imageCredit}</span> : null}
-            </figure>
-          );
-        })}
+        {images.map((src, index) => (
+          <img
+            key={`${artisanId}-${src}`}
+            src={src}
+            alt={`${artisanName} ${index + 1}`}
+            className={`artisan-detail__gallery-image${src.includes('kv-100') ? ' artisan-detail__gallery-image--full' : ''}${src.includes('toshizo0') ? ' artisan-detail__gallery-image--portrait' : ''}`}
+            loading="lazy"
+          />
+        ))}
       </div>
     </>
   );
@@ -137,7 +119,7 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get(ACCESS_SESSION_COOKIE)?.value;
   const isClientPreview = String(process.env.CLIENT_PREVIEW_ENABLED || '').trim().toLowerCase() === 'true';
-  const isUnlocked = isClientPreview || Boolean(getSessionRecord(sessionToken));
+  const isUnlocked = Boolean(getSessionRecord(sessionToken));
   const rightStoryText = '日本の「美」を、千年先の世界へ紡ぐ。';
   const rightStoryTextEn = 'Weaving the beauty of Japan into the world a thousand years from now.';
   const rightStoryTextZhHans = '将日本之「美」，织就于千年后的世界。';
@@ -168,7 +150,7 @@ export default async function HomePage() {
         ></iframe>
         <iframe
           className="hero__video hero__video--mobile"
-          src="https://player.vimeo.com/video/1180212166?background=1&autoplay=1&muted=1&loop=1&playsinline=1&title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479"
+          src="https://player.vimeo.com/video/1183490041?background=1&autoplay=1&muted=1&loop=1&playsinline=1&title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479"
           frameBorder="0"
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
           loading="eager"
@@ -313,7 +295,7 @@ export default async function HomePage() {
       </button>
       <div className="registration-popup__inner">
         <h2 className="registration__title">REGISTRATION</h2>
-        <p className="registration__text" data-ja="この先の内容をご覧いただくには、ご登録が必要となります。&#10;プロジェクトの詳細や世界の匠たちが織りなす物語を、ぜひご体感ください。&#10;ご登録は無料で承っております。" data-en="Registration is required to view the content ahead.&#10;Explore the project details and the stories woven by master artisans from around the world.&#10;Registration is free of charge." data-zh-hans="查看后续内容需要注册。&#10;请体验项目详情及世界匠人们编织的故事。&#10;注册免费。" data-zh-hant="查看後續內容需要註冊。&#10;請體驗項目詳情及世界匠人們編織的故事。&#10;註冊免費。">
+        <p className="registration__text">
           この先の内容をご覧いただくには、ご登録が必要となります。<br />
           プロジェクトの詳細や世界の匠たちが織りなす物語を、ぜひご体感ください。<br />
           ご登録は無料で承っております。
@@ -325,10 +307,10 @@ export default async function HomePage() {
 
   <div className="detail-panel" id="detailPanel">
     <div className="detail-panel__overlay"></div>
-    <button className="detail-panel__close" id="detailClose" type="button">
-      <span></span><span></span>
-    </button>
     <div className="detail-panel__body">
+      <button className="detail-panel__close" id="detailClose" type="button">
+        <span></span><span></span>
+      </button>
       <div className="detail-panel__content" data-detail="0">
         <span className="detail-panel__label">01</span>
         <h3 className="detail-panel__title">KYOTO</h3>
@@ -370,7 +352,7 @@ export default async function HomePage() {
         <div className="detail-panel__text">
           <h4 className="detail-panel__lead" data-ja={'世界最古の\nサステナブルな花街'} data-en={"The World\u2019s Most Ancient Sustainable Hanamachi"} data-zh-hans="世界最古可持续发展花街" data-zh-hant="世界最古可持續花街">世界最古の<br />サステナブルな花街</h4>
           <p className="detail-panel__paragraph" data-ja="北野の地に創られた街・上七軒 ー 北野天満宮は、その歴史の中で幾度もの火災や地震に見舞われ、十五世紀中頃の大災では、社殿などの貴重な文化財が焼失してしまいました。その再建工事の際に生じた余材は、北野天満宮の東門前に創建された、参拝客の休み処となる七軒の茶屋建築の資材として使用されました。それこそが「上七軒」という、世界最古のサステナブル精神に基づいて創られた街の始まりと考えられています。" data-en="Kamishichiken, born of Kitano&#39;s very essence, emerged from an act of quiet renewal. Through centuries of fire and earthquakes, Kitano Tenmangu stood resilient; yet in the mid-fifteenth century, flames claimed many of its sacred forms. From what remained, timber was reborn as seven teahouses at the shrine&#39;s eastern gate, welcoming pilgrims with grace. Thus began Kamishichiken: a place shaped by renewal, carrying within it one of the world&#39;s earliest expressions of sustainability." data-zh-hans="上七轩，生于北野之地。北野天满宫历经火灾与地震侵袭，十五世纪中叶一场大灾，社殿等珍贵文化财尽毁。其后重建所遗余材，被用于东门前七间茶屋之建，为参拜者所设歇息之所。上七轩，正由此而始——一处以可持续精神为源的街区。" data-zh-hant="上七軒，生於北野之地。北野天滿宮歷經火災與地震侵襲，十五世紀中葉一場大災，社殿等珍貴文化財盡毀。其後重建所遺餘材，被用於東門前七間茶屋之建，為參拜者所設歇息之所。上七軒，正由此而始——一處以可持續精神為源的街區。">北野の地に創られた街・上七軒 ー 北野天満宮は、その歴史の中で幾度もの火災や地震に見舞われ、十五世紀中頃の大災では、社殿などの貴重な文化財が焼失してしまいました。その再建工事の際に生じた余材は、北野天満宮の東門前に創建された、参拝客の休み処となる七軒の茶屋建築の資材として使用されました。それこそが「上七軒」という、世界最古のサステナブル精神に基づいて創られた街の始まりと考えられています。</p>
-          <p className="detail-panel__paragraph" data-ja={'十七世紀以降、芸舞妓の演舞を愛でながら食事やお酒を楽しむお茶屋遊びが流行したことで、上七軒は優雅な宮廷文化の流れを汲んだ \u201C日本最古の花街\u201D として、また織物の街・西陣の奥座敷として、繁栄に拍車をかけていきました。'} data-en={"From the seventeenth century, as the art of ochaya gatherings, where one dines and drinks in the presence of geiko and maiko came into vogue, Kamishichiken blossomed. Rooted in the grace of courtly culture, it rose to prominence as Japan’s oldest hanamachi and as the refined inner sanctuary of Nishijin, the famed weaving district of Kyoto."} data-zh-hans="十七世纪以降，伴随「茶屋宴游」之兴，人们于此观艺舞妓之舞，品馔饮酒。上七轩承袭宫廷文化之雅，既为日本最古之花街，亦为西阵织物之奥座，渐臻繁盛。" data-zh-hant="十七世紀以降，伴隨「茶屋宴遊」之興，人們於此觀藝舞妓之舞，品饌飲酒。上七軒承襲宮廷文化之雅，既為日本最古之花街，亦為西陣織物之奧座，漸臻繁盛。">十七世紀以降、芸舞妓の演舞を愛でながら食事やお酒を楽しむお茶屋遊びが流行したことで、上七軒は優雅な宮廷文化の流れを汲んだ "日本最古の花街" として、また織物の街・西陣の奥座敷として、繁栄に拍車をかけていきました。</p>
+          <p className="detail-panel__paragraph" data-ja={'十七世紀以降、芸舞妓の演舞を愛でながら食事やお酒を楽しむお茶屋遊びが流行したことで、上七軒は優雅な宮廷文化の流れを汲んだ \u201C日本最古の花街\u201D として、また織物の街・西陣の奥座敷として、繁栄に拍車をかけていきました。'} data-en={"From the seventeenth century, as the art of ochaya gatherings, where one dines and drinks in the presence of geiko and maiko came into vogue, Kamishichiken blossomed. Rooted in the grace of courtly culture, it rose to prominence as Japan&#39;s oldest hanamachi and as the refined inner sanctuary of Nishijin, the famed weaving district of Kyoto."} data-zh-hans="十七世纪以降，伴随「茶屋宴游」之兴，人们于此观艺舞妓之舞，品馔饮酒。上七轩承袭宫廷文化之雅，既为日本最古之花街，亦为西阵织物之奥座，渐臻繁盛。" data-zh-hant="十七世紀以降，伴隨「茶屋宴遊」之興，人們於此觀藝舞妓之舞，品饌飲酒。上七軒承襲宮廷文化之雅，既為日本最古之花街，亦為西陣織物之奧座，漸臻繁盛。">十七世紀以降、芸舞妓の演舞を愛でながら食事やお酒を楽しむお茶屋遊びが流行したことで、上七軒は優雅な宮廷文化の流れを汲んだ "日本最古の花街" として、また織物の街・西陣の奥座敷として、繁栄に拍車をかけていきました。</p>
           <p className="detail-panel__paragraph" data-ja="その街に佇むのが「旧 長谷川邸」という一邸です。上七軒のお茶屋の中でも北野天満宮に最も近い場所に佇み、一際広い敷地を有する格式高い邸宅として、二百年から三百年もの間賑わっていたと伝えられています。木造建築でありながら現代にその姿を残している、極めて歴史的価値の高い奇跡の邸宅です。" data-en="Within this storied district stands the Former Hasegawa Residence. Positioned nearest to Kitano Tenmangu among the ochaya of Kamishichiken, and set upon an unusually generous estate, it is said to have prospered for two to three centuries as a residence of distinction. That such a wooden structure remains to this day is nothing short of extraordinary, a rare and invaluable testament to history." data-zh-hans="伫立其间的，正是『旧长谷川邸』。于上七轩众多茶屋之中，此邸最邻北野天满宫，占地开阔，据传作为格调高雅的宅邸，二至三百年间，门庭兴盛不绝。木构之身，延续至今，静然存世。" data-zh-hant="佇立其間的，正是「舊長谷川邸」。於上七軒眾多茶屋之中，此邸最鄰北野天滿宮，占地開闊。相傳二至三百年間，門庭興盛不絕。木構之身，延續至今，靜然存世。">その街に佇むのが「旧 長谷川邸」という一邸です。上七軒のお茶屋の中でも北野天満宮に最も近い場所に佇み、一際広い敷地を有する格式高い邸宅として、二百年から三百年もの間賑わっていたと伝えられています。木造建築でありながら現代にその姿を残している、極めて歴史的価値の高い奇跡の邸宅です。</p>
         </div>
         <button className="detail-panel__next" type="button" data-next-detail="3" data-ja="次のセクションへ" data-en="Next Section" data-zh-hans="下一章节" data-zh-hant="前往下一個章節">次のセクションへ</button>
@@ -422,9 +404,8 @@ export default async function HomePage() {
   <section className="artisans-five">
     <div className="artisans-five__inner">
       <article className="artisan-card">
-        <button className="artisan-card__media artisan-card__media-button artisan-card__media-button--credited" type="button" data-artisan="0" aria-label="隈研吾の詳細を開く">
+        <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="0" aria-label="隈研吾の詳細を開く">
           <img src="/assets/images/artisans/kengokuma.webp" alt="隈研吾" className="artisan-card__image" />
-          <span className="artisan-card__credit">© Designhouse</span>
         </button>
         <div className="artisan-card__overlay artisan-card__overlay--light">
           <div className="artisan-card__copy">
@@ -579,6 +560,7 @@ export default async function HomePage() {
         </p>
         <div className="property-section__buttons">
           <a href="/property" className="property-section__button" data-ja="詳細を確認する" data-en="View Details" data-zh-hans="查看详情" data-zh-hant="查看詳情">詳細を確認する</a>
+          <a href="/property#property-contact" className="property-section__button property-section__button--contact" data-ja="お問い合わせ" data-en="Contact Us" data-zh-hans="联系我们" data-zh-hant="聯絡我們">お問い合わせ</a>
         </div>
       </div>
 
@@ -607,7 +589,7 @@ export default async function HomePage() {
         <div className="artisan-detail__meta">
           <div className="artisan-detail__meta-copy">
             <p className="artisan-detail__role">Design Supervision</p>
-            <p className="artisan-detail__jp" data-ja="隈研吾 / 隈研吾建築都市設計事務所" data-en="Kengo Kuma / Kengo Kuma &amp; Associates">隈研吾 / 隈研吾建築都市設計事務所</p>
+            <p className="artisan-detail__jp" data-ja="隈研吾 / 隈研吾建築都市設計事務所" data-en="Kengo Kuma &amp; Associates">隈研吾 / 隈研吾建築都市設計事務所</p>
           </div>
         </div>
         <p className="artisan-detail__text" data-ja="1954年生まれ。1990年に隈研吾建築都市設計事務所を設立。慶應義塾大学教授、東京大学教授などを歴任し、現在は東京大学にて特別教授・名誉教授を務めるほか、多くの機関で教育・研究活動を推進。日本芸術院会員。" data-zh-hans="1954年生。1990年创立隈研吾建筑都市设计事务所。历任庆应义塾大学教授、东京大学教授等职，现任东京大学特别教授暨名誉教授，并在多所机构推动教育与研究活动。日本艺术院会员。" data-zh-hant="1954年生。1990年創立隈研吾建築都市設計事務所。歷任慶應義塾大學教授、東京大學教授等職，現任東京大學特別教授暨名譽教授，並於多所機構推動教育與研究活動。日本藝術院會員。" data-en="Born in 1954. He founded Kengo Kuma and Associates in 1990. After serving as professor at Keio University and the University of Tokyo, he currently holds the title of Special Professor and Professor Emeritus at the University of Tokyo, while advancing research and education at numerous institutions. Member of the Japan Art Academy.">
@@ -616,8 +598,8 @@ export default async function HomePage() {
         <p className="artisan-detail__text" data-ja="木や石などの素材が持つ力や光の表情を繊細に引き出し、土地の記憶と工芸性を現代へとつなぐデザインを基軸に、住宅から文化施設、都市スケールのプロジェクトまで多彩に展開。自然・技術・人間の新しい関係を切り開く建築を世界へ問い続けている。" data-zh-hans="他细腻地汲取木材、石材等素材蕴含的力量与光线表情，以连结土地记忆与工艺性的设计为核心，广泛展开从住宅到文化设施、乃至都市规模的多元项目。持续向世界提出开创自然、技术与人类新关系的建筑。" data-zh-hant="他細膩地汲取木材、石材等素材蘊含的力量與光線表情，以連結土地記憶與工藝性的設計為核心，廣泛展開從住宅到文化設施、乃至都市規模的多元專案。持續向世界提出開創自然、技術與人類新關係的建築。" data-en="Drawing subtly on the inherent strength of materials such as wood and stone, and the interplay of light, his design philosophy bridges the memory of place and the spirit of craftsmanship with the present. His work spans residences, cultural facilities and urban-scale projects, continually proposing a new relationship between nature, technology, and humanity.">
           木や石などの素材が持つ力や光の表情を繊細に引き出し、土地の記憶と工芸性を現代へとつなぐデザインを基軸に、住宅から文化施設、都市スケールのプロジェクトまで多彩に展開。自然・技術・人間の新しい関係を切り開く建築を世界へ問い続けている。
         </p>
-        <p className="artisan-detail__text" data-ja="事務所には国内外合わせて数百名に及ぶ多国籍の設計プロフェッショナルが在籍し、それぞれの才能が世界30カ国以上で新たな潮流を生み出している。近年では室内装飾や食器・家具・インテリアなどのデザイン領域をさらに広げ、現在も各地で数百を超えるプロジェクトが進行中。これまでに50カ国以上で手がけた建築群は、世界建築界の最高峰を象徴する存在として高い評価を受けている。" data-zh-hans="事务所汇聚国内外数百名设计专业人士，各展所长，在逾30个国家引领崭新潮流。近年活动领域更扩展至室内装饰、餐具、家具及室内设计开发，目前逾数百个项目正在全球同步推进。迄今在50余国完成的建筑群，作为世界建筑界最高峰的象征，广受各界高度评价。" data-zh-hant="事務所匯聚國內外數百名設計專業人士，各展所長，在逾30個國家引領嶄新潮流。近年活動領域更擴展至室內裝飾、餐具、家具及室內設計開發，目前逾數百個專案正在全球同步推進。迄今在50餘國完成的建築群，作為世界建築界最高峰的象徵，廣受各界高度評價。" data-en="The firm brings together several hundred design professionals from Japan and around the world, whose individual talents continue to shape new movements across more than 30 countries. In recent years, its scope has expanded beyond architecture to encompass interior design, tableware, furniture, and a broader expression of lifestyle. Today, it leads to hundreds of projects on a global scale. Its portfolio, spanning over 50 countries, has earned international acclaim and stands as a symbol of excellence at the very pinnacle of world architecture.">
-          事務所には国内外合わせて数百名に及ぶ多国籍の設計プロフェッショナルが在籍し、それぞれの才能が世界30カ国以上で新たな潮流を生み出している。近年では室内装飾や食器・家具・インテリアなどのデザイン領域をさらに広げ、現在も各地で数百を超えるプロジェクトが進行中。これまでに50カ国以上で手がけた建築群は、世界建築界の最高峰を象徴する存在として高い評価を受けている。
+        <p className="artisan-detail__text" data-ja="事務所には国内外合わせて数百名に及ぶ設計のプロフェッショナルが所属し、それぞれの才能が30カ国以上で新たな潮流を生み出している。近年では室内装飾や食器・家具・インテリアなどのデザイン開発へと活動領域をさらに広げ、現在も数百を超えるプロジェクトがグローバルで進行中。これまでに50か国以上で手がけた建築群は、世界建築界の最高峰を象徴する存在として高い評価を受けている。" data-zh-hans="事务所汇聚国内外数百名设计专业人士，各展所长，在逾30个国家引领崭新潮流。近年活动领域更扩展至室内装饰、餐具、家具及室内设计开发，目前逾数百个项目正在全球同步推进。迄今在50余国完成的建筑群，作为世界建筑界最高峰的象征，广受各界高度评价。" data-zh-hant="事務所匯聚國內外數百名設計專業人士，各展所長，在逾30個國家引領嶄新潮流。近年活動領域更擴展至室內裝飾、餐具、家具及室內設計開發，目前逾數百個專案正在全球同步推進。迄今在50餘國完成的建築群，作為世界建築界最高峰的象徵，廣受各界高度評價。" data-en="The firm brings together several hundred design professionals from Japan and around the world, whose individual talents continue to shape new movements across more than 30 countries. In recent years, its scope has expanded beyond architecture to encompass interior design, tableware, furniture, and a broader expression of lifestyle. Today, it leads to hundreds of projects on a global scale. Its portfolio, spanning over 50 countries, has earned international acclaim and stands as a symbol of excellence at the very pinnacle of world architecture.">
+          事務所には国内外合わせて数百名に及ぶ設計のプロフェッショナルが所属し、それぞれの才能が30カ国以上で新たな潮流を生み出している。近年では室内装飾や食器・家具・インテリアなどのデザイン開発へと活動領域をさらに広げ、現在も数百を超えるプロジェクトがグローバルで進行中。これまでに50か国以上で手がけた建築群は、世界建築界の最高峰を象徴する存在として高い評価を受けている。
         </p>
         <div className="artisan-detail__section">
           <p className="artisan-detail__section-title" data-ja="代表的な実績" data-en="Representative Works" data-zh-hans="代表性业绩" data-zh-hant="代表性實績">代表的な実績</p>
@@ -709,9 +691,9 @@ export default async function HomePage() {
         <ul className="artisan-detail__list">
           <li data-ja="伊勢神宮茶室「霽月」" data-zh-hans="伊势神宫茶室「霁月」" data-zh-hant="伊勢神宮茶室「霽月」" data-en={'Ise Shrine Tea room "Seigetsu"'}>伊勢神宮茶室「霽月」</li>
           <li data-ja="京都迎賓館（国の迎賓施設）※内部施工" data-en="Rockefeller Residence" data-zh-hans="洛克菲勒邸" data-zh-hant="京都迎賓館（國家迎賓設施）※室內施工">京都迎賓館（国の迎賓施設）※内部施工</li>
-          <li data-ja="俵屋旅館（登録有形文化財）※改修" data-en="Tawaraya Ryokan (Registered Tangible Cultural Property) *Renovation" data-zh-hans="俵屋旅馆（登录有形文化财）※改修" data-zh-hant="俵屋旅館（登錄有形文化財）※翻修">俵屋旅館（登録有形文化財）※改修</li>
-          <li data-ja="鶴屋吉信 本店 1、2階店舗及び外観" data-zh-hans="鹤屋吉信 本店 1、2楼店铺及外观" data-zh-hant="鶴屋吉信 本店 1、2樓店舖及外觀" data-en="Tsuruyayoshinobu Main Store 1st &amp; 2nd Floor Shops and Exterior">鶴屋吉信 本店 1、2階店舗及び外観</li>
-          <li data-ja="羽田空港第3ターミナル江戸小路" data-zh-hans="松下幸之助邸茶室" data-zh-hant="松下幸之助邸 茶室" data-en={"Matsushita K\u014Dnosuke Residence Tea room"}>羽田空港第3ターミナル江戸小路</li>
+          <li data-ja="俵屋旅館（登録有形文化財）※改修・増築" data-en="Tawaraya Ryokan (Registered Tangible Cultural Property) *Renovation &amp; Extension" data-zh-hans="俵屋旅馆（登录有形文化财）※改修·增筑" data-zh-hant="俵屋旅館（登錄有形文化財）※翻修與增建">俵屋旅館（登録有形文化財）※改修・増築</li>
+          <li data-ja="鶴屋吉信 本店「菓遊茶屋」" data-zh-hans="鹤屋吉信本店「菓游茶屋」" data-zh-hant="鶴屋吉信 本店「菓遊茶屋」" data-en={'Tsuruyayoshinobu Main Store "Kay\u016B Chaya"'}>鶴屋吉信 本店「菓遊茶屋」</li>
+          <li data-ja="松下幸之助邸茶室" data-zh-hans="松下幸之助邸茶室" data-zh-hant="松下幸之助邸 茶室" data-en={"Matsushita K\u014Dnosuke Residence Tea room"}>松下幸之助邸茶室</li>
         </ul>
         <ArtisanProfessionalsGallery artisanId="2" artisanName="NAKAMURA SOTOJI" />
       </article>
@@ -948,8 +930,7 @@ export default async function HomePage() {
           <li data-ja="国宝「風神雷神図屏風」複製（建仁寺）" data-zh-hans="国宝《风神雷神图屏风》复制（建仁寺）" data-zh-hant="國寶《風神雷神圖屏風》複製（建仁寺）" data-en={'National Treasure "Wind and Thunder Gods Folding Screen" (Kennin-ji)'}>国宝「風神雷神図屏風」複製（建仁寺）</li>
           <li data-ja="南禅寺、妙心寺、二条城、名古屋城 障壁画複製" data-zh-hans="南禅寺、妙心寺、二条城、名古屋城障壁画复制" data-zh-hant="南禪寺、妙心寺、二條城、名古屋城障壁畫複製" data-en={"Sliding door paintings for Nanzen-ji Temple, My\u014Dshin-ji Temple, Nij\u014D Castle, and Nagoya Castle"}>南禅寺、妙心寺、二条城、名古屋城 障壁画複製</li>
           <li data-ja="シアトル美術館、メトロポリタン美術館 作品複製協力" data-en="Collaboration with Seattle Art Museum and The Metropolitan Museum of Art" data-zh-hans="西雅图美术馆、大都会艺术博物馆作品复制协力" data-zh-hant="西雅圖美術館、大都會藝術博物館作品複製協力">シアトル美術館、メトロポリタン美術館 作品複製協力</li>
-          <li data-ja="安倍昭恵氏との共作" data-en="Collaboration with Akie Abe" data-zh-hans="与安倍昭惠女士共同创作" data-zh-hant="與安倍昭惠女士共同創作">安倍昭恵氏との共作</li>
-          <li data-ja="京都　御寺泉涌寺「黒龍図」奉納" data-en='Dedication of "Black Dragon" painting at Sennyū-ji Temple, Kyoto' data-zh-hans="京都 御寺泉涌寺「黑龙图」奉纳" data-zh-hant="京都　御寺泉涌寺「黑龍圖」奉納">京都　御寺泉涌寺「黒龍図」奉納</li>
+          <li data-ja="Ralph Rucci、GIVENCHY、片岡鶴太郎 コラボレーション" data-en="Collaboration with Ralph Rucci, GIVENCHY, and Kataoka Tsurutaro" data-zh-hans="与Ralph Rucci、GIVENCHY、片冈鹤太郎合作" data-zh-hant="與Ralph Rucci、GIVENCHY、片岡鶴太郎合作">Ralph Rucci、GIVENCHY、片岡鶴太郎 コラボレーション</li>
           <li data-ja="ルーブル美術館、G8サミット、上海万博 展示" data-en="Exhibitions at the Louvre Museum, G8 Summit, and Shanghai World Expo" data-zh-hans="卢浮宫、G8峰会、上海世博会展出" data-zh-hant="羅浮宮、G8峰會、上海世博會展出">ルーブル美術館、G8サミット、上海万博 展示</li>
         </ul>
         <ArtisanProfessionalsGallery artisanId="8" artisanName="HIROTO RAKUSHO" />
