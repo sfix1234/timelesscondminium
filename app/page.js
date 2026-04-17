@@ -375,16 +375,16 @@ export default async function HomePage() {
     </div>
   </div>
 
-  <AccessGate initialUnlocked={isUnlocked} isClientPreview={isClientPreview}>
-  <>
   <section className="project-vision">
     <div className="project-vision__inner">
-      <h2 className="project-vision__title">THE HISTORY MOVIE</h2>
+      <h2 className="project-vision__title">THE PROJECT MOVIE</h2>
       <ProjectVisionVideo />
-      <p className="project-vision__subcopy">Story of "THE SILENCE - Furnished by ARMANI / CASA"</p>
+      <p className="project-vision__subcopy">Kengo Kuma Speaks</p>
     </div>
   </section>
 
+  <AccessGate initialUnlocked={isUnlocked} isClientPreview={isClientPreview}>
+  <>
   <section className="artisans-intro">
     <div className="artisans-intro__inner">
       <div className="artisans-intro__head">

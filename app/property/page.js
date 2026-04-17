@@ -70,11 +70,11 @@ export default async function PropertyPage() {
           <div className="property-kuma__sticky">
             <div className="property-kuma__inner">
               <div className="property-kuma__name">
-                <h2 className="property-kuma__en">THE PROJECT MOVIE</h2>
+                <h2 className="property-kuma__en">THE HISTORY MOVIE</h2>
               </div>
 
               <PropertyKumaVideo />
-              <p className="property-kuma__subcopy">Kengo Kuma Speaks</p>
+              <p className="property-kuma__subcopy">Story of &quot;THE SILENCE - Furnished by ARMANI / CASA&quot;</p>
 
             </div>
 
