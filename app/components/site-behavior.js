@@ -613,7 +613,8 @@ export default function SiteBehavior() {
       }
 
 
-    if (propertyKumaSection) {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (propertyKumaSection && !isMobile) {
         const pinEnd = 0.985;
         const getPropertyKumaPinnedState = (sectionProgress, isSectionActive) => {
           if (!isSectionActive) return false;

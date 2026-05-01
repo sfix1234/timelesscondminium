@@ -9255,11 +9255,152 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
     letter-spacing: 0.03em;
   }
 
+  /* SP: disable apple-style sticky scroll for property-kuma */
+  .property-page #property-kuma {
+    height: auto !important;
+    overflow: visible;
+  }
+  .property-page #property-kuma .property-kuma__sticky {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+  .property-page #property-kuma.is-kuma-pinned .property-kuma__sticky {
+    position: relative;
+    inset: auto;
+  }
+  .property-page #property-kuma .property-kuma__inner {
+    position: relative;
+    inset: auto;
+    transform: none;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+  }
+  html.has-js .property-page #property-kuma #property-info.property-info--intrude {
+    transform: none;
+  }
+  .property-page #property-kuma #property-info.property-info--intrude {
+    position: relative;
+    inset: auto;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    min-height: auto;
+    padding: 40px 5%;
+  }
+  .property-page #property-kuma.is-property-info-active #property-info.property-info--intrude {
+    position: relative;
+  }
+  .property-page #property-kuma #property-info .property-info__intro {
+    opacity: 1;
+    transform: none;
+  }
+  .property-page #property-kuma #property-info .property-info__inner {
+    display: block;
+    min-height: auto;
+  }
+  .property-page #property-kuma #property-info .property-info__details {
+    position: relative;
+    inset: auto;
+    transform: none;
+    opacity: 1;
+    width: 100%;
+    display: block;
+  }
+  /* --- Floor Map --- */
+  .property-page #property-kuma #property-info .property-info__detail-figure {
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .property-page #property-kuma #property-info .property-info__detail-map,
+  .property-page #property-kuma #property-info .property-info__detail-floor-image {
+    position: relative;
+    inset: auto;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .property-page #property-kuma #property-info .property-info__detail-map {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .property-page #property-kuma #property-info .property-info__detail-panel {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    padding: 20px 16px;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 0;
+  }
+  .property-page #property-kuma #property-info .property-info__detail-image-frame {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+  }
+  .property-page #property-kuma #property-info .property-info__detail-image {
+    width: 90%;
+    max-width: 90%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  /* --- Floor Image --- */
+  .property-page #property-kuma #property-info .property-info__detail-floor-image {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgb(235, 230, 220);
+  }
+  .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-image__panel--embedded {
+    position: relative;
+    top: auto;
+    transform: none;
+    min-height: auto;
+    padding: 0;
+  }
+  .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-image__heading {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-gallery {
+    min-height: auto;
+  }
+  .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-gallery__frame {
+    min-height: auto;
+  }
+  .property-page #property-kuma .property-floor-image__panel {
+    min-height: auto;
+    padding: 0;
+  }
+
 }
 
 @media (max-width: 480px) {
   .property-page #property-kuma {
-    height: 150vh;
+    height: auto !important;
   }
 
   .property-page #property-kuma #property-info.property-info--intrude {
