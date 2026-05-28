@@ -118,11 +118,11 @@ function ArtisanProfessionalsGallery({ artisanId, artisanName }) {
   );
 }
 
-export async function HomePageContent({ forceUnlocked = false } = {}) {
+export default async function HomePage() {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get(ACCESS_SESSION_COOKIE)?.value;
   const isClientPreview = String(process.env.CLIENT_PREVIEW_ENABLED || '').trim().toLowerCase() === 'true';
-  const isUnlocked = forceUnlocked || Boolean(getSessionRecord(sessionToken));
+  const isUnlocked = Boolean(getSessionRecord(sessionToken));
   const rightStoryText = '日本の「美」を、千年先の世界へ紡ぐ。';
   const rightStoryTextEn = 'Weaving the beauty of Japan into the world a thousand years from now.';
   const rightStoryTextZhHans = '将日本之「美」，织就于千年后的世界。';
@@ -1218,6 +1218,3 @@ export async function HomePageContent({ forceUnlocked = false } = {}) {
   );
 }
 
-export default function HomePage() {
-  return <HomePageContent />;
-}
