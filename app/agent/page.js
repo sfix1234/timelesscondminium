@@ -1,7 +1,7 @@
+import { HomePageContent } from '../page';
+import AgentLogin from './agent-login';
 import { cookies } from 'next/headers';
 import { ACCESS_SESSION_COOKIE, getSessionRecord } from '../../lib/access-control';
-import HomePage from '../page';
-import AgentLogin from './agent-login';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +16,7 @@ export default async function AgentPage() {
   const isAuthenticated = Boolean(getSessionRecord(sessionToken));
 
   if (isAuthenticated) {
-    return <HomePage />;
+    return <HomePageContent forceUnlocked={true} />;
   }
 
   return <AgentLogin />;
