@@ -28,7 +28,7 @@ export default function AgentLogin() {
         setError(data.message || '認証に失敗しました。');
         return;
       }
-      router.push('/');
+      router.push('/agent');
     });
   };
 
