@@ -16,8 +16,8 @@ export default function ThanksPage() {
           担当者より折り返しご連絡いたしますので、<br />
           今しばらくお待ちくださいませ。
         </p>
-        <Link href="/property" className="thanks-page__back">
-          物件ページに戻る
+        <Link href="/" className="thanks-page__back">
+          トップに戻る
         </Link>
       </div>
     </div>

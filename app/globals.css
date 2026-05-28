@@ -1777,7 +1777,7 @@ html:not(.has-js) .craftsmen .craftsmen-photo__label {
   z-index: 12;
   width: 100%;
   height: 100vh;
-  background: #ebe6dc;
+  background: #ece3d2;
   color: #2f2518;
   overflow: hidden;
 }
@@ -4371,7 +4371,7 @@ html:not(.has-js) .stage__info {
 /* ===== Property Page ===== */
 .property-page {
   margin: 0;
-  background: #d6d2ca;
+  background: #ebe6dc;
   color: #1b1515;
   overflow-x: hidden;
 }
@@ -5435,10 +5435,8 @@ html:not(.has-js) .stage__info {
 .property-floor-section {
   position: relative;
   z-index: 3;
-  background:
-    linear-gradient(rgba(6, 6, 6, 0.76), rgba(6, 6, 6, 0.84)),
-    url('/assets/images/kitano_sm.png') center center / cover no-repeat;
-  color: #f3efe8;
+  background: #ece3d2;
+  color: #2b2724;
   padding: clamp(60px, 12vh, 120px) 20px clamp(60px, 10vh, 100px);
 }
 
@@ -5456,7 +5454,7 @@ html:not(.has-js) .stage__info {
   font-weight: 400;
   font-size: clamp(28px, 7vw, 48px);
   letter-spacing: 0.07em;
-  color: rgba(243, 239, 232, 0.96);
+  color: rgba(43, 39, 36, 0.96);
   text-align: center;
 }
 
@@ -5543,7 +5541,7 @@ html:not(.has-js) .stage__info {
 
 .property-floor-section .property-floor-image__heading {
   margin: 0 0 clamp(6px, 0.8vh, 10px);
-  color: #f3efe8;
+  color: #2b2724;
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(18px, 1.8vw, 26px);
   letter-spacing: 0.04em;
@@ -5566,7 +5564,7 @@ html:not(.has-js) .stage__info {
 
 .property-floor-section .property-floor-gallery__current {
   margin: 0;
-  color: #f3efe8;
+  color: #2b2724;
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-size: clamp(10px, 0.78vw, 12px);
   text-align: center;
@@ -6182,7 +6180,7 @@ html:not(.has-js) .stage__info {
   margin: 0 0 clamp(34px, 5vh, 52px);
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
-  font-size: clamp(18px, 1.8vw, 26px);
+  font-size: clamp(26px, 2.8vw, 38px);
   letter-spacing: 0.035em;
   text-align: center;
   color: #16120e;
@@ -6201,7 +6199,7 @@ html:not(.has-js) .stage__info {
 
 .property-access__map-wrap {
   position: relative;
-  width: 560px;
+  width: 440px;
   height: auto;
   max-width: 100%;
   max-height: none;
@@ -6442,7 +6440,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
   .property-access__title {
     margin-bottom: clamp(18px, 2.4vh, 28px);
-    font-size: clamp(18px, 1.8vw, 26px);
+    font-size: clamp(26px, 2.8vw, 38px);
   }
 
   .property-access__layout {
@@ -6460,7 +6458,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   }
 
   .property-access__map-wrap {
-    width: min(100%, 620px);
+    width: min(100%, 480px);
     height: auto;
     margin-right: -68px;
   }
@@ -6469,7 +6467,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
     grid-column: 2;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: flex-start;
     min-height: 500px;
     height: 500px;
@@ -6897,9 +6895,10 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 .property-page .property-access__title,
 .property-page .property-director__title { font-size: clamp(28px, 4.8vw, 44px); }
 
-.property-page .property-access__title { font-size: clamp(32px, 4.2vw, 48px); }
-
-.property-page .property-spec__title { font-size: clamp(32px, 4.2vw, 48px); }
+.property-page .property-access__title,
+.property-page .property-spec__title {
+  font-size: clamp(32px, 4.2vw, 48px);
+}
 
 .property-page .property-info__room { font-size: clamp(12px, 1.1vw, 15px); }
 .property-page .property-info__floor { font-size: clamp(16px, 2.2vw, 22px); }
@@ -7085,7 +7084,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 }
 
 .property-contact-block {
-  background: #ebe6dc;
+  background: #ece3d2;
   color: rgba(35, 30, 30, 0.95);
   padding: clamp(56px, 10vh, 110px) 20px clamp(72px, 12vh, 130px);
 }
@@ -9585,4 +9584,160 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
     width: 48px;
   }
 
+}
+
+/* ---------------------------------------------------------------------------
+   Home page (/) Floor Map — static clone of the /property design.
+   The /property version is scroll-progress driven (absolute overlay + CSS
+   custom-property opacity). The home page has no scroll machinery, so the
+   .property-floor-clone marker (on #property-kuma) neutralizes the animation
+   and lays the map + floor image out statically, stacked. The extra class
+   keeps these selectors higher-specificity than the base/responsive rules.
+--------------------------------------------------------------------------- */
+.property-page #property-kuma.property-floor-clone {
+  position: relative;
+  z-index: 3;
+  height: auto;
+}
+
+/* #property-info is kept only as a styling-scope anchor so the /property
+   detail rules (scoped under #property-info) still apply. It is NOT a visual
+   box here — the two independent sections inside provide their own frame. */
+.property-page #property-kuma.property-floor-clone #property-info.property-info--clone-scope {
+  position: relative;
+  display: block;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+/* Each block is its own independent, full-viewport section. */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: clamp(24px, 6vh, 72px) clamp(16px, 4vw, 64px);
+  background: #000;
+  color: #f3efe8;
+}
+
+/* Floor Image block: beige background instead of black */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block--image {
+  background: #ece3d2;
+  color: #2b2724;
+}
+
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block--image .property-floor-image__heading {
+  color: #2b2724;
+}
+
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block .property-info__inner {
+  width: min(100%, 1280px);
+  max-height: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block .property-info__details {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  max-width: none;
+  max-height: 100%;
+  transform: none;
+  opacity: 1;
+  display: block;
+}
+
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block .property-info__detail-figure {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  display: block;
+}
+
+/* Neutralize the scroll-driven absolute/opacity layout — show statically. */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-map,
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image {
+  position: relative;
+  inset: auto;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  margin: 0;
+  min-height: 0;
+}
+
+/* Map image scales down to fit its section instead of forcing its
+   fixed aspect-ratio box. */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-image-frame {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 78vh;
+  aspect-ratio: auto;
+}
+
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-image {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+}
+
+/* Floor-image panel sits statically inside its own section. */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image .property-floor-image__panel--embedded {
+  position: relative;
+  top: auto;
+  transform: none;
+  height: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image .property-floor-gallery,
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image .property-floor-gallery__frame {
+  min-height: 0;
+}
+
+/* Cap the 16/9 gallery frame so heading + meta + frame + thumbnails fit
+   within the section without clipping. */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image .property-floor-gallery__frame {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: clamp(220px, 52vh, 560px);
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
+}
+
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image .property-floor-gallery {
+  gap: clamp(8px, 1.8vh, 18px);
+  justify-content: center;
+}
+
+.property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image .property-floor-gallery__meta {
+  margin-bottom: clamp(8px, 1.6vh, 18px);
+}
+
+/* PC only: nudge the "Floor Map" label + 1F/2F switch a bit to the right
+   (home clone only — does not affect the /property page). */
+@media (min-width: 769px) {
+  .property-page #property-kuma.property-floor-clone #property-info .property-info__detail-panel {
+    padding-left: 300px;
+  }
 }

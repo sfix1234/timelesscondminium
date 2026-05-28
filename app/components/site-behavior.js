@@ -263,12 +263,16 @@ export default function SiteBehavior() {
             ? safeQuerySelector(targetSelector)
             : null;
 
+        if (!target && targetSelector === '.registration') {
+          target = safeQuerySelector('#property-contact');
+        }
+
         const gatedRoot = target?.closest('.access-gate__content');
         const isTargetLocked = Boolean(
           gatedRoot &&
           (gatedRoot.classList.contains('is-locked') || gatedRoot.classList.contains('is-checking'))
         );
-        if (isTargetLocked || targetSelector === '.registration') {
+        if (isTargetLocked) {
           closeNavOverlay();
           openRegistrationPopup();
           return;
@@ -426,7 +430,15 @@ export default function SiteBehavior() {
     const craftsmenSection = document.querySelector('.craftsmen');
     const stagePhotoSection = document.querySelector('.stage-photo');
     const registrationSection = document.querySelector('.registration');
-    const propertyKumaSection = document.getElementById('property-kuma');
+    const propertyKumaCandidate = document.getElementById('property-kuma');
+    // The home page (/) reuses #property-kuma only as a static Floor Map clone
+    // (.property-floor-clone). It must NOT run the scroll-driven scene, which
+    // would toggle is-property-info-active / is-property-floor-image-active and
+    // cross-fade the map and floor image into the same box.
+    const propertyKumaSection =
+      propertyKumaCandidate && propertyKumaCandidate.classList.contains('property-floor-clone')
+        ? null
+        : propertyKumaCandidate;
     let stableViewportWidth = 0;
     let stableViewportHeight = 0;
     const measureViewport = () => ({

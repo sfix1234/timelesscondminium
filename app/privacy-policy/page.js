@@ -9,8 +9,7 @@ export default function PrivacyPolicyPage() {
         headerClassName="privacy-page__header"
         navItems={[
           { labelJa: 'TOP', labelEn: 'TOP', target: '/' },
-          { labelJa: 'PROPERTY', labelEn: 'PROPERTY', target: '/property' },
-          { labelJa: 'CONTACT', labelEn: 'CONTACT', target: '/property' },
+          { labelJa: 'CONTACT', labelEn: 'CONTACT', target: '/' },
         ]}
       />
 
