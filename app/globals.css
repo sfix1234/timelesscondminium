@@ -455,59 +455,98 @@ html.property-scroll-lock body {
 }
 
 .jpn-badge__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   background: transparent;
   border: 0;
   color: #fff;
   font-family: 'Cormorant Garamond', serif;
   font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 2px;
-  padding: 14px 14px 12px;
+  font-size: 14px;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  text-transform: uppercase;
+  padding: 13px 6px 10px;
   line-height: 1;
   cursor: pointer;
 }
 
+/* Solid white downward triangle (▼) */
+.jpn-badge__label::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #fff;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.jpn-badge:has(.jpn-badge__menu.is-open) .jpn-badge__label::after {
+  transform: rotate(180deg);
+}
+
 .jpn-badge__line {
-  width: 40px;
+  width: 34px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.7);
-  margin-top: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(206, 173, 116, 0) 0%,
+    rgba(206, 173, 116, 0.92) 50%,
+    rgba(206, 173, 116, 0) 100%
+  );
+  margin-top: 7px;
 }
 
 .jpn-badge__menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 13px);
   left: 0;
-  transform: none;
-  display: none;
+  transform: translateY(-6px);
+  display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-width: 160px;
-  padding: 8px 6px;
-  background: rgba(10, 10, 10, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(6px);
+  gap: 1px;
+  min-width: 128px;
+  padding: 9px 8px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: rgba(18, 14, 11, 0.82);
+  border: 1px solid rgba(206, 173, 116, 0.32);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
   z-index: 10003;
 }
 
 .jpn-badge__menu.is-open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .jpn-badge__menu-item {
   border: 0;
   background: transparent;
-  color: rgba(255, 255, 255, 0.92);
-  font-family: 'Noto Sans JP', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.06em;
+  color: rgba(244, 240, 232, 0.74);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  text-transform: uppercase;
   text-align: center;
-  padding: 6px 8px;
+  padding: 8px 10px;
   cursor: pointer;
+  transition: color 0.26s ease, background 0.26s ease;
 }
 
 .jpn-badge__menu-item:hover {
-  background: rgba(255, 255, 255, 0.18);
+  color: #dcc491;
+  background: rgba(206, 173, 116, 0.1);
 }
 
 /* Hamburger menu */
@@ -2156,65 +2195,6 @@ html:not(.has-js) .stage__info {
   transform: translateX(4px);
 }
 
-.stage-photo-text {
-  position: relative;
-  z-index: 1;
-  overflow: visible;
-  background: #ebe6dc;
-  height: 100vh;
-  padding: 0;
-}
-
-.stage-photo-text__inner {
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  background: #ebe6dc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stage-photo__text {
-  margin: 0 auto;
-  padding: 0;
-  font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
-  font-weight: 700;
-  font-size: clamp(12px, 1.8vw, 18px);
-  color: rgba(34, 28, 22, 0.88);
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  letter-spacing: 0.24em;
-  line-height: 1.9;
-  white-space: nowrap;
-}
-
-.stage-photo__text.is-horizontal {
-  writing-mode: horizontal-tb;
-  text-orientation: initial;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(14px, 2vw, 22px);
-  letter-spacing: 0.06em;
-  line-height: 1.7;
-  white-space: normal;
-  text-align: center;
-  max-width: 80vw;
-}
-
-.stage-photo__text-top {
-  display: inline-block;
-  transform: translateY(-10px);
-}
-
-.stage-photo__text.is-horizontal .stage-photo__text-top {
-  transform: none;
-}
-
-.stage-photo__text-bottom {
-  display: inline-block;
-  transform: translateY(-10px);
-}
-
 .stage-photo {
   position: relative;
   z-index: 1;
@@ -2595,7 +2575,10 @@ html:not(.has-js) .stage__info {
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
-  transform: translateY(18px);
+  /* translateY(0) keeps the collapsed box flush with the registration section.
+     A positive offset here leaks into the page's scroll height and shows as an
+     ~18px gap below the 100vh registration screen. */
+  transform: translateY(0);
 }
 
 .access-gate__content.is-unlocked {
@@ -2858,7 +2841,7 @@ html:not(.has-js) .stage__info {
 }
 
 .project-vision {
-  background: #d6d2ca;
+  background: #ece3d2;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -2893,7 +2876,7 @@ html:not(.has-js) .stage__info {
   text-align: center;
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
-  font-size: clamp(32px, 4.2vw, 48px);
+  font-size: clamp(16px, 1.8vw, 24px);
   letter-spacing: 0.005em;
   color: rgba(18, 18, 18, 0.96);
 }
@@ -2904,7 +2887,7 @@ html:not(.has-js) .stage__info {
   margin: clamp(20px, 4vh, 28px) 0 0;
   text-align: center;
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(16px, 1.8vw, 24px);
+  font-size: clamp(32px, 4.2vw, 48px);
   letter-spacing: 0.04em;
   line-height: 1.5;
   color: rgba(18, 18, 18, 0.72);
@@ -2914,7 +2897,7 @@ html:not(.has-js) .stage__info {
   position: relative;
   display: block;
   width: 100%;
-  max-width: 900px;
+  max-width: 1080px;
   margin: clamp(22px, 3vh, 32px) auto 0;
   border: 0;
   padding: 0;
@@ -3096,7 +3079,7 @@ html:not(.has-js) .stage__info {
 .artisans-intro {
   position: relative;
   z-index: 13;
-  background: #d6d2ca;
+  background: #ece3d2;
   padding: clamp(38px, 7vh, 68px) 20px clamp(44px, 8vh, 80px);
 }
 
@@ -3189,7 +3172,7 @@ html:not(.has-js) .stage__info {
 .artisans-five {
   position: relative;
   z-index: 13;
-  background: #d6d2ca;
+  background: #ece3d2;
   padding: 0 0 clamp(44px, 9vh, 84px);
 }
 
@@ -3202,7 +3185,9 @@ html:not(.has-js) .stage__info {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  /* Allow vertical page scroll AND horizontal carousel pan: a downward
+     swipe starting on a card must still scroll the page on mobile. */
+  touch-action: pan-x pan-y;
   padding: 0 14px;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -3234,9 +3219,7 @@ html:not(.has-js) .stage__info {
   flex: 0 0 min(78vw, 320px);
   min-height: 0;
   overflow: hidden;
-  background: #ebe6dc;
   scroll-snap-align: center;
-  box-shadow: inset 0 0 0 1px rgba(126, 112, 92, 0.18);
 }
 
 .artisan-card__media {
@@ -3288,7 +3271,7 @@ html:not(.has-js) .stage__info {
 }
 
 .artisan-card__overlay--light {
-  background: #ebe6dc;
+  background: #ece3d2;
   color: rgba(44, 35, 24, 0.96);
 }
 
@@ -3351,8 +3334,6 @@ html:not(.has-js) .stage__info {
 @media (min-width: 1024px) {
   .artisans-five .artisan-card,
   .artisans-color .artisan-card {
-    background: #ebe6dc;
-    box-shadow: inset 0 0 0 1px rgba(126, 112, 92, 0.18);
     display: flex;
     flex-direction: column;
   }
@@ -3378,7 +3359,7 @@ html:not(.has-js) .stage__info {
 
   .artisans-five .artisan-card__overlay--light,
   .artisans-color .artisan-card__overlay--light {
-    background: #ebe6dc;
+    background: #ece3d2;
     color: rgba(44, 35, 24, 0.96);
   }
 
@@ -3420,7 +3401,7 @@ html:not(.has-js) .stage__info {
 .artisans-color {
   position: relative;
   z-index: 13;
-  background: #d6d2ca;
+  background: #ece3d2;
   padding: clamp(36px, 7vh, 68px) 0 clamp(44px, 8vh, 80px);
   padding-top: 180px;
   padding-bottom: 300px;
@@ -3504,7 +3485,9 @@ html:not(.has-js) .stage__info {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  /* Allow vertical page scroll AND horizontal carousel pan: a downward
+     swipe starting on a card must still scroll the page on mobile. */
+  touch-action: pan-x pan-y;
   padding: 0 14px;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -4325,7 +4308,60 @@ html:not(.has-js) .stage__info {
     padding: clamp(64px, 10vh, 88px) clamp(26px, 4vw, 56px) clamp(34px, 6vh, 58px);
   }
 
+  .artisan-detail__content {
+    width: min(100%, 1000px);
+  }
+
+  /* Full-bleed media (video / gallery) framing a centered editorial text
+     column — keeps reading measure refined and balances the wide stage. */
+  .artisan-detail__meta,
+  .artisan-detail__text,
+  .artisan-detail__section,
+  .artisan-detail__list {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .artisan-detail__meta {
+    margin-top: 34px;
+    padding-bottom: 18px;
+  }
+
+  .artisan-detail__role {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+  }
+
+  .artisan-detail__jp {
+    margin-top: 10px;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+  }
+
+  .artisan-detail__text {
+    margin-top: 24px;
+    font-size: 14px;
+    line-height: 2.32;
+  }
+
+  .artisan-detail__section {
+    margin-top: 48px;
+  }
+
+  .artisan-detail__section-title {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+
+  .artisan-detail__list {
+    margin-top: 18px;
+    font-size: 13px;
+    line-height: 2.2;
+  }
+
   .artisan-detail__gallery {
+    margin-top: 40px;
     column-count: 2;
     column-gap: 12px;
   }
@@ -5435,7 +5471,7 @@ html:not(.has-js) .stage__info {
 .property-floor-section {
   position: relative;
   z-index: 3;
-  background: #ece3d2;
+  background: #ebe6dc;
   color: #2b2724;
   padding: clamp(60px, 12vh, 120px) 20px clamp(60px, 10vh, 100px);
 }
@@ -6155,9 +6191,7 @@ html:not(.has-js) .stage__info {
 }
 
 .property-access {
-  background:
-    radial-gradient(circle at top right, rgba(205, 190, 160, 0.14), transparent 28%),
-    linear-gradient(180deg, #f4efe5 0%, #efe7da 100%);
+  background: #ece3d2;
   color: #554b42;
   min-height: 100vh;
   min-height: 100svh;
@@ -6240,6 +6274,16 @@ html:not(.has-js) .stage__info {
   box-shadow: none;
 }
 
+.property-access__gmap {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 0;
+  border-radius: 6px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+  filter: grayscale(1) contrast(0.96);
+}
+
 .property-access__pin {
   position: absolute;
   top: 19.4%;
@@ -6297,36 +6341,6 @@ html:not(.has-js) .stage__info {
   display: grid;
   gap: 18px;
   align-content: start;
-}
-
-.property-access__zoom-wrap {
-  width: min(100%, 360px);
-  height: auto;
-  aspect-ratio: 1 / 1;
-  justify-self: center;
-  opacity: 0;
-  visibility: hidden;
-  transform: none;
-  transition:
-    opacity 0.9s ease,
-    visibility 0.9s ease,
-    filter 0.9s ease;
-  will-change: opacity, filter;
-  border-radius: 50%;
-  overflow: hidden;
-  border: clamp(3px, 0.42vw, 5px) solid rgba(177, 161, 110, 0.8);
-  box-shadow:
-    0 0 0 1px rgba(131, 103, 52, 0.16),
-    0 10px 28px rgba(104, 83, 50, 0.16),
-    inset 0 0 22px rgba(126, 100, 58, 0.18);
-  background: #f1eadc;
-  filter: saturate(0.92) brightness(0.98);
-}
-
-.property-access__zoom-wrap.is-visible {
-  opacity: 1;
-  visibility: visible;
-  filter: saturate(1) brightness(1);
 }
 
 .property-access__zoom {
@@ -6458,33 +6472,24 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   }
 
   .property-access__map-wrap {
-    width: min(100%, 480px);
+    width: min(100%, 580px);
     height: auto;
-    margin-right: -68px;
+    margin-right: -40px;
   }
 
   .property-access__side {
     grid-column: 2;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: flex-start;
     min-height: 500px;
     height: 500px;
     width: 500px;
-    padding-left: 140px;
+    padding-left: 90px;
     padding-top: 0;
     gap: clamp(18px, 2vh, 24px);
     overflow: visible;
-  }
-
-  .property-access__zoom-wrap {
-    width: 300px;
-    height: 300px;
-    align-self: flex-start;
-    margin-top: -20px;
-    flex: 0 0 auto;
-    margin-left: 45px;
   }
 
   .property-access__info {
@@ -6991,10 +6996,6 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
   .property-access__layout {
     gap: 24px;
-  }
-
-  .property-access__zoom-wrap {
-    width: min(78vw, 320px);
   }
 
   .property-access__pin {
@@ -8070,15 +8071,15 @@ html[lang='en'] .property-page .armani-homage__copy p {
 
 .property-page #property-kuma #property-info .property-info__road--left {
   left: -4%;
-  top: 27%;
-  bottom: 14%;
+  top: 16%;
+  bottom: 0%;
   width: 130px;
 }
 
 .property-page #property-kuma #property-info .property-info__road--right {
   right: -0.7%;
-  top: 7%;
-  bottom: 29%;
+  top: -9%;
+  bottom: 21%;
   width: 100px;
   transform: rotate(-18deg);
   transform-origin: bottom center;
@@ -8509,6 +8510,7 @@ html[lang='en'] .property-page .armani-homage__copy p {
 
 .property-page #property-kuma .property-floor-gallery__viewer {
   flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   min-height: 0;
   display: grid;
@@ -8965,6 +8967,7 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
     width: 100%;
     min-height: calc(100dvh - 128px);
     place-items: center;
+    background-color: transparent;
   }
 
   .property-page #property-kuma #property-info .property-info__title {
@@ -9160,6 +9163,7 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   .property-page #property-kuma .property-floor-gallery__viewer {
     display: flex;
     flex-direction: column;
+    width: 100%;
     gap: 14px;
   }
 
@@ -9370,7 +9374,6 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: rgb(235, 230, 220);
   }
   .property-page #property-kuma #property-info .property-info__detail-floor-image .property-floor-image__panel--embedded {
     position: relative;
@@ -9448,9 +9451,9 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   }
 
   .property-page #property-kuma #property-info .property-info__road--left {
-    left: 3%;
+    left: 2%;
     top: 8%;
-    bottom: 9%;
+    bottom: 0%;
     width: 24px;
   }
 
@@ -9633,6 +9636,19 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
 .property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block--image {
   background: #ece3d2;
   color: #2b2724;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Floor Image block: keep the 3-column viewer (prev 20% | stage 1fr |
+   next 20%) but let the whole grid stretch edge to edge. */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block--image .property-floor-gallery__viewer {
+  width: 100%;
+}
+
+/* Floor Map block: black background only */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block--map .property-info__details {
+  background: black;
 }
 
 .property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block--image .property-floor-image__heading {
@@ -9646,6 +9662,14 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Floor Image block: drop the 1280px cap + centering margin so the gallery
+   spans the full width. Placed AFTER the shared rule above so it wins
+   (same specificity, later in source order). */
+.property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block--image .property-info__inner {
+  width: 100%;
+  margin: 0;
 }
 
 .property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block .property-info__details {
@@ -9717,12 +9741,12 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
 /* Cap the 16/9 gallery frame so heading + meta + frame + thumbnails fit
    within the section without clipping. */
 .property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image .property-floor-gallery__frame {
-  width: auto;
+  width: 100%;
   max-width: 100%;
   height: auto;
   max-height: clamp(220px, 52vh, 560px);
   aspect-ratio: 16 / 9;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .property-page #property-kuma.property-floor-clone #property-info .property-info__detail-floor-image .property-floor-gallery {
@@ -9740,4 +9764,218 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   .property-page #property-kuma.property-floor-clone #property-info .property-info__detail-panel {
     padding-left: 300px;
   }
+}
+
+/* ===== Floor Image — luxury polish (.property-page #property-kuma:
+   applies to both the home Floor Image clone and the /property page) ===== */
+
+/* Heading: refined gold hairline underline */
+.property-page #property-kuma .property-floor-image__heading {
+  position: relative;
+  padding-bottom: clamp(9px, 1.1vh, 15px);
+  letter-spacing: 0.08em;
+  color: #2b2622;
+}
+.property-page #property-kuma .property-floor-image__heading::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: clamp(46px, 4vw, 72px);
+  height: 1px;
+  background: linear-gradient(90deg, #b1a16e 0%, rgba(177, 161, 110, 0.12) 100%);
+}
+
+/* "ENTRANCE" current label: warm gold tone, wider tracking */
+.property-page #property-kuma .property-floor-gallery__current {
+  color: #7e643a;
+  letter-spacing: 0.18em;
+}
+
+/* Before / After toggle: pill with a refined gold active state */
+.property-page #property-kuma .property-floor-gallery__toggle {
+  border: 1px solid rgba(126, 100, 58, 0.26);
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.35);
+}
+.property-page #property-kuma .property-floor-gallery__toggle-button {
+  min-width: 84px;
+  padding: 9px 22px;
+  border: 0;
+  background: transparent;
+  color: rgba(80, 68, 50, 0.72);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 0.35s ease, background 0.35s ease;
+}
+.property-page #property-kuma .property-floor-gallery__toggle-button.is-active {
+  background: linear-gradient(180deg, #b6a576 0%, #9c8a57 100%);
+  color: #fffaf0;
+}
+
+/* Side previews: directional vignette + desaturation that frames the hero */
+.property-page #property-kuma .property-floor-gallery__preview {
+  background: #0e0c0a;
+}
+.property-page #property-kuma .property-floor-gallery__preview-image {
+  filter: saturate(0.82) brightness(0.78);
+  transition: filter 0.6s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.property-page #property-kuma .property-floor-gallery__preview:hover .property-floor-gallery__preview-image {
+  filter: saturate(0.95) brightness(0.9);
+  transform: scale(1.04);
+}
+.property-page #property-kuma .property-floor-gallery__preview--prev::after {
+  background: linear-gradient(90deg, rgba(8, 7, 6, 0.72) 0%, rgba(8, 7, 6, 0.32) 100%);
+}
+.property-page #property-kuma .property-floor-gallery__preview--next::after {
+  background: linear-gradient(90deg, rgba(8, 7, 6, 0.32) 0%, rgba(8, 7, 6, 0.72) 100%);
+}
+
+/* Hero frame: soft elevated shadow + inset gold ring and gentle vignette */
+.property-page #property-kuma .property-floor-gallery__frame {
+  border: 1px solid rgba(126, 100, 58, 0.16);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5),
+    0 22px 52px -22px rgba(60, 46, 24, 0.46),
+    0 8px 20px -10px rgba(60, 46, 24, 0.26);
+}
+.property-page #property-kuma .property-floor-gallery__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 248, 233, 0.16),
+    inset 0 0 40px rgba(0, 0, 0, 0.16);
+}
+
+/* Thumbnails: gold active state with a subtle lift */
+.property-page #property-kuma .property-floor-gallery__thumb {
+  border-radius: 2px;
+  transition: opacity 220ms ease, border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+.property-page #property-kuma .property-floor-gallery__thumb:hover {
+  opacity: 0.78;
+}
+.property-page #property-kuma .property-floor-gallery__thumb.is-active {
+  opacity: 1;
+  border-color: rgba(126, 100, 58, 0.65);
+  box-shadow:
+    0 0 0 1px rgba(177, 161, 110, 0.5),
+    0 6px 14px -6px rgba(60, 46, 24, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ===== Floating Contact Button ===== */
+.floating-contact {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 118px;
+  height: 118px;
+  border: 1px solid rgba(244, 239, 230, 0.16);
+  border-radius: 50%;
+  background: #423a33;
+  color: #f4efe6;
+  text-decoration: none;
+  box-shadow: 0 12px 34px rgba(36, 26, 18, 0.34);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.floating-contact:hover {
+  transform: translateY(-3px);
+  background: #4d443c;
+  box-shadow: 0 16px 40px rgba(36, 26, 18, 0.44);
+}
+
+.floating-contact__en {
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-indent: 0.16em;
+}
+
+.floating-contact__label {
+  font-family: 'Noto Serif Japanese', 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 11.5px;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-indent: 0.22em;
+  opacity: 0.92;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .floating-contact {
+    right: 16px;
+    bottom: 18px;
+    width: 98px;
+    height: 98px;
+    gap: 6px;
+  }
+  .floating-contact__en {
+    font-size: 15px;
+  }
+  .floating-contact__label {
+    font-size: 10.5px;
+  }
+}
+
+/* ===== Story background slideshow (3s crossfade, 12 images) ===== */
+.story__slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  z-index: 0;
+}
+
+.story__slide--1  { background-image: url('/assets/images/propatyinfo/6innergarden_after.jpg'); }
+.story__slide--2  { background-image: url('/assets/images/propatyinfo/1entrance_after.jpg'); }
+.story__slide--3  { background-image: url('/assets/images/propatyinfo/2dining_after.jpg'); }
+.story__slide--4  { background-image: url('/assets/images/propatyinfo/12.jpg'); }
+.story__slide--5  { background-image: url('/assets/images/propatyinfo/8hiromahanare.jpg'); }
+
+/* No-JS / fallback: show the first image */
+.story__slide--1 { opacity: 1; }
+
+/* With JS: cross-fade loop (5 x 5s = 25s), paused until scrolled into view */
+.has-js .story__slide {
+  opacity: 0;
+  animation: storyCrossfade 25s linear infinite paused;
+}
+.story.is-visible .story__slide { animation-play-state: running; }
+
+.has-js .story__slide--1  { animation-delay: 0s; }
+.has-js .story__slide--2  { animation-delay: 5s; }
+.has-js .story__slide--3  { animation-delay: 10s; }
+.has-js .story__slide--4  { animation-delay: 15s; }
+.has-js .story__slide--5  { animation-delay: 20s; }
+
+/* Each slide: visible for its 5s slot (20% of 25s) with a ~1s crossfade */
+@keyframes storyCrossfade {
+  0%   { opacity: 0; }
+  4%   { opacity: 1; }
+  20%  { opacity: 1; }
+  24%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .has-js .story__slide { animation: none; opacity: 0; }
+  .has-js .story__slide--1 { opacity: 1; }
 }

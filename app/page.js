@@ -188,7 +188,13 @@ export default async function HomePage() {
     </div>
 
     <section className="story">
-      <div className="story__bg"></div>
+      <div className="story__bg">
+        <div className="story__slide story__slide--1"></div>
+        <div className="story__slide story__slide--2"></div>
+        <div className="story__slide story__slide--3"></div>
+        <div className="story__slide story__slide--4"></div>
+        <div className="story__slide story__slide--5"></div>
+      </div>
       <div className="story__overlay"></div>
       <div className="story__content">
         <div className="story__vertical-text">
@@ -204,25 +210,13 @@ export default async function HomePage() {
   </div>
 
 
-  <section className="craftsmen" data-visible-threshold="0.3">
-    <div className="craftsmen__sticky">
-      <p className="craftsmen__heading" data-ja="世界初、匠の技が結集した邸宅。" data-en="The world&#39;s first residence, where master craftsmanship converges." data-zh-hans="世界首创，汇聚匠心技艺之邸宅。" data-zh-hant="世界首創，匠心技藝薈萃之邸宅。">世界初、匠の技が結集した邸宅。</p>
-    </div>
-    <div className="craftsmen__visual">
-      <figure className="craftsmen-photo__frame">
-        <img src="/assets/images/craftsmen-group_sm.jpg" alt="匠たちの集合写真" className="craftsmen-photo__img" />
-        <div className="craftsmen-photo__labels" aria-hidden="true">
-          <span className="craftsmen-photo__label">Ueji</span>
-          <span className="craftsmen-photo__label">Kongo Gumi</span>
-          <span className="craftsmen-photo__label">Kengo Kuma</span>
-          <span className="craftsmen-photo__label">Kenji Nakamura</span>
-          <span className="craftsmen-photo__label">Koukei Eri</span>
-          <span className="craftsmen-photo__label">Nakamura Sotoji Komuten</span>
-        </div>
-      </figure>
+  <section className="project-vision">
+    <div className="project-vision__inner">
+      <p className="project-vision__subcopy">Kengo Kuma Speaks</p>
+      <h2 className="project-vision__title">THE PROJECT MOVIE</h2>
+      <ProjectVisionVideo />
     </div>
   </section>
-
 
   <section className="stage">
     <div className="stage__inner">
@@ -283,21 +277,15 @@ export default async function HomePage() {
     </div>
   </section>
 
-  <section className="stage-photo-text">
-    <div className="stage-photo-text__inner">
-      <p className="stage-photo__text" data-ja="和の文化「静寂」という名の至光品。" data-en={'Japanese culture. A supreme treasure named \u201CSilence.\u201D'} data-zh-hans="和之文化，名为「静寂」的至光之品。" data-zh-hant="和之文化——名為「寂靜」的至臻之境"><span className="stage-photo__text-top">和の文化「静寂」という名の至光品。</span></p>
-    </div>
-  </section>
-
   {/* Old registration-popup removed — REGISTRATION is now the single inline
       AccessGate placed directly before the Floor map. */}
 
   <div className="detail-panel" id="detailPanel">
     <div className="detail-panel__overlay"></div>
+    <button className="detail-panel__close" id="detailClose" type="button">
+      <span></span><span></span>
+    </button>
     <div className="detail-panel__body">
-      <button className="detail-panel__close" id="detailClose" type="button">
-        <span></span><span></span>
-      </button>
       <div className="detail-panel__content" data-detail="0">
         <span className="detail-panel__label">01</span>
         <h3 className="detail-panel__title">KYOTO</h3>
@@ -362,14 +350,6 @@ export default async function HomePage() {
     </div>
   </div>
 
-  <section className="project-vision">
-    <div className="project-vision__inner">
-      <h2 className="project-vision__title">THE PROJECT MOVIE</h2>
-      <ProjectVisionVideo />
-      <p className="project-vision__subcopy">Kengo Kuma Speaks</p>
-    </div>
-  </section>
-
   <section className="artisans-intro">
     <div className="artisans-intro__inner">
       <div className="artisans-intro__head">
@@ -405,7 +385,7 @@ export default async function HomePage() {
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="1" aria-label="金剛組の詳細を開く">
           <img src="/assets/images/artisans/photo_1_sm.jpg" alt="金剛組" className="artisan-card__image" />
         </button>
-        <div className="artisan-card__overlay">
+        <div className="artisan-card__overlay artisan-card__overlay--light">
           <div className="artisan-card__copy">
             <p className="artisan-card__role">Construction</p>
             <h3 className="artisan-card__name" data-ja="金剛組" data-en="Kongo Gumi Co. Ltd." data-zh-hans="金剛組" data-zh-hant="金剛組">金剛組</h3>
@@ -418,7 +398,7 @@ export default async function HomePage() {
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="2" aria-label="中村外二工務店の詳細を開く">
           <img src="/assets/images/artist_photo/photo_2.jpg" alt="中村外二工務店" className="artisan-card__image" />
         </button>
-        <div className="artisan-card__overlay">
+        <div className="artisan-card__overlay artisan-card__overlay--light">
           <div className="artisan-card__copy">
             <p className="artisan-card__role">Tea Room Construction</p>
             <h3 className="artisan-card__name" data-ja="中村外二工務店" data-en="Nakamura Sotoji Komuten" data-zh-hans="中村外二工務店" data-zh-hant="中村外二工務店">中村外二工務店</h3>
@@ -431,7 +411,7 @@ export default async function HomePage() {
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="4" aria-label="御庭植治の詳細を開く">
           <img src="/assets/images/artist_photo/onniwaueji_sm.jpg" alt="御庭植治" className="artisan-card__image" />
         </button>
-        <div className="artisan-card__overlay">
+        <div className="artisan-card__overlay artisan-card__overlay--light">
           <div className="artisan-card__copy">
             <p className="artisan-card__role">Landscape Design</p>
             <h3 className="artisan-card__name" data-ja="御庭植治" data-en="Onniwa Ueji Inc." data-zh-hans="御庭植治" data-zh-hant="御庭植治">御庭植治</h3>
@@ -444,7 +424,7 @@ export default async function HomePage() {
         <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="3" aria-label="ARMANI / CASAの詳細を開く">
           <img src="/assets/images/artisans/armani:casa_sm.jpg" alt="ARMANI / CASA" className="artisan-card__image" />
         </button>
-        <div className="artisan-card__overlay">
+        <div className="artisan-card__overlay artisan-card__overlay--light">
           <div className="artisan-card__copy">
             <p className="artisan-card__role">Furniture / Accessories</p>
             <h3 className="artisan-card__name">ARMANI / CASA</h3>
@@ -484,7 +464,7 @@ export default async function HomePage() {
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="6" aria-label="江里朋子の詳細を開く">
             <img src="/assets/images/artist_photo/tomoko_sm.jpg" alt="江里朋子" className="artisan-card__image" />
           </button>
-          <div className="artisan-card__overlay">
+          <div className="artisan-card__overlay artisan-card__overlay--light">
             <div className="artisan-card__copy">
               <p className="artisan-card__role">Kirikane Artist</p>
               <h3 className="artisan-card__name" data-ja="江里朋子" data-en="Tomoko Eri" data-zh-hans="江里朋子" data-zh-hant="江里朋子">江里朋子</h3>
@@ -497,7 +477,7 @@ export default async function HomePage() {
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="7" aria-label="伊藤東凌の詳細を開く">
             <img src="/assets/images/artist_photo/toryo.jpg" alt="伊藤東凌" className="artisan-card__image" />
           </button>
-          <div className="artisan-card__overlay">
+          <div className="artisan-card__overlay artisan-card__overlay--light">
             <div className="artisan-card__copy">
               <p className="artisan-card__role artisan-card__role--compact">Mindfulness Director</p>
               <h3 className="artisan-card__name" data-ja="伊藤東凌" data-en="Toryo Ito" data-zh-hans="伊藤東凌" data-zh-hant="伊藤東凌">伊藤東凌</h3>
@@ -510,7 +490,7 @@ export default async function HomePage() {
           <button className="artisan-card__media artisan-card__media-button" type="button" data-artisan="8" aria-label="裕人 礫翔の詳細を開く">
             <img src="/assets/images/artist_photo/IMG_1555.jpg" alt="裕人 礫翔" className="artisan-card__image" />
           </button>
-          <div className="artisan-card__overlay">
+          <div className="artisan-card__overlay artisan-card__overlay--light">
             <div className="artisan-card__copy">
               <p className="artisan-card__role">Metal Leaf Artist</p>
               <h3 className="artisan-card__name" data-ja="裕人 礫翔" data-en="Rakusho Hiroto" data-zh-hans="裕人 礫翔" data-zh-hant="裕人 礫翔">裕人 礫翔</h3>
@@ -579,40 +559,19 @@ export default async function HomePage() {
       <div className="property-access__layout">
         <div className="property-access__map-column">
           <div className="property-access__map-wrap">
-            <img
-              src="/assets/images/map-image/map-image.png"
-              data-ja-src="/assets/images/map-image/map-image.png"
-              data-en-src="/assets/images/map-image/map-image_en.png"
-              className="property-access__map property-access__embed"
-              alt="上七軒 旧長谷川邸 地図"
+            <iframe
+              className="property-access__gmap"
+              title="上七軒 旧長谷川邸 Google マップ"
+              data-gmap="https://maps.google.com/maps?q=%E4%BA%AC%E9%83%BD%E5%BA%9C%E4%BA%AC%E9%83%BD%E5%B8%82%E4%B8%8A%E4%BA%AC%E5%8C%BA%E7%9C%9F%E7%9B%9B%E7%94%BA698&z=16"
+              src="https://maps.google.com/maps?q=%E4%BA%AC%E9%83%BD%E5%BA%9C%E4%BA%AC%E9%83%BD%E5%B8%82%E4%B8%8A%E4%BA%AC%E5%8C%BA%E7%9C%9F%E7%9B%9B%E7%94%BA698&z=16&hl=ja&output=embed"
               loading="lazy"
-            />
-            <div className="property-access__map-inset" aria-hidden="true">
-              <img
-                src="/assets/images/map-image/image-popup.png"
-                data-ja-src="/assets/images/map-image/image-popup.png"
-                data-en-src="/assets/images/map-image/image-popup_en.png"
-                className="property-access__map-inset-image"
-                alt=""
-                loading="lazy"
-              />
-            </div>
-            <button className="property-access__pin" type="button" aria-label="北野天満宮の詳細を開く" data-map-pin></button>
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
 
         <div className="property-access__side">
-          <div className="property-access__zoom-wrap">
-            <img
-              src="/assets/images/map-image/image-popup.png"
-              data-ja-src="/assets/images/map-image/image-popup.png"
-              data-en-src="/assets/images/map-image/image-popup_en.png"
-              className="property-access__zoom"
-              alt="北野天満宮 周辺拡大図"
-              loading="lazy"
-            />
-          </div>
-
           <div className="property-access__info">
             <h3 className="property-access__subtitle" data-ja="上七軒までのアクセス" data-en="Access to Kamishichiken" data-zh-hans="交通信息" data-zh-hant="交通資訊">上七軒までのアクセス</h3>
 
@@ -701,7 +660,7 @@ export default async function HomePage() {
           <div className="property-spec__row"><dt data-ja="造園" data-en="Landscape Design" data-zh-hans="造园" data-zh-hant="造園">造園</dt><dd data-ja="御庭植治株式会社" data-en="Onniwa Ueji Inc." data-zh-hans="御庭植治株式会社" data-zh-hant="御庭植治株式会社">御庭植治株式会社</dd></div>
           <div className="property-spec__row"><dt data-ja="家具 / アクセサリー" data-en="Furnishings / Accessories" data-zh-hans="家具 / 配饰" data-zh-hant="家具 / 配飾">家具 / アクセサリー</dt><dd data-ja="アルマーニ / カーザ" data-en="ARMANI / CASA" data-zh-hans="Armani / Casa" data-zh-hant="Armani / Casa">アルマーニ / カーザ</dd></div>
           <div className="property-spec__row"><dt data-ja="設計監理" data-en="Project Architect" data-zh-hans="设计监理" data-zh-hant="設計監理">設計監理</dt><dd data-ja="株式会社アトリエ・プリコラージュ" data-en="Atelier Pricolage Inc." data-zh-hans="株式会社アトリエ・プリコラージュ" data-zh-hant="株式會社 Atelier Pricolage">株式会社アトリエ・プリコラージュ</dd></div>
-          <div className="property-spec__row"><dt data-ja="販売パートナー" data-en="Sales Agent" data-zh-hans="销售合作伙伴" data-zh-hant="銷售合作夥伴">販売パートナー</dt><dd data-ja="TonTon Forbes Global Properties" data-en="TonTon Forbes Global Properties" data-zh-hans="TonTon Forbes Global Properties" data-zh-hant="TonTon Forbes Global Properties">TonTon Forbes Global Properties</dd></div>
+          <div className="property-spec__row"><dt data-ja="販売パートナー" data-en="Sales Agent" data-zh-hans="销售合作伙伴" data-zh-hant="銷售合作夥伴">販売パートナー</dt><dd data-ja="TonTon | Forbes Global Properties" data-en="TonTon | Forbes Global Properties" data-zh-hans="TonTon | Forbes Global Properties" data-zh-hant="TonTon | Forbes Global Properties">TonTon | Forbes Global Properties</dd></div>
           <div className="property-spec__row"><dt data-ja="Executive Producer" data-en="Executive Producer" data-zh-hans="Executive Producer" data-zh-hant="Executive Producer">Executive Producer</dt><dd data-ja="中村建治" data-en="Kenji Nakamura" data-zh-hans="中村建治" data-zh-hant="中村建治">中村建治</dd></div>
           <div className="property-spec__row"><dt data-ja="事業主" data-en="Developer" data-zh-hans="开发商" data-zh-hant="開發商">事業主</dt><dd data-ja="株式会社フィード" data-en="FIDO.Inc" data-zh-hans="Feed Co.（株式会社フィード）" data-zh-hant="Feed Co.（株式会社フィード）">株式会社フィード</dd></div>
           <div className="property-spec__row"><dt data-ja="販売価格" data-en="Price" data-zh-hans="售价" data-zh-hant="售價">販売価格</dt><dd data-ja="ASK" data-en="ASK" data-zh-hans="详情请垂询（ASK）" data-zh-hant="詳情請洽詢（ASK）">ASK</dd></div>
@@ -1213,6 +1172,26 @@ export default async function HomePage() {
       </article>
     </div>
   </div>
+      <a
+        href="#property-contact"
+        className="floating-contact"
+        aria-label="お問い合わせ"
+        data-ja-aria="お問い合わせ"
+        data-en-aria="Contact"
+        data-zh-hans-aria="联系我们"
+        data-zh-hant-aria="聯絡我們"
+      >
+        <span className="floating-contact__en" aria-hidden="true">CONTACT</span>
+        <span
+          className="floating-contact__label"
+          data-ja="お問い合わせ"
+          data-en="Contact"
+          data-zh-hans="联系我们"
+          data-zh-hant="聯絡我們"
+        >
+          お問い合わせ
+        </span>
+      </a>
       <SiteBehavior />
     </>
   );

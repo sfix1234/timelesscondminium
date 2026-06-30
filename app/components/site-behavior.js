@@ -72,10 +72,10 @@ export default function SiteBehavior() {
 
     const applyLanguageBadge = (lang) => {
       currentLang = lang;
-      const labelMap = { ja: '日本語', en: 'English', 'zh-hans': '中国語（簡体字）', 'zh-hant': '中国語（繁体字）' };
+      const labelMap = { ja: 'JA', en: 'EN', 'zh-hans': 'ZH-CN', 'zh-hant': 'ZH-TW' };
       const htmlLangMap = { ja: 'ja', en: 'en', 'zh-hans': 'zh-Hans', 'zh-hant': 'zh-Hant' };
       if (langToggle) {
-        langToggle.textContent = labelMap[lang] || '日本語';
+        langToggle.textContent = labelMap[lang] || 'JA';
         langToggle.setAttribute('aria-label', 'Switch language');
       }
       html.lang = htmlLangMap[lang] || 'ja';
@@ -137,6 +137,14 @@ export default function SiteBehavior() {
         const src = el.getAttribute(srcKey);
         if (src) el.src = src;
       });
+
+      // Switch Google Maps embed language via the hl= parameter
+      const gmapLangMap = { ja: 'ja', en: 'en', 'zh-hans': 'zh-CN', 'zh-hant': 'zh-TW' };
+      const gmapHl = gmapLangMap[lang] || 'ja';
+      document.querySelectorAll('[data-gmap]').forEach((el) => {
+        const base = el.getAttribute('data-gmap');
+        if (base) el.src = `${base}&hl=${gmapHl}&output=embed`;
+      });
     };
 
     applyLanguageBadge('ja');
@@ -152,7 +160,6 @@ export default function SiteBehavior() {
     const heroStart = 0;
     playAfter('.jpn-badge__label', heroStart);
     playAfter('.jpn-badge__line', heroStart + 400);
-    playAfter('.hamburger', heroStart + 200);
     playAfter('.center-block__title', heroStart + 500);
     playAfter('.hero__logo-overlay', heroStart + 900);
 
@@ -235,60 +242,19 @@ export default function SiteBehavior() {
         openRegistrationPopup();
       });
     });
+    document.querySelectorAll('a.floating-contact[href="#property-contact"]').forEach((el) => {
+      on(el, 'click', (e) => {
+        const contactSection = document.getElementById('property-contact');
+        if (contactSection) {
+          e.preventDefault();
+          contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
     on(document, 'keydown', (e) => {
       if (e.key === 'Escape' && registrationPopup?.classList.contains('is-open')) {
         closeRegistrationPopup();
       }
-    });
-
-    const hamburger = document.querySelector('.hamburger');
-    const navOverlay = document.getElementById('navOverlay');
-    const closeNavOverlay = () => {
-      hamburger?.classList.remove('is-open');
-      navOverlay?.classList.remove('is-open');
-      html.classList.remove('no-scroll');
-    };
-    on(hamburger, 'click', () => {
-      const isOpen = hamburger.classList.toggle('is-open');
-      navOverlay?.classList.toggle('is-open', isOpen);
-      html.classList.toggle('no-scroll', isOpen);
-    });
-    navOverlay?.querySelectorAll('.nav-overlay__link').forEach((link) => {
-      on(link, 'click', (e) => {
-        e.preventDefault();
-        const targetSelector = link.getAttribute('data-target');
-        const isPathNavigation = Boolean(targetSelector && targetSelector.startsWith('/'));
-        let target =
-          !isPathNavigation && targetSelector && targetSelector !== '#'
-            ? safeQuerySelector(targetSelector)
-            : null;
-
-        if (!target && targetSelector === '.registration') {
-          target = safeQuerySelector('#property-contact');
-        }
-
-        const gatedRoot = target?.closest('.access-gate__content');
-        const isTargetLocked = Boolean(
-          gatedRoot &&
-          (gatedRoot.classList.contains('is-locked') || gatedRoot.classList.contains('is-checking'))
-        );
-        if (isTargetLocked) {
-          closeNavOverlay();
-          openRegistrationPopup();
-          return;
-        }
-
-        closeNavOverlay();
-        if (isPathNavigation && targetSelector) {
-          window.location.href = targetSelector;
-          return;
-        }
-        if (target) {
-          requestAnimationFrame(() => {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
-        }
-      });
     });
 
     const detailPanel = document.getElementById('detailPanel');
@@ -411,14 +377,6 @@ export default function SiteBehavior() {
       if (e.key === 'Escape' && artisanDetail?.classList.contains('is-open')) {
         closeArtisanDetail();
       }
-    });
-
-    const accessMapPin = document.querySelector('[data-map-pin]');
-    const accessZoomWrap = document.querySelector('.property-access__zoom-wrap');
-
-    on(accessMapPin, 'click', () => {
-      if (!accessZoomWrap) return;
-      accessZoomWrap.classList.add('is-visible');
     });
 
     const centerBlock = document.querySelector('.center-block:not(.hero__logo-overlay)');
