@@ -251,6 +251,18 @@ export default function SiteBehavior() {
         }
       });
     });
+
+    const floatingContactEl = document.querySelector('.floating-contact');
+    const propertyContactSection = document.getElementById('property-contact');
+    if (floatingContactEl && propertyContactSection) {
+      const contactVisibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          floatingContactEl.classList.toggle('is-hidden', entry.isIntersecting);
+        });
+      }, { threshold: 0 });
+      contactVisibilityObserver.observe(propertyContactSection);
+      cleanupFns.push(() => contactVisibilityObserver.disconnect());
+    }
     on(document, 'keydown', (e) => {
       if (e.key === 'Escape' && registrationPopup?.classList.contains('is-open')) {
         closeRegistrationPopup();
