@@ -7567,7 +7567,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 }
 
 .property-page .property-contact-block__title { font-size: clamp(28px, 4.8vw, 44px); }
-.property-page .property-contact-block__lead { font-size: clamp(12px, 1.7vw, 14px); }
+.property-page .property-contact-block__lead { font-size: clamp(11px, 1.4vw, 12px); }
 .property-page .property-contact-block__app-title { font-size: clamp(12px, 1.4vw, 14px); }
 .property-page .property-contact-block__app-sub { font-size: clamp(10px, 1.1vw, 12px); }
 
@@ -7577,7 +7577,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   .property-page .property-contact-block__apps { gap: 12px; grid-template-columns: minmax(0, 1fr); }
   .property-page .property-contact-block__app-icon { width: 40px; height: 40px; }
   .property-page .property-contact-block__app { gap: 10px; padding: 14px 12px 16px; }
-  .property-page .property-contact-block__lead { font-size: clamp(13px, 3.9vw, 16px); }
+  .property-page .property-contact-block__lead { font-size: clamp(11px, 3.3vw, 13px); }
   .property-page .property-contact-block__app-title { font-size: clamp(13px, 3.7vw, 16px); }
   .property-page .property-contact-block__app-sub { font-size: clamp(11px, 3vw, 13px); }
 }
