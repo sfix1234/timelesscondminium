@@ -47,6 +47,11 @@ export default function RootLayout({ children }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
+            __html: `(function(d,loc){try{var p=new URLSearchParams(loc.search);var src=(p.get('utm_source')||'').trim();var med=(p.get('utm_medium')||'').trim().toLowerCase();if(src&&(med==='partner'||/^PT[0-9A-Za-z_-]+$/i.test(src))){var code=src.toUpperCase().replace(/[^0-9A-Z_-]/g,'').slice(0,32);if(code){d.cookie='ttc_partner='+code+'; path=/; max-age=7776000; samesite=lax';}}}catch(e){}})(document,window.location);`
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i,c){var loaded=false;function hasConsent(){return d.cookie.split('; ').some(function(item){return item.trim().indexOf(c+'=accepted')===0;});}function load(){if(loaded){return;}loaded=true;w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=

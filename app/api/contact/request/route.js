@@ -50,19 +50,25 @@ function validatePayload(payload) {
   const email = normalizeEmail(payload.email);
   const company = String(payload.company || '').trim();
   const phoneNumber = String(payload.phoneNumber || '').trim();
+  const referralSource = String(payload.referralSource || '').trim();
+  const referralDetail = String(payload.referralDetail || '').trim();
+  const referralCode = String(payload.referralCode || '').trim().replace(/[^0-9A-Za-z_-]/g, '').slice(0, 32);
   const message = String(payload.message || '').trim();
   const agreed = Boolean(payload.agreed);
 
   if (name.length < 2) errors.name = 'お名前を入力してください。';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = '有効なメールアドレスを入力してください。';
   if (phoneNumber.replace(/[^\d]/g, '').length < 8) errors.phoneNumber = '有効な電話番号を入力してください。';
+  const referralSourcesRequiringDetail = ['プライベートバンク', 'ファミリーオフィス', 'その他の不動産会社', '個人からのご紹介', 'その他'];
+  if (!referralSource) errors.referralSource = 'ご紹介元を選択してください。';
+  else if (referralSourcesRequiringDetail.includes(referralSource) && !referralDetail) errors.referralDetail = 'ご紹介元の詳細を入力してください。';
   if (message.length < 5) errors.message = 'お問い合わせ内容を入力してください。';
   if (!agreed) errors.agreed = '同意が必要です。';
 
   return {
     isValid: Object.keys(errors).length === 0,
     errors,
-    clean: { name, email, company, phoneNumber, message, agreed }
+    clean: { name, email, company, phoneNumber, referralSource, referralDetail, referralCode, message, agreed }
   };
 }
 
@@ -92,6 +98,10 @@ export async function POST(request) {
 
     const isLocalDev = process.env.NODE_ENV !== 'production';
 
+    const referralText = validation.clean.referralSource
+      ? `${validation.clean.referralSource}${validation.clean.referralDetail ? `（${validation.clean.referralDetail}）` : ''}`
+      : '-';
+
     if (!resendApiKey || !fromEmail || receivingEmails.length === 0) {
       if (isLocalDev) {
         console.log('[contact/request:dev] mail config missing — skipping email, recording to Sheets only');
@@ -119,6 +129,8 @@ export async function POST(request) {
         <p>メールアドレス: ${escapeHtml(validation.clean.email)}</p>
         <p>会社名: ${escapeHtml(validation.clean.company || '-')}</p>
         <p>電話番号: ${escapeHtml(validation.clean.phoneNumber)}</p>
+        <p>ご紹介元: ${escapeHtml(referralText)}</p>
+        <p>紹介コード: ${escapeHtml(validation.clean.referralCode || '-')}</p>
         <p>プライバシーポリシー同意: 同意済み</p>
         <p>同意時刻: ${escapeHtml(agreedAtText)} (JST)</p>
         <p>お問い合わせ内容:</p>
@@ -135,6 +147,7 @@ export async function POST(request) {
         <p>メールアドレス: ${escapeHtml(validation.clean.email)}</p>
         <p>会社名: ${escapeHtml(validation.clean.company || '-')}</p>
         <p>電話番号: ${escapeHtml(validation.clean.phoneNumber)}</p>
+        <p>ご紹介元: ${escapeHtml(referralText)}</p>
         <p>受付時刻: ${escapeHtml(agreedAtText)} (JST)</p>
         <p>お問い合わせ内容:</p>
         <p style="white-space: pre-wrap;">${escapeHtml(validation.clean.message)}</p>
@@ -197,8 +210,10 @@ export async function POST(request) {
         validation.clean.email,
         validation.clean.company || '-',
         validation.clean.phoneNumber,
+        referralText,
         validation.clean.message,
-        '同意済み'
+        '同意済み',
+        validation.clean.referralCode || '-'
       ]);
       console.log('[contact/request] Google Sheets append succeeded');
     } catch (sheetError) {

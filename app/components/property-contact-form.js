@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 const COUNTRY_CODES = [
@@ -74,12 +74,74 @@ const COUNTRY_CODES = [
   { value: '+998', label: 'UZ +998' },
 ];
 
+const REFERRAL_SOURCES = [
+  {
+    value: 'fpg',
+    label: { ja: '株式会社FPG', en: 'FPG Co., Ltd.', 'zh-hans': 'FPG株式会社', 'zh-hant': 'FPG株式會社' },
+    requiresDetail: false,
+  },
+  {
+    value: 'jamesedition',
+    label: { ja: 'JamesEdition B.V.', en: 'JamesEdition B.V.', 'zh-hans': 'JamesEdition B.V.', 'zh-hant': 'JamesEdition B.V.' },
+    requiresDetail: false,
+  },
+  {
+    value: 'savills',
+    label: { ja: 'サヴィルズ・ジャパン', en: 'Savills Japan', 'zh-hans': 'Savills Japan', 'zh-hant': 'Savills Japan' },
+    requiresDetail: false,
+  },
+  {
+    value: 'jll',
+    label: { ja: 'ジョーンズ ラング ラサール株式会社／JLL', en: 'Jones Lang LaSalle / JLL', 'zh-hans': '仲量联行／JLL', 'zh-hant': '仲量聯行／JLL' },
+    requiresDetail: false,
+  },
+  {
+    value: 'private-bank',
+    label: { ja: 'プライベートバンク', en: 'Private Bank', 'zh-hans': '私人银行', 'zh-hant': '私人銀行' },
+    requiresDetail: true,
+    detail: { ja: '金融機関名・紹介者氏名', en: "Institution & referrer's name", 'zh-hans': '金融机构名称・介绍人姓名', 'zh-hant': '金融機構名稱・介紹人姓名' },
+  },
+  {
+    value: 'family-office',
+    label: { ja: 'ファミリーオフィス', en: 'Family Office', 'zh-hans': '家族办公室', 'zh-hant': '家族辦公室' },
+    requiresDetail: true,
+    detail: { ja: '組織名・紹介者氏名', en: "Organization & referrer's name", 'zh-hans': '组织名称・介绍人姓名', 'zh-hant': '組織名稱・介紹人姓名' },
+  },
+  {
+    value: 'other-agency',
+    label: { ja: 'その他の不動産会社', en: 'Other Real Estate Company', 'zh-hans': '其他房地产公司', 'zh-hant': '其他房地產公司' },
+    requiresDetail: true,
+    detail: { ja: '会社名・紹介者氏名', en: "Company & referrer's name", 'zh-hans': '公司名称・介绍人姓名', 'zh-hant': '公司名稱・介紹人姓名' },
+  },
+  {
+    value: 'personal',
+    label: { ja: '個人からのご紹介', en: 'Personal Referral', 'zh-hans': '个人介绍', 'zh-hant': '個人介紹' },
+    requiresDetail: true,
+    detail: { ja: '紹介者氏名', en: "Referrer's name", 'zh-hans': '介绍人姓名', 'zh-hant': '介紹人姓名' },
+  },
+  {
+    value: 'other',
+    label: { ja: 'その他', en: 'Other', 'zh-hans': '其他', 'zh-hant': '其他' },
+    requiresDetail: true,
+    detail: { ja: '紹介元の詳細', en: 'Referral details', 'zh-hans': '介绍来源详情', 'zh-hant': '介紹來源詳情' },
+  },
+];
+
+const REFERRAL_PLACEHOLDER = {
+  ja: '選択してください',
+  en: 'Please select',
+  'zh-hans': '请选择',
+  'zh-hant': '請選擇',
+};
+
 const INITIAL_FORM = {
   name: '',
   email: '',
   company: '',
   countryCode: '+81',
   phoneNumber: '',
+  referralSource: '',
+  referralDetail: '',
   message: '',
   agreed: false
 };
@@ -89,6 +151,8 @@ const VALIDATION_MESSAGES = {
     name: 'お名前を入力してください。',
     email: '有効なメールアドレスを入力してください。',
     phoneNumber: '有効な電話番号を入力してください。',
+    referralSource: 'ご紹介元を選択してください。',
+    referralDetail: 'ご紹介元の詳細を入力してください。',
     message: 'お問い合わせ内容を入力してください。',
     agreed: '同意が必要です。',
   },
@@ -96,6 +160,8 @@ const VALIDATION_MESSAGES = {
     name: 'Please enter your name.',
     email: 'Please enter a valid email address.',
     phoneNumber: 'Please enter a valid phone number.',
+    referralSource: 'Please select your referral source.',
+    referralDetail: 'Please enter the referral details.',
     message: 'Please enter your inquiry.',
     agreed: 'Consent is required.',
   },
@@ -103,6 +169,8 @@ const VALIDATION_MESSAGES = {
     name: '请输入您的姓名。',
     email: '请输入有效的电子邮箱。',
     phoneNumber: '请输入有效的电话号码。',
+    referralSource: '请选择介绍来源。',
+    referralDetail: '请输入介绍来源详情。',
     message: '请输入咨询内容。',
     agreed: '需要您的同意。',
   },
@@ -110,6 +178,8 @@ const VALIDATION_MESSAGES = {
     name: '請輸入您的姓名。',
     email: '請輸入有效的電子郵箱。',
     phoneNumber: '請輸入有效的電話號碼。',
+    referralSource: '請選擇介紹來源。',
+    referralDetail: '請輸入介紹來源詳情。',
     message: '請輸入諮詢內容。',
     agreed: '需要您的同意。',
   },
@@ -131,6 +201,15 @@ function validate(form, lang = 'ja') {
     errors.phoneNumber = msg.phoneNumber;
   }
 
+  if (!form.referralSource) {
+    errors.referralSource = msg.referralSource;
+  } else {
+    const source = REFERRAL_SOURCES.find((item) => item.value === form.referralSource);
+    if (source && source.requiresDetail && form.referralDetail.trim().length < 1) {
+      errors.referralDetail = msg.referralDetail;
+    }
+  }
+
   if (form.message.trim().length < 5) {
     errors.message = msg.message;
   }
@@ -142,6 +221,13 @@ function validate(form, lang = 'ja') {
   return errors;
 }
 
+function readPartnerCode() {
+  if (typeof document === 'undefined') return '';
+  const match = document.cookie.split('; ').find((item) => item.startsWith('ttc_partner='));
+  if (!match) return '';
+  return decodeURIComponent(match.slice('ttc_partner='.length)).replace(/[^0-9A-Za-z_-]/g, '').slice(0, 32);
+}
+
 export default function PropertyContactForm() {
   const router = useRouter();
   const [form, setForm] = useState(INITIAL_FORM);
@@ -149,6 +235,19 @@ export default function PropertyContactForm() {
   const [status, setStatus] = useState('');
   const [isPending, startTransition] = useTransition();
   const [lang, setLang] = useState('ja');
+  const [referralCode, setReferralCode] = useState('');
+  const formStartSentRef = useRef(false);
+
+  useEffect(() => {
+    setReferralCode(readPartnerCode());
+  }, []);
+
+  const notifyFormStart = () => {
+    if (formStartSentRef.current) return;
+    formStartSentRef.current = true;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'form_start', partner_code: readPartnerCode() || undefined });
+  };
 
   useEffect(() => {
     const updateLang = () => setLang(document.documentElement.lang || 'ja');
@@ -166,7 +265,10 @@ export default function PropertyContactForm() {
   };
   const labels = submitLabels[lang] || submitLabels.en;
 
+  const selectedReferral = REFERRAL_SOURCES.find((source) => source.value === form.referralSource) || null;
+
   const updateField = (key, value) => {
+    notifyFormStart();
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: '' }));
   };
@@ -185,7 +287,11 @@ export default function PropertyContactForm() {
       const response = await fetch('/api/contact/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify({
+          ...form,
+          referralSource: selectedReferral ? selectedReferral.label.ja : '',
+          referralCode: referralCode || readPartnerCode()
+        })
       });
       const data = await response.json();
 
@@ -202,6 +308,7 @@ export default function PropertyContactForm() {
 
   return (
     <form className="property-contact-block__form" onSubmit={handleSubmit}>
+      <input type="hidden" name="referralCode" value={referralCode} readOnly />
       <div className="property-contact-block__form-row property-contact-block__form-row--double">
         <label>
           <span data-ja="お名前 *" data-en="Full Name *" data-zh-hans="姓名 *" data-zh-hant="姓名 *">お名前 *</span>
@@ -266,6 +373,38 @@ export default function PropertyContactForm() {
           </div>
           {errors.phoneNumber ? <small>{errors.phoneNumber}</small> : null}
         </div>
+      </div>
+      <div className="property-contact-block__form-row property-contact-block__form-row--double">
+        <label>
+          <span data-ja="ご紹介元 *" data-en="Referral Source *" data-zh-hans="介绍来源 *" data-zh-hant="介紹來源 *">ご紹介元 *</span>
+          <select
+            value={form.referralSource}
+            onChange={(event) => {
+              setForm((current) => ({ ...current, referralSource: event.target.value, referralDetail: '' }));
+              setErrors((current) => ({ ...current, referralSource: '', referralDetail: '' }));
+            }}
+          >
+            <option value="">{REFERRAL_PLACEHOLDER[lang] || REFERRAL_PLACEHOLDER.en}</option>
+            {REFERRAL_SOURCES.map((source) => (
+              <option key={source.value} value={source.value}>
+                {source.label[lang] || source.label.en}
+              </option>
+            ))}
+          </select>
+          {errors.referralSource ? <small>{errors.referralSource}</small> : null}
+        </label>
+        {selectedReferral && selectedReferral.requiresDetail ? (
+          <label>
+            <span>{`${selectedReferral.detail[lang] || selectedReferral.detail.en} *`}</span>
+            <input
+              type="text"
+              placeholder={selectedReferral.detail[lang] || selectedReferral.detail.en}
+              value={form.referralDetail}
+              onChange={(event) => updateField('referralDetail', event.target.value)}
+            />
+            {errors.referralDetail ? <small>{errors.referralDetail}</small> : null}
+          </label>
+        ) : null}
       </div>
       <label>
         <span data-ja="お問い合わせ内容 *" data-en="Inquiry Details *" data-zh-hans="咨询内容 *" data-zh-hant="諮詢內容 *">お問い合わせ内容 *</span>
