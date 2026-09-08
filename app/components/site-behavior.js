@@ -254,14 +254,40 @@ export default function SiteBehavior() {
 
     const floatingContactEl = document.querySelector('.floating-contact');
     const propertyContactSection = document.getElementById('property-contact');
-    if (floatingContactEl && propertyContactSection) {
-      const contactVisibilityObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          floatingContactEl.classList.toggle('is-hidden', entry.isIntersecting);
-        });
-      }, { threshold: 0 });
-      contactVisibilityObserver.observe(propertyContactSection);
-      cleanupFns.push(() => contactVisibilityObserver.disconnect());
+    const projectVisionSection = document.querySelector('.project-vision');
+    if (floatingContactEl) {
+      let hiddenForContactSection = false;
+      let notYetRevealed = !!projectVisionSection;
+      const updateFloatingContactVisibility = () => {
+        floatingContactEl.classList.toggle('is-hidden', notYetRevealed || hiddenForContactSection);
+      };
+      updateFloatingContactVisibility();
+
+      if (propertyContactSection) {
+        const contactVisibilityObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            hiddenForContactSection = entry.isIntersecting;
+            updateFloatingContactVisibility();
+          });
+        }, { threshold: 0 });
+        contactVisibilityObserver.observe(propertyContactSection);
+        cleanupFns.push(() => contactVisibilityObserver.disconnect());
+      }
+
+      if (projectVisionSection) {
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              notYetRevealed = false;
+            } else if (entry.boundingClientRect.top > 0) {
+              notYetRevealed = true;
+            }
+            updateFloatingContactVisibility();
+          });
+        }, { threshold: 0 });
+        revealObserver.observe(projectVisionSection);
+        cleanupFns.push(() => revealObserver.disconnect());
+      }
     }
     on(document, 'keydown', (e) => {
       if (e.key === 'Escape' && registrationPopup?.classList.contains('is-open')) {
