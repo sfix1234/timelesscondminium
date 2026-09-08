@@ -454,6 +454,33 @@ html.property-scroll-lock body {
   z-index: 10003;
 }
 
+.jpn-badge__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jpn-badge__instagram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  opacity: 0.88;
+  transition: opacity 0.3s ease;
+}
+
+.jpn-badge__instagram:hover {
+  opacity: 1;
+}
+
+.jpn-badge__instagram img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .jpn-badge__label {
   display: inline-flex;
   align-items: center;
@@ -496,7 +523,6 @@ html.property-scroll-lock body {
     rgba(206, 173, 116, 0.92) 50%,
     rgba(206, 173, 116, 0) 100%
   );
-  margin-top: 7px;
 }
 
 .jpn-badge__menu {
@@ -9882,9 +9908,8 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   gap: 7px;
   width: 118px;
   height: 118px;
-  border: 1px solid rgba(244, 239, 230, 0.16);
   border-radius: 50%;
-  background: #423a33;
+  background: url('/assets/images/floating-contact.png') center / cover no-repeat;
   color: #f4efe6;
   text-decoration: none;
   box-shadow: 0 12px 34px rgba(36, 26, 18, 0.34);
@@ -9893,7 +9918,6 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
 
 .floating-contact:hover {
   transform: translateY(-3px);
-  background: #4d443c;
   box-shadow: 0 16px 40px rgba(36, 26, 18, 0.44);
 }
 
@@ -9902,24 +9926,17 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   pointer-events: none;
 }
 
-.floating-contact__en {
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
-  font-weight: 400;
-  font-size: 17px;
-  letter-spacing: 0.16em;
-  line-height: 1;
-  text-indent: 0.16em;
-}
-
+.floating-contact__en,
 .floating-contact__label {
-  font-family: 'Noto Serif Japanese', 'Cormorant Garamond', serif;
-  font-weight: 400;
-  font-size: 11.5px;
-  letter-spacing: 0.22em;
-  line-height: 1;
-  text-indent: 0.22em;
-  opacity: 0.92;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
+  border: 0;
 }
 
 @media (max-width: 768px) {
