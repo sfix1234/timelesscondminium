@@ -853,6 +853,10 @@ html.property-scroll-lock body {
   visibility: visible;
 }
 
+.floating-logo.is-released {
+  position: absolute;
+}
+
 .floating-logo .hero__logo-overlay {
   animation: none !important;
   filter: none !important;
