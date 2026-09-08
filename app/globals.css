@@ -831,28 +831,26 @@ html.property-scroll-lock body {
 }
 
 /* ===== Floating Logo (scroll morph) ===== */
+.floating-logo,
+.floating-logo.is-released {
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+}
+
 .floating-logo {
   position: fixed;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
-  width: 78%;
+  width: 65%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 9999;
   pointer-events: none;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   opacity: 1;
   visibility: visible;
-}
-
-.floating-logo.is-released {
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
 }
 
 .floating-logo .hero__logo-overlay {
