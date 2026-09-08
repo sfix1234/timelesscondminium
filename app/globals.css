@@ -460,6 +460,12 @@ html.property-scroll-lock body {
   gap: 8px;
 }
 
+.jpn-badge__lang {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .jpn-badge__instagram {
   display: inline-flex;
   align-items: center;
