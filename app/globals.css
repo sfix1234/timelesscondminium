@@ -454,6 +454,12 @@ html.property-scroll-lock body {
   z-index: 10003;
 }
 
+@media (min-width: 769px) {
+  .jpn-badge {
+    transform: translate(-7px, -20px);
+  }
+}
+
 .jpn-badge__row {
   display: flex;
   align-items: center;
@@ -472,6 +478,7 @@ html.property-scroll-lock body {
   justify-content: center;
   width: 16px;
   height: 16px;
+  margin-top: 6px;
   opacity: 0.88;
   transition: opacity 0.3s ease;
 }
@@ -9907,8 +9914,8 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   align-items: center;
   justify-content: center;
   gap: 7px;
-  width: 118px;
-  height: 118px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   background: url('/assets/images/floating-contact.png') center / cover no-repeat;
   color: #f4efe6;
@@ -9944,8 +9951,8 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   .floating-contact {
     right: 16px;
     bottom: 18px;
-    width: 98px;
-    height: 98px;
+    width: 75px;
+    height: 75px;
     gap: 6px;
   }
   .floating-contact__en {
