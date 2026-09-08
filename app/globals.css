@@ -456,7 +456,7 @@ html.property-scroll-lock body {
 
 @media (min-width: 769px) {
   .jpn-badge {
-    transform: translate(-7px, -20px);
+    transform: translate(20px, 15px);
   }
 }
 
