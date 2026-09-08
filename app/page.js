@@ -181,7 +181,7 @@ export default async function HomePage() {
           <div className="center-block hero__logo-overlay">
           </div>
           <div className="floating-logo__main">
-            <img src="/assets/images/thesilence_logo_white.png" alt="" className="floating-logo__image" />
+            <img src="/assets/images/floating-logo.png" alt="" className="floating-logo__image" />
           </div>
         </div>
       </div>
