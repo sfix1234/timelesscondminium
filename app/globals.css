@@ -911,6 +911,10 @@ html.property-scroll-lock body {
   justify-content: center;
 }
 
+.floating-logo__main picture {
+  display: contents;
+}
+
 .floating-logo__image {
   width: 100%;
   max-width: 1440px;
