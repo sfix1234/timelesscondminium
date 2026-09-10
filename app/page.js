@@ -160,9 +160,6 @@ export default async function HomePage() {
         ></iframe>
       </div>
       <div className="hero__overlay"></div>
-      <div className="hero__center-title-wrap">
-        <img src="/assets/images/timeless-logo.png" alt="THE TIMELESS CONDOMINIUM" className="hero__center-title-logo" />
-      </div>
     </section>
 
     <div className="hero-story-scene__logo-track" aria-hidden="true">
