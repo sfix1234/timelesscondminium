@@ -906,7 +906,7 @@ html.property-scroll-lock body {
 }
 
 .hero__center-title-logo {
-  width: clamp(220px, 34vw, 420px);
+  width: clamp(220px, 20vw, 420px);
   height: auto;
   display: block;
 }
