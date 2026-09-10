@@ -533,7 +533,16 @@ export default function SiteBehavior() {
             const sceneRect = heroStoryScene ? heroStoryScene.getBoundingClientRect() : null;
             const storyRect = storySection ? storySection.getBoundingClientRect() : null;
             if (floatingLogo && sceneRect) {
-              const releaseTriggered = sceneRect.bottom <= vh + 18;
+              // .floating-logo is `position: fixed` (pinned to the layout viewport,
+              // i.e. document.documentElement.clientHeight) until released, then
+              // `position: absolute` with the same `bottom` offset. Comparing
+              // against that same layout-viewport height (instead of the
+              // visualViewport-based `vh`, which shrinks/grows as the mobile
+              // address bar hides/shows) keeps the two positions pixel-aligned
+              // at the moment of release, avoiding a visible jump near the end
+              // of the scene on mobile.
+              const fixedViewportHeight = document.documentElement.clientHeight;
+              const releaseTriggered = sceneRect.bottom <= fixedViewportHeight;
               floatingLogo.classList.toggle('is-released', releaseTriggered);
             }
             if (storyRect) {
