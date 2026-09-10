@@ -905,6 +905,12 @@ html.property-scroll-lock body {
   white-space: nowrap;
 }
 
+.hero__center-title-logo {
+  width: clamp(220px, 34vw, 420px);
+  height: auto;
+  display: block;
+}
+
 .floating-logo__main {
   width: 100%;
   display: flex;
@@ -7420,6 +7426,22 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   color: rgba(35, 30, 30, 0.34);
 }
 
+.property-contact-block__form label > select {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgba(35, 30, 30, 0.45);
+  border-radius: 0;
+  background: transparent;
+  padding: 6px 0 10px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(12px, 1.8vw, 15px);
+  color: rgba(35, 30, 30, 0.95);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
 .property-contact-block__check {
   border-top: 1px solid rgba(35, 30, 30, 0.45);
   padding-top: 16px;
@@ -7648,6 +7670,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 .property-page .property-contact-block__note,
 .property-page .property-contact-block__form label,
 .property-page .property-contact-block__form input,
+.property-page .property-contact-block__form select,
 .property-page .property-contact-block__form textarea,
 .property-page .property-contact-block__check span,
 .property-page .property-contact-block__submit,

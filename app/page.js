@@ -171,7 +171,7 @@ export default async function HomePage() {
         </div>
       </div>
       <div className="hero__center-title-wrap">
-        <span className="hero__center-title-text">THE TIMELESS CONDOMINIUM</span>
+        <img src="/assets/images/timeless-logo.png" alt="THE TIMELESS CONDOMINIUM" className="hero__center-title-logo" />
       </div>
     </section>
 
