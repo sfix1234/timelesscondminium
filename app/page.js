@@ -167,7 +167,7 @@ export default async function HomePage() {
         <div className="hero-intro__flare"></div>
         <div className="hero-intro__mark">
           <span className="hero-intro__mark-ring"></span>
-          <img src="/assets/images/thesilence_logo_white.png" alt="" className="hero-intro__mark-logo" />
+          <img src="/assets/images/timeless-logo.png" alt="" className="hero-intro__mark-logo" />
         </div>
       </div>
       <div className="hero__center-title-wrap">
