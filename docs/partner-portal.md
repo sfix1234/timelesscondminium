@@ -2,6 +2,26 @@
 
 管理者が担当者を登録し、担当者本人がパスワードを設定して紹介リンクを発行する機能です。
 
+## 現在の公開先（2026-09-27）
+
+- Vercelチーム: `fido`（`fido-89dfcaca`）
+- プロジェクト: `timelesscondminium`（`prj_dX6OSqyOMfAnAvAGYiGQtgNNQWqG`）
+- 本番ブランチ: `fido-production`。このブランチへのpushでfidoに自動デプロイ。
+- 旧環境の `main` は維持しており、fido用の変更は `fido-production` で管理。
+- 公開URL: `https://timelesscondminium.vercel.app`
+- 担当者ログイン: `https://timelesscondminium.vercel.app/partners`
+- DB: Neon `timeless-partners`、Free、Washington D.C.（`iad1`）。本番環境のみに接続。
+- 初期管理者: `ytaishu07@gmail.com`。本人がパスワード・認証アプリの初期設定を完了してから利用。
+
+`timelesscondominium.com` は旧Vercelチームを向いており、ドメインの切り替えは未実施です。
+現在の `PARTNER_ORIGIN` は `https://timelesscondminium.vercel.app` です。
+下記の新規導入例にある元ドメインをそのまま使わず、運用中の公開先に合わせて設定してください。
+ドメインを切り替えるときはDNSの管理権限を確認し、`PARTNER_ORIGIN` を更新して再デプロイし、
+ログイン・紹介リンク・メール連携を確認します。すでに発行した仮ドメインのリンクも引き続き扱えるようにしてください。
+
+本番接続設定と初期管理者の設定URLは、Gitリポジトリの外にある非公開フォルダに保存しています。
+秘密鍵や初期設定URLをこの文書やGitに追記しないでください。
+
 ## 画面
 
 - `/partners`：担当者ログイン・本人のリンク一覧・リンク発行
