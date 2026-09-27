@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { appendContactRow } from '../../../../lib/google-sheets';
+import { portal } from '../../../../lib/affiliate/server';
+import { configured, REFERRAL_COOKIE, LEGACY_CODES } from '../../../../lib/affiliate/config.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -81,6 +83,16 @@ export async function POST(request) {
       return NextResponse.json({ ok: false, errors: validation.errors }, { status: 400 });
     }
 
+    // New referral ownership is resolved from a signed HttpOnly cookie, never
+    // from a name, user ID or code supplied by the browser's form payload.
+    const referralCookie = request.cookies.get(REFERRAL_COOKIE)?.value;
+    if (referralCookie && !configured()) {
+      return NextResponse.json({ ok: false, message: '紹介情報を確認できません。時間をおいて再度お試しください。' }, { status: 503 });
+    }
+    const managedReferral = referralCookie && configured() ? await portal().attribution(referralCookie) : null;
+    validation.clean.referralCode = managedReferral?.code ||
+      (!referralCookie && LEGACY_CODES.has(validation.clean.referralCode.toUpperCase()) ? validation.clean.referralCode.toUpperCase() : '');
+
     const resendApiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.ACCESS_FROM_EMAIL;
     const receivingEmails = getReceivingEmails();
@@ -131,6 +143,7 @@ export async function POST(request) {
         <p>電話番号: ${escapeHtml(validation.clean.phoneNumber)}</p>
         <p>ご紹介元: ${escapeHtml(referralText)}</p>
         <p>紹介コード: ${escapeHtml(validation.clean.referralCode || '-')}</p>
+        ${managedReferral ? `<p>紹介会社（リンク経由）: ${escapeHtml(managedReferral.company || '-')}</p><p>紹介担当者（リンク経由）: ${escapeHtml(managedReferral.name)}</p><p>紹介リンク: ${escapeHtml(managedReferral.label)} / ${escapeHtml(managedReferral.slug)}</p>` : ''}
         <p>プライバシーポリシー同意: 同意済み</p>
         <p>同意時刻: ${escapeHtml(agreedAtText)} (JST)</p>
         <p>お問い合わせ内容:</p>
@@ -213,7 +226,10 @@ export async function POST(request) {
         referralText,
         validation.clean.message,
         '同意済み',
-        validation.clean.referralCode || '-'
+        validation.clean.referralCode || '-',
+        managedReferral?.company || '-',
+        managedReferral?.name || '-',
+        managedReferral?.slug || '-'
       ]);
       console.log('[contact/request] Google Sheets append succeeded');
     } catch (sheetError) {

@@ -1,0 +1,43 @@
+// Run against the isolated preview: node tests/affiliate-http.mjs
+import assert from 'node:assert/strict';
+const base = 'http://127.0.0.1:3100';
+const post = (path, body, cookie = '', origin = base) => fetch(`${base}/api/partners/${path}`, {
+  method: 'POST', headers: { 'Content-Type': 'application/json', Origin: origin, Cookie: cookie }, body: JSON.stringify(body)
+});
+const unauthorized = await fetch(`${base}/api/partners/state`);
+assert.equal(unauthorized.status, 401);
+assert.match(unauthorized.headers.get('cache-control'), /no-store/);
+const csrf = await post('login', { email: 'yamada@example.test', password: 'Preview-only-account-2026!' }, '', 'https://attacker.example');
+assert.equal(csrf.status, 403);
+const login = await post('login', { email: 'yamada@example.test', password: 'Preview-only-account-2026!' });
+assert.equal(login.status, 200);
+assert.match(login.headers.get('set-cookie'), /HttpOnly/i);
+assert.match(login.headers.get('set-cookie'), /SameSite=Strict/i);
+const cookie = login.headers.getSetCookie().map(s => s.split(';')[0]).join('; ');
+const state = await (await fetch(`${base}/api/partners/state`, { headers: { Cookie: cookie } })).json();
+assert.equal(state.user.email, 'yamada@example.test');
+assert.deepEqual(state.users, []);
+assert.ok(state.links.every(l => l.user_id === state.user.id));
+assert.equal((await post('users', { name: 'Blocked', email: 'blocked@example.test' }, cookie)).status, 403);
+assert.equal((await post('links', { slug: 'csrf-blocked', label: 'blocked' }, cookie, 'https://attacker.example')).status, 403);
+assert.equal((await post('links', { slug: 'yamada-kyoto', label: 'duplicate' }, cookie)).status, 409);
+const referral = await fetch(`${base}/r/yamada-kyoto`, { redirect: 'manual' });
+assert.equal(referral.status, 302);
+assert.match(referral.headers.get('location'), /utm_medium=partner/);
+assert.match(referral.headers.getSetCookie().find(s => s.startsWith('ttc_referral=')), /; HttpOnly;/);
+assert.match(referral.headers.get('cache-control'), /no-store/);
+assert.equal((await fetch(`${base}/r/not-a-real-link`, { redirect: 'manual' })).status, 404);
+const page = await fetch(`${base}/partners`);
+assert.equal(page.headers.get('referrer-policy'), 'no-referrer');
+assert.match(page.headers.get('content-security-policy'), /frame-ancestors 'none'/);
+const html = await page.text();
+assert.ok(!html.includes('googletagmanager.com'));
+assert.ok(!html.includes('COOKIE CONSENT'));
+assert.ok(!html.includes('local-preview-admin-0123456789'));
+assert.equal((await fetch(`${base}/management/not-a-valid-key`)).status, 404);
+const legacy = await fetch(`${base}/?utm_source=PT001&utm_medium=partner`);
+assert.match(legacy.headers.get('set-cookie'), /ttc_referral=;/);
+await legacy.body.cancel();
+await post('logout', {}, cookie);
+assert.equal((await fetch(`${base}/api/partners/state`, { headers: { Cookie: cookie } })).status, 401);
+console.log('PASS: HTTP auth, CSRF, ownership, duplicate names, signed referral redirect, private headers, legacy attribution, logout.');

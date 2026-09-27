@@ -1,5 +1,6 @@
 import './globals.css';
 import CookieConsentBanner from './components/cookie-consent-banner';
+import { headers } from 'next/headers';
 
 export const metadata = {
   title: 'THE TIMELESS CONDOMINIUM',
@@ -41,10 +42,12 @@ export const metadata = {
   }
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const isPortal = (await headers()).get('x-partner-portal') === '1';
   return (
     <html lang="ja">
       <head>
+        {!isPortal && <>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(d,loc){try{var p=new URLSearchParams(loc.search);var src=(p.get('utm_source')||'').trim();var med=(p.get('utm_medium')||'').trim().toLowerCase();if(src&&(med==='partner'||/^PT[0-9A-Za-z_-]+$/i.test(src))){var code=src.toUpperCase().replace(/[^0-9A-Z_-]/g,'').slice(0,32);if(code){d.cookie='ttc_partner='+code+'; path=/; max-age=7776000; samesite=lax';}}}catch(e){}})(document,window.location);`
@@ -58,9 +61,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}w.__loadGTM=load;if(hasConsent()){load();}})(window,document,'script','dataLayer','GTM-M4JZ5P3P','ttc_cookie_consent');`
           }}
         />
+        </>}
       </head>
       <body>
-        <CookieConsentBanner />
+        {!isPortal && <CookieConsentBanner />}
         {children}
       </body>
     </html>

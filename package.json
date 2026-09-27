@@ -5,12 +5,24 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test:partners": "node --test tests/affiliate.test.mjs",
+    "preview:partners": "node scripts/affiliate-preview.mjs"
   },
   "dependencies": {
     "gsap": "^3.14.2",
-    "next": "15.2.8",
+    "next": "15.5.26",
+    "otpauth": "^9.5.2",
+    "postgres": "^3.4.9",
+    "qrcode": "^1.5.4",
     "react": "19.0.0",
     "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8"
+  },
+  "overrides": {
+    "postcss": "^8.5.23",
+    "nanoid": "^3.3.18"
   }
 }
