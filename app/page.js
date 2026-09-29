@@ -769,7 +769,7 @@ export default async function HomePage() {
           </div>
 
           <div className="property-contact-block__apps">
-            <a href="https://wa.me/818064569899" target="_blank" rel="noopener noreferrer" className="property-contact-block__app" aria-label="WHATSAPPで問い合わせ">
+            <a href="/api/whatsapp/start" target="_blank" rel="noopener noreferrer" className="property-contact-block__app" aria-label="WHATSAPPで問い合わせ">
               <span className="property-contact-block__app-icon property-contact-block__app-icon--wa">☎</span>
               <div className="property-contact-block__app-body">
                 <p className="property-contact-block__app-title" data-ja="WHATSAPPで問い合わせ" data-en="Contact us via WhatsApp" data-zh-hans="通过 WhatsApp 咨询" data-zh-hant="透過 WhatsApp 諮詢">WHATSAPPで問い合わせ</p>
