@@ -12,6 +12,16 @@ if (command === 'generate-config') {
   if (!output) throw new Error('Specify a private output file');
   await writeFile(output, `PARTNER_SECRET=${randomBytes(32).toString('base64url')}\nPARTNER_ADMIN_PATH=${randomBytes(24).toString('base64url')}\nPARTNER_ORIGIN=https://timelesscondominium.com\n`, { mode: 0o600, flag: 'wx' });
   console.log(`Private configuration saved: ${output}`);
+} else if (command === 'migrate') {
+  getConfig();
+  const db = getDatabase();
+  try {
+    const migration = await readFile(new URL('../lib/affiliate/migrations/002_named_referrals.sql', import.meta.url), 'utf8');
+    await db.transaction(async tx => {
+      for (const statement of migration.split(';').map(s => s.trim()).filter(Boolean)) await tx.query(statement);
+    });
+    console.log('Named referral URL migration completed.');
+  } finally { await db.close(); }
 } else if (command === 'init') {
   const [email, output] = args;
   if (!email || !output) throw new Error('Usage: node scripts/affiliate-admin.mjs init <admin-email> <private-output-file>');
@@ -28,6 +38,6 @@ if (command === 'generate-config') {
     console.log(`Admin setup saved privately: ${output}`);
   } finally { await db.close(); }
 } else {
-  console.log('Commands: generate-config <private-output-file> | init <admin-email> <private-output-file>');
+  console.log('Commands: generate-config <private-output-file> | init <admin-email> <private-output-file> | migrate');
   process.exitCode = 1;
 }

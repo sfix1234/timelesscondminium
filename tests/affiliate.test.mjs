@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { PGlite } from '@electric-sql/pglite';
 import { createService, validSlug } from '../lib/affiliate/service.mjs';
 import { digest, totp, readReferral, signReferral } from '../lib/affiliate/crypto.mjs';
+import { slugFromName } from '../lib/affiliate/slug.mjs';
 
 const password = 'A-long-test-passphrase-2026!';
 const config = { secret: 'test-only-secret-0000000000000000000000000000', origin: 'https://example.test', adminPath: 'test-admin-path-0123456789012345' };
@@ -24,8 +25,11 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
   assert.equal(adminSetup.recoveryCodes.length, 8);
   await assert.rejects(service.activate({ token: adminToken, password }, 'admin'), /使用/);
   await assert.rejects(service.bootstrap('attacker@example.test'), /登録/);
-  const a = await service.createUser(admin, { name: '担当者A', email: 'A@example.test', company: '京都パートナー' });
-  const b = await service.createUser(admin, { name: '担当者B', email: 'b@example.test', company: '東京パートナー' });
+  const a = await service.createUser(admin, { name: '担当者A', email: 'A@example.test', company: '京都パートナー', slug: 'partner_a' });
+  const b = await service.createUser(admin, { name: '担当者B', email: 'b@example.test', company: '東京パートナー', slug: 'partner_b' });
+  assert.equal(a.referralUrl, 'https://example.test/r/partner_a');
+  assert.equal((await service.publicLink('partner_a')).name, '担当者A');
+  assert.equal((await service.attribution(signReferral(a.link.id, config.secret))).company, '京都パートナー');
   const activate = inviteUrl => service.activate({ token: tokenOf(inviteUrl), password }, 'partners');
   const authA = await activate(a.inviteUrl); const authB = await activate(b.inviteUrl);
   const userA = await service.getActor(authA.session.value); const userB = await service.getActor(authB.session.value);
@@ -37,7 +41,7 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
     assert.equal(created.link.user_id, userA.id);
     await assert.rejects(service.createLink(userB, { slug: 'YAMADA-KYOTO', label: 'duplicate' }), e => e.status === 409);
     await assert.rejects(service.updateLink(userB, created.link.id, { label: 'hijacked' }), e => e.status === 404);
-    assert.equal((await service.dashboard(userB)).links.length, 0);
+    assert.equal((await service.dashboard(userB)).links.length, 1);
     assert.deepEqual((await service.dashboard(userA)).users, []);
     assert.equal((await service.dashboard(admin)).users.length, 2);
     assert.ok(!(await service.dashboard(admin)).users.some(u => 'password_hash' in u || 'mfa_secret' in u));
@@ -98,8 +102,72 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
     await db.query("UPDATE affiliate_sessions SET expires_at=now()-interval '1 second'");
     assert.equal(await service.getActor(adminSetup.session.value), null);
   });
+  await t.test('named referral links are unique, immediately usable, stable, and stop with their owner', async () => {
+    const first = await service.createUser(admin, { name: '山田 太郎', email: 'yamada1@example.test', slug: 'yamada_taro' });
+    const second = await service.createUser(admin, { name: '山田 太郎', email: 'yamada2@example.test', slug: 'yamada_taro' });
+    assert.equal(first.referralUrl, 'https://example.test/r/yamada_taro');
+    assert.equal(second.referralUrl, 'https://example.test/r/yamada_taro_2');
+    assert.equal((await service.publicLink('yamada_taro')).code, first.user.code);
+    assert.equal((await service.publicLink('yamada_taro_2')).code, second.user.code);
+    assert.equal((await service.issueReferral(admin, first.user.id, { slug: 'another_name' })).referralUrl, first.referralUrl);
+    await assert.rejects(service.issueReferral(userA, first.user.id), e => e.status === 403);
+    await assert.rejects(service.createUser(admin, { name: '山田 三郎', email: 'bad@example.test', slug: 'invalid/name' }), /URL用/);
+    await assert.rejects(service.createUser(admin, { name: '山田 三郎', email: 'missing@example.test' }), /URL用/);
+    await service.updateUser(admin, first.user.id, { name: '山田 次郎' });
+    assert.equal((await service.issueReferral(admin, first.user.id)).referralUrl, first.referralUrl);
+    const referral = signReferral(first.link.id, config.secret);
+    await service.updateUser(admin, first.user.id, { active: false });
+    assert.equal(await service.publicLink('yamada_taro'), undefined);
+    assert.equal(await service.attribution(referral), undefined);
+    await service.updateUser(admin, first.user.id, { active: true });
+    assert.equal((await service.attribution(referral)).name, '山田 次郎');
+    await service.updateLink(admin, first.link.id, { active: false });
+    assert.equal(await service.publicLink('yamada_taro'), undefined);
+    assert.equal((await service.issueReferral(admin, first.user.id)).link.active, false);
+    await service.updateLink(admin, first.link.id, { active: true });
+    await activate((await service.reissue(admin, first.user.id)).inviteUrl);
+    assert.equal((await service.publicLink('yamada_taro')).code, first.user.code);
+    const row = (await service.dashboard(admin)).users.find(u => u.id === first.user.id);
+    assert.equal(row.primary_slug, 'yamada_taro');
+    assert.equal(row.link_count, 1);
+    const concurrent = await Promise.all([1, 2].map(n => service.createUser(admin, { name: '同姓同名', email: `same${n}@example.test`, slug: 'same_name' })));
+    assert.deepEqual(concurrent.map(r => r.link.slug).sort(), ['same_name', 'same_name_2']);
+    const long = 'a'.repeat(48);
+    const longFirst = await service.createUser(admin, { name: 'Long First', email: 'long1@example.test', slug: long });
+    const longSecond = await service.createUser(admin, { name: 'Long Second', email: 'long2@example.test', slug: long });
+    assert.equal(longFirst.link.slug.length, 48);
+    assert.equal(longSecond.link.slug.length, 48);
+    assert.ok(validSlug(longSecond.link.slug));
+  });
 });
 test('URL names reject reserved paths, traversal and invalid names', () => {
-  for (const name of ['../admin', 'admin', 'api', '日本語', '-abc', 'abc-', 'two--parts', 'a'.repeat(49), 'ab', 'with space', 'x?y=1']) assert.equal(validSlug(name), false, name);
+  for (const name of ['../admin', 'admin', 'api', '日本語', '-abc', 'abc-', '_abc', 'abc_', 'two--parts', 'two__parts', 'two_-parts', 'a'.repeat(49), 'ab', 'with space', 'x?y=1']) assert.equal(validSlug(name), false, name);
   assert.equal(validSlug('tanaka-kyoto'), true);
+  assert.equal(validSlug('yamada_taro'), true);
+  assert.equal(slugFromName('Yamada Taro'), 'yamada_taro');
+  assert.equal(slugFromName('山田 太郎'), '');
+});
+test('migration preserves legacy links and supports names for existing partners', async t => {
+  const db = new PGlite();
+  t.after(() => db.close());
+  const schema = (await readFile(new URL('../lib/affiliate/schema.sql', import.meta.url), 'utf8'))
+    .replace(/  slug text NOT NULL UNIQUE CHECK[^\n]+/, () => "  slug text NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9][a-z0-9-]{1,46}[a-z0-9]$'),")
+    .replace('  is_primary boolean NOT NULL DEFAULT false,\n', '')
+    .replace(/CREATE UNIQUE INDEX IF NOT EXISTS affiliate_links_primary_owner[^\n]+\n/, '');
+  await db.exec(schema);
+  const adminId = '00000000-0000-4000-8000-000000000001';
+  const partnerId = '00000000-0000-4000-8000-000000000002';
+  await db.query("INSERT INTO affiliate_users(id,email,name,role,code) VALUES($1,'admin@example.test','Admin','admin','ADMIN'),($2,'legacy@example.test','山田 太郎','partner','LEGACY')", [adminId, partnerId]);
+  await db.query("INSERT INTO affiliate_links(id,user_id,slug,label) VALUES('00000000-0000-4000-8000-000000000003',$1,'legacy-link','Original')", [partnerId]);
+  const migration = await readFile(new URL('../lib/affiliate/migrations/002_named_referrals.sql', import.meta.url), 'utf8');
+  await db.exec(migration);
+  await db.exec(migration);
+  const service = createService({ db, ...config });
+  const admin = { id: adminId, role: 'admin', active: true };
+  const result = await service.issueReferral(admin, partnerId, { slug: 'yamada_taro' });
+  assert.equal(result.referralUrl, 'https://example.test/r/yamada_taro');
+  assert.equal((await service.publicLink('yamada_taro')).code, 'LEGACY');
+  const links = (await db.query('SELECT slug,label,is_primary FROM affiliate_links ORDER BY slug')).rows;
+  assert.deepEqual(links, [{ slug: 'legacy-link', label: 'Original', is_primary: false }, { slug: 'yamada_taro', label: '山田 太郎の紹介URL', is_primary: true }]);
+  assert.equal((await service.issueReferral(admin, partnerId)).link.id, result.link.id);
 });

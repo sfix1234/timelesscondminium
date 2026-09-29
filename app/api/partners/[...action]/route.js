@@ -56,6 +56,7 @@ export async function POST(request, context) {
       if (path === 'users') result = await service.createUser(actor, body);
       else if (action.length === 2 && action[0] === 'users') result = await service.updateUser(actor, action[1], body);
       else if (action.length === 3 && action[0] === 'users' && action[2] === 'invite') result = await service.reissue(actor, action[1]);
+      else if (action.length === 3 && action[0] === 'users' && action[2] === 'referral') result = await service.issueReferral(actor, action[1], body);
       else if (path === 'links') result = await service.createLink(actor, body);
       else if (action.length === 2 && action[0] === 'links') result = await service.updateLink(actor, action[1], body);
       else return json({ error: '見つかりません。' }, 404);

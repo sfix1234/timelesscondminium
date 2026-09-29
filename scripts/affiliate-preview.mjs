@@ -18,11 +18,11 @@ const setup = await service.bootstrap('admin@example.test', '管理者（プレ�
 const info = await service.inviteInfo(value(setup.setupUrl), 'preview');
 const activated = await service.activate({ token: value(setup.setupUrl), password, code: totp(info.setup.secret).generate() }, 'preview');
 const admin = await service.getActor(activated.session.value);
-for (const [name, email, company, slug, label] of [
-  ['山田 太郎', 'yamada@example.test', '京都パートナーズ', 'yamada-kyoto', '京都物件のご紹介用'],
-  ['佐藤 花子', 'sato@example.test', '京町不動産', 'sato-kyoto', 'お客様へのご案内']
+for (const [name, email, company, slug, label, primarySlug] of [
+  ['山田 太郎', 'yamada@example.test', '京都パートナーズ', 'yamada-kyoto', '京都物件のご紹介用', 'yamada_taro'],
+  ['佐藤 花子', 'sato@example.test', '京町不動産', 'sato-kyoto', 'お客様へのご案内', 'sato_hanako']
 ]) {
-  const account = await service.createUser(admin, { name, email, company });
+  const account = await service.createUser(admin, { name, email, company, slug: primarySlug });
   const auth = await service.activate({ token: value(account.inviteUrl), password }, 'preview');
   await service.createLink(await service.getActor(auth.session.value), { slug, label });
 }
