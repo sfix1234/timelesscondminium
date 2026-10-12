@@ -1,17 +1,21 @@
 'use client';
 
+import Script from 'next/script';
+
 export default function ProjectVisionVideo() {
   return (
     <div className="project-vision__media project-vision__video-frame">
       <iframe
-        src="https://player.vimeo.com/video/1183960697?autoplay=1&muted=1&loop=1&playsinline=1&controls=1&title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479"
-        title="THE SILENCE Project Vision"
+        src="https://player.vimeo.com/video/1235165279?badge=0&autopause=0&player_id=0&app_id=58479"
+        title="THESILENCE_Speaks_newlogo_0927 (1)"
         className="project-vision__video-embed"
-        allow="autoplay; fullscreen; picture-in-picture"
+        frameBorder="0"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
         loading="lazy"
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
       />
+      <Script src="https://player.vimeo.com/api/player.js" strategy="lazyOnload" />
     </div>
   );
 }
