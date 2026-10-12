@@ -2976,6 +2976,7 @@ html:not(.has-js) .stage__info {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #000;
+  cursor: default;
 }
 
 .project-vision__video-embed {
@@ -2986,24 +2987,62 @@ html:not(.has-js) .stage__info {
   border: 0;
 }
 
+.project-vision__poster {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  color: #fff;
+  background: #242522;
+  cursor: pointer;
+}
+
+.project-vision__poster::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 19, 15, 0.08), rgba(15, 19, 15, 0.22));
+  pointer-events: none;
+}
+
+.project-vision__poster:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -8px;
+}
+
 .project-vision__image {
   display: block;
   width: 100%;
   height: 100%;
-  aspect-ratio: 16 / 9;
   object-fit: cover;
+  transition: transform 900ms ease;
 }
 
-.project-vision__play {
+.project-vision__play-prompt {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: clamp(56px, 11vw, 78px);
-  aspect-ratio: 1 / 1;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   transform: translate(-50%, -50%);
-  border: 2px solid rgba(242, 242, 242, 0.95);
+}
+
+.project-vision__play {
+  position: relative;
+  display: block;
+  width: clamp(60px, 7vw, 80px);
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 999px;
-  background: rgba(25, 25, 25, 0.26);
+  background: rgba(20, 24, 20, 0.25);
+  backdrop-filter: blur(3px);
+  transition: background 250ms ease, border-color 250ms ease;
 }
 
 .project-vision__play::before {
@@ -3014,9 +3053,42 @@ html:not(.has-js) .stage__info {
   transform: translate(-50%, -50%);
   width: 0;
   height: 0;
-  border-top: clamp(8px, 1.7vw, 12px) solid transparent;
-  border-bottom: clamp(8px, 1.7vw, 12px) solid transparent;
-  border-left: clamp(12px, 2.2vw, 16px) solid rgba(242, 242, 242, 0.95);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid rgba(255, 255, 255, 0.95);
+}
+
+.project-vision__play-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+@media (hover: hover) {
+  .project-vision__poster:hover .project-vision__image {
+    transform: scale(1.025);
+  }
+
+  .project-vision__poster:hover .project-vision__play {
+    border-color: #fff;
+    background: rgba(20, 24, 20, 0.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-vision__image,
+  .project-vision__play {
+    transition: none;
+  }
+
+  .project-vision__poster:hover .project-vision__image {
+    transform: none;
+  }
 }
 
 .cookie-consent {
