@@ -880,47 +880,16 @@ html.property-scroll-lock body {
 }
 
 .floating-logo__case {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
   margin: 0;
-  color: #e6d6b8;
-  white-space: nowrap;
-  text-shadow: 0 2px 12px rgba(15, 12, 8, 0.45);
-}
-
-.floating-logo__case::before,
-.floating-logo__case::after {
-  content: '';
-  align-self: center;
-  width: clamp(24px, 3vw, 40px);
-  height: 1px;
-  background: rgba(230, 214, 184, 0.55);
-}
-
-.floating-logo__case::before {
-  margin-right: 6px;
-}
-
-.floating-logo__case::after {
-  margin-left: 6px;
-}
-
-.floating-logo__case-label {
-  font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
-  font-size: clamp(10px, 1vw, 12px);
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  line-height: 1;
-}
-
-.floating-logo__case-number {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(24px, 2.4vw, 30px);
-  font-weight: 300;
+  font-weight: 400;
   font-variant-numeric: lining-nums;
   letter-spacing: 0.08em;
   line-height: 1;
+  color: #e6d6b8;
+  white-space: nowrap;
+  text-shadow: 0 2px 12px rgba(15, 12, 8, 0.45);
 }
 
 @media (max-width: 768px) {
