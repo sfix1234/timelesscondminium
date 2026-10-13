@@ -6789,18 +6789,16 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
 .property-director__title {
   margin: 0 0 clamp(14px, 2.2vh, 20px);
-  padding-bottom: 15px;
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  font-size: clamp(42px, 7vw, 68px);
-  letter-spacing: 0.03em;
-  line-height: 0.9;
+  padding-bottom: clamp(20px, 3vh, 32px);
+  text-align: center;
 }
 
-.property-director__subtitle {
-  font-size: 0.7em;
-  letter-spacing: 0.06em;
-  opacity: 0.7;
+.property-director__logo {
+  display: block;
+  width: min(70vw, 340px);
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
 }
 
 .property-director__image-wrap {
@@ -6848,15 +6846,33 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   font-weight: 400;
   font-size: clamp(15px, 1.8vw, 19px);
   letter-spacing: 0.08em;
+  line-height: 1.9;
   color: rgba(243, 238, 230, 0.9);
 }
 
 .property-director__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.55em;
+  row-gap: 8px;
   margin: 6px 0 0;
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 300;
   font-size: clamp(38px, 5.6vw, 56px);
   letter-spacing: 0.06em;
+}
+
+.property-director__producer-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 1.6vw, 20px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.property-director__person {
+  white-space: nowrap;
 }
 
 .property-director__text {
