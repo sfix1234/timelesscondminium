@@ -173,10 +173,14 @@ export default async function HomePage() {
       </div>
     </section>
 
-    <div className="hero-story-scene__logo-track" aria-hidden="true">
+    <div className="hero-story-scene__logo-track">
       <div className="hero-story-scene__logo-sticky">
         <div className="floating-logo">
           <div className="center-block hero__logo-overlay">
+            <p className="floating-logo__case">
+              <span className="floating-logo__case-label">ケース</span>
+              <span className="floating-logo__case-number">01</span>
+            </p>
           </div>
           <div className="floating-logo__main">
             <picture>
