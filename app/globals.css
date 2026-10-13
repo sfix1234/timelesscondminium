@@ -2888,10 +2888,11 @@ html:not(.has-js) .stage__info {
 
 .project-vision {
   background: #ece3d2;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
-  padding: 0;
+  padding: 32px 0;
   overflow: hidden;
 }
 
@@ -2973,6 +2974,9 @@ html:not(.has-js) .stage__info {
 }
 
 .project-vision__video-frame {
+  width: calc(100% - 48px);
+  max-width: 840px;
+  max-width: min(840px, max(320px, calc((100svh - 240px) * 4 / 3)));
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #000;
