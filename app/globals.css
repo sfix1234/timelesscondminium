@@ -6811,7 +6811,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   object-fit: cover;
   object-position: 35% center;
   aspect-ratio: 4 / 5;
-  filter: none;
+  filter: grayscale(1);
 }
 
 .property-director__role {
