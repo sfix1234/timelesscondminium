@@ -706,7 +706,9 @@ export default async function HomePage() {
   <div className="property-page">
     <section className="property-director">
       <div className="property-director__inner">
-        <h2 className="property-director__title">THE TIMELESS CONDOMINIUM<br /><span className="property-director__subtitle">Executive Producer</span></h2>
+        <h2 className="property-director__title">
+          <img src="/assets/images/hero-center-logo.png" alt="TIMELESS" width="660" height="129" className="property-director__logo" loading="lazy" />
+        </h2>
 
         <div className="property-director__image-wrap">
           <img
@@ -719,9 +721,12 @@ export default async function HomePage() {
         <div className="property-director__content">
           <div className="property-director__identity">
             <div className="property-director__meta">
-              <p className="property-director__company" data-ja="株式会社フィード 代表取締役" data-en="Representative Director, FIDO INC.">株式会社フィード 代表取締役</p>
+              <p className="property-director__company" data-ja="株式会社TIMELESS　兼　株式会社フィード 代表取締役" data-en="Representative Director, TIMELESS Inc. and FIDO INC.">株式会社TIMELESS　兼　株式会社フィード 代表取締役</p>
             </div>
-            <h3 className="property-director__name" data-ja="中村建治" data-en="Kenji Nakamura">中村建治</h3>
+            <h3 className="property-director__name">
+              <span className="property-director__producer-label">Executive Producer</span>{' '}
+              <span className="property-director__person" data-ja="中村建治" data-en="Kenji Nakamura">中村建治</span>
+            </h3>
           </div>
 
           <div className="property-director__copy">
