@@ -881,6 +881,7 @@ html.property-scroll-lock body {
 
 .floating-logo__case {
   margin: 0;
+  transform: translateY(12px);
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(24px, 2.4vw, 30px);
   font-weight: 400;
