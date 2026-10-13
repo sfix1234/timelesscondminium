@@ -6333,12 +6333,12 @@ html:not(.has-js) .stage__info {
   min-height: 100svh;
   display: flex;
   align-items: center;
-  padding: clamp(28px, 4.2vh, 42px) 24px clamp(30px, 4.8vh, 46px);
+  padding: clamp(48px, 6vw, 80px) 24px;
   box-sizing: border-box;
 }
 
 .property-access__inner {
-  width: min(100%, 1280px);
+  width: min(100%, 1080px);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -6350,15 +6350,17 @@ html:not(.has-js) .stage__info {
   margin: 0 0 clamp(34px, 5vh, 52px);
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
-  font-size: clamp(26px, 2.8vw, 38px);
+  font-size: clamp(34px, 4vw, 48px);
   letter-spacing: 0.035em;
   text-align: center;
   color: #16120e;
 }
 
 .property-access__layout {
+  width: 100%;
   display: grid;
-  gap: clamp(28px, 3vw, 46px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(32px, 4vw, 52px);
   align-items: start;
   justify-content: center;
 }
@@ -6369,7 +6371,7 @@ html:not(.has-js) .stage__info {
 
 .property-access__map-wrap {
   position: relative;
-  width: 440px;
+  width: 100%;
   height: auto;
   max-width: 100%;
   max-height: none;
@@ -6413,7 +6415,8 @@ html:not(.has-js) .stage__info {
 .property-access__gmap {
   display: block;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: auto;
+  aspect-ratio: 16 / 6;
   border: 0;
   border-radius: 6px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
@@ -6474,6 +6477,8 @@ html:not(.has-js) .stage__info {
 }
 
 .property-access__side {
+  width: min(100%, 960px);
+  margin: 0 auto;
   display: grid;
   gap: 18px;
   align-content: start;
@@ -6489,17 +6494,18 @@ html:not(.has-js) .stage__info {
 
 .property-access__info {
   display: grid;
-  gap: 14px;
+  gap: 28px;
   align-content: start;
 }
 
 .property-access__subtitle {
-  margin: 0;
+  margin: 0 0 8px;
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
-  font-size: clamp(13px, 1.15vw, 17px);
+  font-size: clamp(20px, 2.2vw, 28px);
   font-weight: 400;
   letter-spacing: 0.04em;
   color: #4d4137;
+  text-align: center;
 }
 
 html[lang='zh-Hans'] .property-page .property-access__subtitle,
@@ -6517,9 +6523,9 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
 .property-access__block {
   display: grid;
-  grid-template-columns: 92px 1fr;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: 0;
+  gap: 12px;
   color: #635851;
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-weight: 400;
@@ -6529,12 +6535,12 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   display: flex;
   align-items: flex-start;
   margin: 0;
-  padding: 2px 18px 0 0;
+  padding: 0 0 10px;
   border: none;
-  border-right: 1px solid rgba(120, 104, 86, 0.38);
+  border-bottom: 1px solid rgba(120, 104, 86, 0.38);
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-weight: 400;
-  font-size: 22px;
+  font-size: 18px;
   letter-spacing: 0.08em;
   line-height: 1.45;
   color: #4e433a;
@@ -6545,8 +6551,8 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 6px;
-  padding-left: 22px;
+  gap: 10px;
+  padding-left: 0;
 }
 
 .property-access__row {
@@ -6558,7 +6564,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
 .property-access__from {
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
-  font-size: 20px;
+  font-size: 16px;
   letter-spacing: 0.04em;
   line-height: 1.6;
   color: #5c4f45;
@@ -6566,111 +6572,12 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
 .property-access__time {
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
-  font-size: 20px;
+  font-size: 16px;
   letter-spacing: 0.04em;
   line-height: 1.6;
   color: #5c4f45;
   white-space: nowrap;
   text-align: right;
-}
-
-@media (min-width: 1024px) {
-  .property-access {
-    height: 100vh;
-    height: 100dvh;
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding-top: clamp(14px, 2vh, 24px);
-    padding-bottom: clamp(14px, 2vh, 24px);
-  }
-
-  .property-access__inner {
-    height: 100%;
-  }
-
-  .property-access__title {
-    margin-bottom: clamp(18px, 2.4vh, 28px);
-    font-size: clamp(26px, 2.8vw, 38px);
-  }
-
-  .property-access__layout {
-    grid-template-columns: 620px 620px;
-    gap: clamp(24px, 3vw, 40px);
-    align-items: stretch;
-    transform: translateY(30px);
-  }
-
-  .property-access__map-column {
-    grid-column: 1;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-
-  .property-access__map-wrap {
-    width: min(100%, 580px);
-    height: auto;
-    margin-right: -40px;
-  }
-
-  .property-access__side {
-    grid-column: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 500px;
-    height: 500px;
-    width: 500px;
-    padding-left: 90px;
-    padding-top: 0;
-    gap: clamp(18px, 2vh, 24px);
-    overflow: visible;
-  }
-
-  .property-access__info {
-    width: 500px;
-    margin-left: 0;
-    margin-top: 16px;
-    justify-items: start;
-    align-content: end;
-    padding-top: 0;
-    gap: 15px;
-  }
-
-  .property-access__subtitle {
-    width: fit-content;
-    margin-bottom: 20px;
-    margin-left: 66px;
-    text-align: left;
-    font-size: clamp(13px, 1.15vw, 17px);
-  }
-
-  .property-access__block {
-    grid-template-columns: 72px 1fr;
-    margin-left: 84px;
-  }
-
-  .property-access__label {
-    padding: 2px 14px 0 0;
-    font-size: clamp(10px, 0.72vw, 12px);
-    line-height: 1.4;
-  }
-
-  .property-access__rows {
-    gap: 2px;
-    padding-left: 16px;
-  }
-
-  .property-access__row {
-    gap: 14px;
-  }
-
-  .property-access__from,
-  .property-access__time {
-    font-size: clamp(10px, 0.72vw, 12px);
-    line-height: 1.45;
-  }
 }
 
 .property-spec {
@@ -7147,7 +7054,11 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   }
 
   .property-access__layout {
-    gap: 24px;
+    gap: 32px;
+  }
+
+  .property-access__gmap {
+    aspect-ratio: 16 / 10;
   }
 
   .property-access__pin {
@@ -7155,12 +7066,12 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   }
 
   .property-access__info {
-    gap: 16px;
-    padding-top: 50px;
+    gap: 24px;
+    padding-top: 0;
   }
 
   .property-access__subtitle {
-    font-size: clamp(14px, 4.2vw, 20px);
+    font-size: clamp(18px, 5vw, 22px);
     text-align: center;
   }
 
@@ -7188,7 +7099,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   }
 
   .property-access__row {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
     gap: 12px;
   }
