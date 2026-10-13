@@ -616,7 +616,7 @@ export default async function HomePage() {
                 </div>
                 <div className="property-access__row">
                   <span className="property-access__from" data-ja="大阪駅から" data-en="From Osaka Station" data-zh-hans="从大阪站" data-zh-hant="自大阪站">大阪駅から</span>
-                  <span className="property-access__time" data-ja="約 1.3 時間" data-en="Approx. 1 hour 20 minutes" data-zh-hans="约1小时20分" data-zh-hant="約1小時20分">約 1.3 時間</span>
+                  <span className="property-access__time" data-ja="約 1 時間 20 分" data-en="Approx. 1 hour 20 minutes" data-zh-hans="约1小时20分" data-zh-hant="約1小時20分">約 1 時間 20 分</span>
                 </div>
               </div>
             </div>
@@ -630,7 +630,7 @@ export default async function HomePage() {
                 </div>
                 <div className="property-access__row">
                   <span className="property-access__from" data-ja="伊丹空港から" data-en="From Itami Airport" data-zh-hans="从伊丹机场" data-zh-hant="自伊丹機場">伊丹空港から</span>
-                  <span className="property-access__time" data-ja="約 1.6 時間" data-en="Approx. 1 hour 35 minutes" data-zh-hans="约1小时35分" data-zh-hant="約1小時35分">約 1.6 時間</span>
+                  <span className="property-access__time" data-ja="約 1 時間 35 分" data-en="Approx. 1 hour 35 minutes" data-zh-hans="约1小时35分" data-zh-hant="約1小時35分">約 1 時間 35 分</span>
                 </div>
               </div>
             </div>
