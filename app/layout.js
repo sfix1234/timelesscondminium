@@ -1,20 +1,26 @@
 import './globals.css';
 import CookieConsentBanner from './components/cookie-consent-banner';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from '../lib/site-metadata';
 
 export const metadata = {
-  title: 'THE TIMELESS CONDOMINIUM',
-  description: '日本の"美"を、千年先の世界へ紡ぐ。京都・上七軒に佇む、世界最高峰の匠が手がける唯一無二の邸宅。',
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  icons: {
+    icon: [{ url: '/favicon.ico', sizes: '256x256', type: 'image/x-icon' }],
+    shortcut: '/favicon.ico',
+  },
   openGraph: {
-    title: 'THE TIMELESS CONDOMINIUM',
-    description: '日本の"美"を、千年先の世界へ紡ぐ。京都・上七軒に佇む、世界最高峰の匠が手がける唯一無二の邸宅。',
-    url: 'https://timelesscondominium.com',
-    siteName: 'THE TIMELESS CONDOMINIUM',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [
       {
-        url: 'https://timelesscondominium.com/assets/images/og-image.jpg',
+        url: '/assets/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'THE TIMELESS CONDOMINIUM',
+        alt: SITE_NAME,
       },
     ],
     locale: 'ja_JP',
@@ -22,9 +28,9 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'THE TIMELESS CONDOMINIUM',
-    description: '日本の"美"を、千年先の世界へ紡ぐ。京都・上七軒に佇む、世界最高峰の匠が手がける唯一無二の邸宅。',
-    images: ['https://timelesscondominium.com/assets/images/og-image.jpg'],
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: ['/assets/images/og-image.jpg'],
   },
   robots: {
     index: false,

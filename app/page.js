@@ -8,6 +8,32 @@ import PropertyFloorImagePanel from './components/property-floor-image-panel';
 import PropertyContactForm from './components/property-contact-form';
 import SiteFooter from './components/site-footer';
 import { ACCESS_SESSION_COOKIE, getSessionRecord } from '../lib/access-control';
+import { isSearchIndexingEnabled, SITE_NAME, SITE_URL } from '../lib/site-metadata';
+
+export const metadata = {
+  alternates: { canonical: '/' },
+  robots: isSearchIndexingEnabled()
+    ? {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-image-preview': 'large',
+          'max-video-preview': -1,
+          'max-snippet': -1,
+        },
+      }
+    : { index: false, follow: false, googleBot: { index: false, follow: false } },
+};
+
+const websiteStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  alternateName: 'TIMELESS CONDOMINIUM',
+  url: `${SITE_URL}/`,
+};
 
 function VerticalRevealText({ text, colOffset = 0, ...props }) {
   return (
@@ -131,6 +157,10 @@ export default async function HomePage() {
 
   return (
     <>
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteStructuredData).replace(/</g, '\\u003c') }}
+  />
   <div className="top-fixed-header">
     <SiteHeader
       navItems={[
