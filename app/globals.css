@@ -6338,7 +6338,7 @@ html:not(.has-js) .stage__info {
 }
 
 .property-access__inner {
-  width: min(100%, 1080px);
+  width: min(100%, 960px);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -6360,7 +6360,7 @@ html:not(.has-js) .stage__info {
   width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: clamp(32px, 4vw, 52px);
+  gap: clamp(32px, 4vw, 48px);
   align-items: start;
   justify-content: center;
 }
@@ -6418,8 +6418,8 @@ html:not(.has-js) .stage__info {
   height: auto;
   aspect-ratio: 16 / 6;
   border: 0;
-  border-radius: 6px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+  border-radius: 3px;
+  box-shadow: 0 12px 30px rgba(64, 48, 29, 0.1);
   filter: grayscale(1) contrast(0.96);
 }
 
@@ -6477,7 +6477,7 @@ html:not(.has-js) .stage__info {
 }
 
 .property-access__side {
-  width: min(100%, 960px);
+  width: min(100%, 760px);
   margin: 0 auto;
   display: grid;
   gap: 18px;
@@ -6494,14 +6494,14 @@ html:not(.has-js) .stage__info {
 
 .property-access__info {
   display: grid;
-  gap: 28px;
+  gap: 0;
   align-content: start;
 }
 
 .property-access__subtitle {
-  margin: 0 0 8px;
+  margin: 0 0 30px;
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
-  font-size: clamp(20px, 2.2vw, 28px);
+  font-size: clamp(20px, 2vw, 24px);
   font-weight: 400;
   letter-spacing: 0.04em;
   color: #4d4137;
@@ -6523,26 +6523,31 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
 .property-access__block {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 116px minmax(0, 1fr);
   align-items: start;
-  gap: 12px;
+  gap: 32px;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(120, 104, 86, 0.22);
   color: #635851;
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-weight: 400;
+}
+
+.property-access__subtitle + .property-access__block {
+  border-top: 1px solid rgba(120, 104, 86, 0.22);
 }
 
 .property-access__label {
   display: flex;
   align-items: flex-start;
   margin: 0;
-  padding: 0 0 10px;
+  padding: 0;
   border: none;
-  border-bottom: 1px solid rgba(120, 104, 86, 0.38);
   font-family: 'Noto Serif Japanese', 'Noto Serif JP', serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 17px;
   letter-spacing: 0.08em;
-  line-height: 1.45;
+  line-height: 1.6;
   color: #4e433a;
   white-space: nowrap;
 }
@@ -6551,7 +6556,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   padding-left: 0;
 }
 
@@ -7066,11 +7071,12 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
   }
 
   .property-access__info {
-    gap: 24px;
+    gap: 0;
     padding-top: 0;
   }
 
   .property-access__subtitle {
+    margin-bottom: 24px;
     font-size: clamp(18px, 5vw, 22px);
     text-align: center;
   }
@@ -7083,19 +7089,19 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
   .property-access__block {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 12px;
+    padding: 20px 0;
   }
 
   .property-access__label {
-    padding: 0 0 6px;
-    border-right: 0;
-    border-bottom: 1px solid rgba(120, 104, 86, 0.38);
+    padding: 0;
+    border: 0;
     font-size: clamp(13px, 3.8vw, 16px);
   }
 
   .property-access__rows {
     padding-left: 0;
-    gap: 4px;
+    gap: 8px;
   }
 
   .property-access__row {
