@@ -840,7 +840,7 @@ html.property-scroll-lock body {
 
 .floating-logo {
   position: fixed;
-  width: 65%;
+  width: 55%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -883,7 +883,7 @@ html.property-scroll-lock body {
   margin: 0;
   transform: translateY(12px);
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(24px, 2.4vw, 30px);
+  font-size: clamp(20px, 2vw, 25px);
   font-weight: 400;
   font-variant-numeric: lining-nums;
   letter-spacing: 0.08em;
@@ -895,7 +895,7 @@ html.property-scroll-lock body {
 
 @media (max-width: 768px) {
   .floating-logo {
-    width: 75%;
+    width: 64%;
   }
 }
 
@@ -920,7 +920,7 @@ html.property-scroll-lock body {
 }
 
 .hero__center-title-logo {
-  width: min(46vw, 350px);
+  width: min(40vw, 300px);
   height: auto;
   display: block;
 }
