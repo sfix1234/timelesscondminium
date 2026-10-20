@@ -1433,15 +1433,10 @@ html.property-scroll-lock body {
   transition: width 1.2s ease-out 1.2s;
 }
 
-/* White story surface with dark text on every screen size. */
+/* White story background with dark text; retain the photo slideshow. */
 .story,
 .story.is-visible {
   background-color: #fff;
-}
-
-.story__bg,
-.story__overlay {
-  display: none;
 }
 
 .story__content,
