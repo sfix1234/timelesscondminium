@@ -1433,8 +1433,38 @@ html.property-scroll-lock body {
   transition: width 1.2s ease-out 1.2s;
 }
 
+/* White story surface with dark text on every screen size. */
+.story,
+.story.is-visible {
+  background-color: #fff;
+}
+
+.story__bg,
+.story__overlay {
+  display: none;
+}
+
+.story__content,
+.story__vertical-col,
+.floating-logo__case.is-over-light-story {
+  color: #1a1a1a;
+  text-shadow: none;
+}
+
+.floating-logo__image.is-over-light-story,
+.jpn-badge__row.is-over-light-story .jpn-badge__instagram img {
+  filter: brightness(0) invert(0.102);
+}
+
+.jpn-badge__row.is-over-light-story .jpn-badge__label {
+  color: #1a1a1a;
+}
+
+.jpn-badge__row.is-over-light-story .jpn-badge__label::after {
+  border-top-color: currentColor;
+}
+
 /* Active states when scrolled into view */
-.story.is-visible { background-color: #24272c; }
 .story.is-visible .story__bg          { animation-play-state: running; }
 .story.is-visible .story__vertical-char {
   animation: storyCharReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
