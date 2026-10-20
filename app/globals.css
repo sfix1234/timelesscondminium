@@ -1433,30 +1433,32 @@ html.property-scroll-lock body {
   transition: width 1.2s ease-out 1.2s;
 }
 
-/* White story background with dark text; retain the photo slideshow. */
+/* Retain the slideshow: white text on desktop, dark text on mobile. */
 .story,
 .story.is-visible {
   background-color: #fff;
 }
 
-.story__content,
-.story__vertical-col,
-.floating-logo__case.is-over-light-story {
-  color: #1a1a1a;
-  text-shadow: none;
-}
+@media (max-width: 768px) {
+  .story__content,
+  .story__vertical-col,
+  .floating-logo__case.is-over-light-story {
+    color: #1a1a1a;
+    text-shadow: none;
+  }
 
-.floating-logo__image.is-over-light-story,
-.jpn-badge__row.is-over-light-story .jpn-badge__instagram img {
-  filter: brightness(0) invert(0.102);
-}
+  .floating-logo__image.is-over-light-story,
+  .jpn-badge__row.is-over-light-story .jpn-badge__instagram img {
+    filter: brightness(0) invert(0.102);
+  }
 
-.jpn-badge__row.is-over-light-story .jpn-badge__label {
-  color: #1a1a1a;
-}
+  .jpn-badge__row.is-over-light-story .jpn-badge__label {
+    color: #1a1a1a;
+  }
 
-.jpn-badge__row.is-over-light-story .jpn-badge__label::after {
-  border-top-color: currentColor;
+  .jpn-badge__row.is-over-light-story .jpn-badge__label::after {
+    border-top-color: currentColor;
+  }
 }
 
 /* Active states when scrolled into view */
