@@ -6741,7 +6741,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 
 .property-director__logo {
   display: block;
-  width: min(70vw, 340px);
+  width: min(60vw, 290px);
   max-width: 100%;
   height: auto;
   margin: 0 auto;
