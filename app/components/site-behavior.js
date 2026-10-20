@@ -420,6 +420,14 @@ export default function SiteBehavior() {
     const centerBlock = document.querySelector('.center-block:not(.hero__logo-overlay)');
     const floatingLogo = document.querySelector('.floating-logo');
     const storySection = document.querySelector('.story');
+    const storyContrastTargets = [
+      document.querySelector('.floating-logo__image'),
+      document.querySelector('.floating-logo__case'),
+      document.querySelector('.top-fixed-header .jpn-badge__row'),
+    ].filter(Boolean);
+    cleanupFns.push(() => {
+      storyContrastTargets.forEach((el) => el.classList.remove('is-over-light-story'));
+    });
     const verticalCols = document.querySelectorAll('.story__vertical-col');
     const heroBg = document.querySelector('.hero__bg');
     const propertyHeader = document.querySelector('.property-hero__header');
@@ -549,6 +557,13 @@ export default function SiteBehavior() {
               const storyRevealTriggered = storyRect.top <= vh * 0.78 && storyRect.bottom >= vh * 0.28;
               setVerticalRevealed(storyRevealTriggered);
             }
+            storyContrastTargets.forEach((el) => {
+              const rect = el.getBoundingClientRect();
+              const centerY = rect.top + rect.height / 2;
+              const overLightStory = storyRect
+                && centerY >= storyRect.top && centerY <= storyRect.bottom;
+              el.classList.toggle('is-over-light-story', Boolean(overLightStory));
+            });
 
             if (craftsmenSection) {
               const rect = craftsmenSection.getBoundingClientRect();
