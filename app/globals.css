@@ -1473,39 +1473,6 @@ html:not(.has-js) .story__vertical-char {
   pointer-events: none;
 }
 
-/* White story treatment on desktop; mobile retains the photo background. */
-@media (min-width: 769px) {
-  .story,
-  .story.is-visible {
-    background-color: #fff;
-  }
-
-  .story__bg,
-  .story__overlay {
-    display: none;
-  }
-
-  .story__content,
-  .story__vertical-col,
-  .floating-logo__case.is-over-light-story {
-    color: #1a1a1a;
-    text-shadow: none;
-  }
-
-  .floating-logo__image.is-over-light-story,
-  .jpn-badge__row.is-over-light-story .jpn-badge__instagram img {
-    filter: brightness(0) invert(0.102);
-  }
-
-  .jpn-badge__row.is-over-light-story .jpn-badge__label {
-    color: #1a1a1a;
-  }
-
-  .jpn-badge__row.is-over-light-story .jpn-badge__label::after {
-    border-top-color: currentColor;
-  }
-}
-
 /* ===== Story SP overrides ===== */
 @media (max-width: 768px) {
   .story__bg {
