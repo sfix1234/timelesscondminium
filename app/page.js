@@ -279,7 +279,7 @@ export default async function HomePage() {
           <div className="stage__info-block is-active" data-info="0">
             <h3 className="stage__info-title">KYOTO</h3>
             <div className="stage__info-body">
-              <p className="stage__info-text" data-ja={'千年の都・京都は、宮廷文化、宗教、茶道、庭園、建築、芸能、和食など\n日本文化の根幹を育み、世界へ継承し続ける稀有な都市。'} data-en="Kyoto, the ancient capital of a thousand years, has cultivated the essence of Japanese culture, from courtly traditions and spirituality to tea ceremony, gardens, architecture, performing arts, and cuisine, continuing to share its legacy with the world as a city unlike any other." data-zh-hans="千年古都京都，孕育了宫廷文化、宗教信仰、茶道、庭园、建筑、艺能与和食等日本文化之根脉，并恒久流转于世界，独成其境。" data-zh-hant="千年古都京都，孕育宮廷文化、宗教信仰、茶道、庭園、建築、藝能與和食等日本文化之根脈，並恆久流轉於世界，獨成其境。">千年の都・京都は、宮廷文化、宗教、茶道、庭園、建築、芸能、和食など<br />日本文化の根幹を育み、世界へ継承し続ける稀有な都市。</p>
+              <p className="stage__info-text" data-ja={'千年の都・京都は、\n宮廷文化、宗教、茶道、庭園、建築、芸能、和食など\n日本文化の根幹を育み、世界へ継承し続ける稀有な都市。'} data-en="Kyoto, the ancient capital of a thousand years, has cultivated the essence of Japanese culture, from courtly traditions and spirituality to tea ceremony, gardens, architecture, performing arts, and cuisine, continuing to share its legacy with the world as a city unlike any other." data-zh-hans="千年古都京都，孕育了宫廷文化、宗教信仰、茶道、庭园、建筑、艺能与和食等日本文化之根脉，并恒久流转于世界，独成其境。" data-zh-hant="千年古都京都，孕育宮廷文化、宗教信仰、茶道、庭園、建築、藝能與和食等日本文化之根脈，並恆久流轉於世界，獨成其境。">千年の都・京都は、<br />宮廷文化、宗教、茶道、庭園、建築、芸能、和食など<br />日本文化の根幹を育み、世界へ継承し続ける稀有な都市。</p>
               <button className="stage__more-link" type="button">VIEW MORE<span className="stage__more-arrow">→</span></button>
             </div>
           </div>
