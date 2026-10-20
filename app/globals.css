@@ -1639,7 +1639,7 @@ html:not(.has-js) .story__vertical-char {
 .has-js .craftsmen.is-animated.is-visible {
   padding-top: 0;
   padding-bottom: 0;
-  background: #ebe6dc;
+  background: #fff;
 }
 
 html:not(.has-js) .craftsmen__heading {
@@ -1909,7 +1909,7 @@ html:not(.has-js) .craftsmen .craftsmen-photo__label {
   z-index: 12;
   width: 100%;
   height: 100vh;
-  background: #ece3d2;
+  background: #fff;
   color: #2f2518;
   overflow: hidden;
 }
@@ -2291,7 +2291,7 @@ html:not(.has-js) .stage__info {
 .stage-photo {
   position: relative;
   z-index: 1;
-  background: #ebe6dc;
+  background: #fff;
   height: 100vh;
   overflow: hidden;
 }
@@ -2934,7 +2934,7 @@ html:not(.has-js) .stage__info {
 }
 
 .project-vision {
-  background: #ece3d2;
+  background: #fff;
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
@@ -3248,7 +3248,7 @@ html:not(.has-js) .stage__info {
 .artisans-intro {
   position: relative;
   z-index: 13;
-  background: #ece3d2;
+  background: #fff;
   padding: clamp(38px, 7vh, 68px) 20px clamp(44px, 8vh, 80px);
 }
 
@@ -3341,7 +3341,7 @@ html:not(.has-js) .stage__info {
 .artisans-five {
   position: relative;
   z-index: 13;
-  background: #ece3d2;
+  background: #fff;
   padding: 0 0 clamp(44px, 9vh, 84px);
 }
 
@@ -3430,7 +3430,7 @@ html:not(.has-js) .stage__info {
 
 .artisan-card__overlay {
   position: relative;
-  background: #ebe6dc;
+  background: #fff;
   color: rgba(44, 35, 24, 0.96);
   display: flex;
   align-items: flex-end;
@@ -3440,7 +3440,7 @@ html:not(.has-js) .stage__info {
 }
 
 .artisan-card__overlay--light {
-  background: #ece3d2;
+  background: #fff;
   color: rgba(44, 35, 24, 0.96);
 }
 
@@ -3518,7 +3518,7 @@ html:not(.has-js) .stage__info {
   .artisans-color .artisan-card__overlay {
     position: relative;
     inset: auto;
-    background: #ebe6dc;
+    background: #fff;
     color: rgba(44, 35, 24, 0.96);
     flex-direction: row;
     justify-content: space-between;
@@ -3528,7 +3528,7 @@ html:not(.has-js) .stage__info {
 
   .artisans-five .artisan-card__overlay--light,
   .artisans-color .artisan-card__overlay--light {
-    background: #ece3d2;
+    background: #fff;
     color: rgba(44, 35, 24, 0.96);
   }
 
@@ -3570,7 +3570,7 @@ html:not(.has-js) .stage__info {
 .artisans-color {
   position: relative;
   z-index: 13;
-  background: #ece3d2;
+  background: #fff;
   padding: clamp(36px, 7vh, 68px) 0 clamp(44px, 8vh, 80px);
   padding-top: 180px;
   padding-bottom: 300px;
@@ -4576,7 +4576,7 @@ html:not(.has-js) .stage__info {
 /* ===== Property Page ===== */
 .property-page {
   margin: 0;
-  background: #ebe6dc;
+  background: #fff;
   color: #1b1515;
   overflow-x: hidden;
 }
@@ -5028,7 +5028,7 @@ html:not(.has-js) .stage__info {
 .property-kuma {
   position: relative;
   z-index: 2;
-  background: #ebe6dc;
+  background: #fff;
   padding: 0;
 }
 
@@ -5640,7 +5640,7 @@ html:not(.has-js) .stage__info {
 .property-floor-section {
   position: relative;
   z-index: 3;
-  background: #ebe6dc;
+  background: #fff;
   color: #2b2724;
   padding: clamp(60px, 12vh, 120px) 20px clamp(60px, 10vh, 100px);
 }
@@ -6360,7 +6360,7 @@ html:not(.has-js) .stage__info {
 }
 
 .property-access {
-  background: #ece3d2;
+  background: #fff;
   color: #554b42;
   min-height: 100vh;
   min-height: 100svh;
@@ -7188,7 +7188,7 @@ html[lang='zh-Hant'] .property-page .property-access__subtitle {
 }
 
 .property-contact-block {
-  background: #ece3d2;
+  background: #fff;
   color: rgba(35, 30, 30, 0.95);
   padding: clamp(56px, 10vh, 110px) 20px clamp(72px, 12vh, 130px);
 }
@@ -7970,7 +7970,7 @@ html[lang='en'] .property-page .armani-homage__copy p {
   --property-info-overlay-opacity: 0;
   position: relative;
   height: 155vh;
-  background: #ebe6dc;
+  background: #fff;
   padding: 0;
   overflow: hidden;
 }
@@ -8006,7 +8006,7 @@ html[lang='en'] .property-page .armani-homage__copy p {
   justify-content: center;
   align-items: center;
   padding: 0;
-  background: #ebe6dc;
+  background: #fff;
   opacity: 1;
   transform: translateX(-50%);
   will-change: auto;
@@ -8080,7 +8080,7 @@ html[lang='en'] .property-page .armani-homage__copy p {
 }
 
 .property-page #property-kuma.is-property-floor-image-active #property-info.property-info--intrude {
-  background: #ebe6dc;
+  background: #fff;
   color: #1a1a1a;
   padding-left: 0;
   padding-right: 0;
@@ -9752,9 +9752,9 @@ html.has-js .property-page #property-kuma #property-info.property-info--intrude 
   color: #f3efe8;
 }
 
-/* Floor Image block: beige background instead of black */
+/* Floor Image block: white background */
 .property-page #property-kuma.property-floor-clone #property-info .property-info__clone-block--image {
-  background: #ece3d2;
+  background: #fff;
   color: #2b2724;
   padding-left: 0;
   padding-right: 0;
