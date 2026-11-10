@@ -84,11 +84,36 @@ if (process.argv[2]) {
   assert.equal(owner.link_count, 3);
   assert.equal(owner.primary_slug, slug);
   assert.equal(owner.activated, false);
+  for (const partnerType of ['101', '201']) {
+    const response = await post('users', { name: `区分${partnerType}担当者`, email: `type${partnerType}_${Date.now()}@example.test`, partner_type: partnerType, slug: 'ignored_name' }, adminCookie);
+    assert.equal(response.status, 200);
+    const typed = await response.json();
+    assert.match(typed.link.slug, new RegExp(`^${partnerType}(?:_\\d+)?$`));
+    assert.equal(typed.user.partner_type, partnerType);
+    const again = await post(`users/${typed.user.id}/referral`, { partner_type: partnerType }, adminCookie);
+    assert.equal(again.status, 200);
+    const extra = await again.json();
+    assert.match(extra.link.slug, new RegExp(`^${partnerType}_\\d+$`));
+    assert.notEqual(extra.link.slug, typed.link.slug);
+    const redirect = await fetch(`${base}/r/${extra.link.slug}`, { redirect: 'manual' });
+    assert.equal(redirect.status, 302);
+    assert.equal(new URL(redirect.headers.get('location')).searchParams.get('utm_source'), typed.user.code);
+    const typedCookie = redirect.headers.getSetCookie().find(s => s.startsWith('ttc_referral=')).split(';')[0];
+    assert.match(await whatsapp(typedCookie), new RegExp(`^区分${partnerType}担当者様のご紹介`));
+    const updated = await post(`users/${typed.user.id}`, { name: '区分変更後の担当者', partner_type: partnerType === '101' ? '201' : '101' }, adminCookie);
+    assert.equal(updated.status, 200);
+    const updatedState = await (await fetch(`${base}/api/partners/state`, { headers: { Cookie: adminCookie } })).json();
+    assert.equal(updatedState.users.find(u => u.id === typed.user.id).partner_type, partnerType === '101' ? '201' : '101');
+    assert.ok(updatedState.links.filter(l => l.user_id === typed.user.id).every(l => l.name === '区分変更後の担当者'));
+    assert.equal((await fetch(`${base}/r/${typed.link.slug}`, { redirect: 'manual' })).status, 302);
+    assert.equal((await post(`users/${typed.user.id}`, { partner_type: '999' }, adminCookie)).status, 400);
+  }
   const adminPage = await fetch(credentials.adminUrl, { headers: { Cookie: adminCookie } });
   assert.equal(adminPage.status, 200);
   assert.match(await adminPage.text(), /紹介パートナー管理/);
   await post('logout', {}, adminCookie);
   console.log('PASS: administrator repeatedly issues URLs, preserves the primary URL, rejects other partners and CSRF, and attributes every URL before login setup.');
+  console.log('PASS: agency/individual selection, numeric URLs without names, repeated issuance, category/name edits, dashboard readback and existing URL preservation.');
 }
 const primaryLink = state.links.find(l => l.slug === 'yamada_taro');
 assert.equal((await post(`links/${primaryLink.id}`, { active: false }, cookie)).status, 200);

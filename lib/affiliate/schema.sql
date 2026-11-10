@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS affiliate_users (
   email text NOT NULL UNIQUE CHECK (email = lower(email)),
   name text NOT NULL,
   company text NOT NULL DEFAULT '',
+  partner_type text CONSTRAINT affiliate_users_partner_type_check CHECK (partner_type IN ('101', '201')),
   role text NOT NULL CHECK (role IN ('admin', 'partner')),
   code text NOT NULL UNIQUE,
   active boolean NOT NULL DEFAULT true,

@@ -5,6 +5,7 @@ import { PGlite } from '@electric-sql/pglite';
 import { createService, validSlug } from '../lib/affiliate/service.mjs';
 import { digest, totp, readReferral, signReferral } from '../lib/affiliate/crypto.mjs';
 import { slugFromName, slugWithSuffix } from '../lib/affiliate/slug.mjs';
+import { validPartnerType, partnerTypeLabel } from '../lib/affiliate/partner-types.mjs';
 
 const password = 'A-long-test-passphrase-2026!';
 const config = { secret: 'test-only-secret-0000000000000000000000000000', origin: 'https://example.test', adminPath: 'test-admin-path-0123456789012345' };
@@ -186,6 +187,49 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
       assert.equal((await service.attribution(signReferral(result.link.id, config.secret))).name, partner.user.name);
     }
   });
+  await t.test('partner types generate numeric URLs, remain editable, and preserve attribution', async () => {
+    const agency = await service.createUser(admin, { name: '仲介担当者', email: 'agency@example.test', partner_type: '101', slug: 'name_should_not_be_used' });
+    const individual = await service.createUser(admin, { name: '個人担当者', email: 'individual@example.test', partner_type: '201' });
+    assert.equal(agency.link.slug, '101');
+    assert.equal(individual.link.slug, '201');
+    assert.equal(agency.user.partner_type, '101');
+    assert.equal(individual.user.partner_type, '201');
+    const sameType = await service.createUser(admin, { name: '別の仲介担当者', email: 'agency2@example.test', partner_type: '101' });
+    assert.equal(sameType.link.slug, '101_2');
+    const issued = await Promise.all([1, 2].map(() => service.issueReferral(admin, agency.user.id)));
+    assert.deepEqual(issued.map(r => r.link.slug).sort(), ['101_3', '101_4']);
+    const extra = await service.issueReferral(admin, agency.user.id, { suffix: 'ABC123' });
+    assert.equal(extra.link.slug, '101_abc123');
+    for (const result of [agency, ...issued, extra]) {
+      assert.equal((await service.publicLink(result.link.slug)).code, agency.user.code);
+      assert.equal((await service.attribution(signReferral(result.link.id, config.secret))).name, '仲介担当者');
+    }
+    assert.equal((await service.publicLink('101_2')).code, sameType.user.code);
+    await service.updateUser(admin, agency.user.id, { name: '変更した担当者', partner_type: '201' });
+    const renamed = (await service.dashboard(admin)).users.find(u => u.id === agency.user.id);
+    assert.equal(renamed.name, '変更した担当者');
+    assert.equal(renamed.partner_type, '201');
+    assert.equal(renamed.primary_slug, '101');
+    assert.equal((await service.attribution(signReferral(agency.link.id, config.secret))).name, '変更した担当者');
+    assert.equal((await service.issueReferral(admin, agency.user.id)).link.slug, '201_2');
+    assert.ok((await service.dashboard(admin)).links.filter(l => l.user_id === agency.user.id).every(l => l.partner_type === '201'));
+    await assert.rejects(service.updateUser(userA, agency.user.id, { partner_type: '101' }), e => e.status === 403);
+    for (const value of ['', '999', 101, '個人']) {
+      await assert.rejects(service.createUser(admin, { name: 'Invalid', email: 'invalidtype@example.test', partner_type: value }), /区分/);
+      await assert.rejects(service.updateUser(admin, agency.user.id, { partner_type: value }), /区分/);
+      await assert.rejects(service.issueReferral(admin, agency.user.id, { partner_type: value }), /区分/);
+    }
+    await assert.rejects(service.issueReferral(admin, agency.user.id, { suffix: '../abc' }), /英数字/);
+    const legacy = await service.createUser(admin, { name: '既存担当者', email: 'unclassified@example.test', slug: 'legacy_unclassified' });
+    assert.equal(legacy.user.partner_type, null);
+    await assert.rejects(service.issueReferral(admin, legacy.user.id, { partner_type: '101', suffix: 'x'.repeat(45) }), /48文字/);
+    assert.equal((await service.dashboard(admin)).users.find(u => u.id === legacy.user.id).partner_type, null);
+    const classified = await service.issueReferral(admin, legacy.user.id, { partner_type: '101' });
+    assert.match(classified.link.slug, /^101_\d+$/);
+    assert.equal((await service.dashboard(admin)).users.find(u => u.id === legacy.user.id).partner_type, '101');
+    assert.equal((await service.publicLink('legacy_unclassified')).code, legacy.user.code);
+    assert.equal((await service.inviteInfo(tokenOf(legacy.inviteUrl), 'types')).name, '既存担当者');
+  });
   await t.test('concurrent additional issuance respects the existing per-partner limit', async () => {
     const partner = await service.createUser(admin, { name: '上限確認', email: 'limit@example.test', slug: 'limit_check' });
     await db.query(`INSERT INTO affiliate_links(id,user_id,slug,label)
@@ -211,6 +255,14 @@ test('optional alphanumeric additions preserve names, normalize case and obey UR
   assert.equal(slugWithSuffix('', 'abc123'), '');
   assert.equal(validSlug(slugWithSuffix('abc', 'x'.repeat(44))), true);
   assert.equal(validSlug(slugWithSuffix('abcd', 'x'.repeat(44))), false);
+});
+test('type codes distinguish agencies, individuals and unclassified legacy partners', () => {
+  assert.equal(validPartnerType('101'), true);
+  assert.equal(validPartnerType('201'), true);
+  for (const value of [undefined, null, '', '999', 101, 'broker']) assert.equal(validPartnerType(value), false);
+  assert.equal(partnerTypeLabel('101'), '仲介業者（101）');
+  assert.equal(partnerTypeLabel('201'), '個人（201）');
+  assert.equal(partnerTypeLabel(null), '区分未設定');
 });
 test('migration preserves legacy links and supports names for existing partners', async t => {
   const db = new PGlite();
@@ -239,4 +291,27 @@ test('migration preserves legacy links and supports names for existing partners'
   assert.equal(additional.link.is_primary, false);
   assert.equal((await service.publicLink(additional.link.slug)).code, 'LEGACY');
   assert.equal((await service.publicLink(result.link.slug)).code, 'LEGACY');
+});
+test('partner type migration is repeatable and preserves existing accounts and URLs', async t => {
+  const db = new PGlite();
+  t.after(() => db.close());
+  const schema = (await readFile(new URL('../lib/affiliate/schema.sql', import.meta.url), 'utf8'))
+    .replace(/  partner_type text[^\n]+\n/, '');
+  await db.exec(schema);
+  const id = '00000000-0000-4000-8000-000000000010';
+  await db.query("INSERT INTO affiliate_users(id,email,name,role,code,password_hash) VALUES($1,'existing@example.test','既存担当者','partner','EXISTING','existing-test-hash')", [id]);
+  await db.query("INSERT INTO affiliate_links(id,user_id,slug,label,is_primary) VALUES('00000000-0000-4000-8000-000000000011',$1,'existing_named_url','以前のURL',true)", [id]);
+  const beforeUser = (await db.query('SELECT * FROM affiliate_users WHERE id=$1', [id])).rows[0];
+  const beforeLinks = (await db.query('SELECT * FROM affiliate_links')).rows;
+  const migration = await readFile(new URL('../lib/affiliate/migrations/003_partner_types.sql', import.meta.url), 'utf8');
+  await db.exec(migration);
+  await db.exec(migration);
+  const { partner_type, ...afterUser } = (await db.query('SELECT * FROM affiliate_users WHERE id=$1', [id])).rows[0];
+  assert.equal(partner_type, null);
+  assert.deepEqual(afterUser, beforeUser);
+  assert.deepEqual((await db.query('SELECT * FROM affiliate_links')).rows, beforeLinks);
+  await assert.rejects(db.query("UPDATE affiliate_users SET partner_type='999' WHERE id=$1", [id]), e => e.code === '23514');
+  await db.query("UPDATE affiliate_users SET partner_type='101' WHERE id=$1", [id]);
+  await db.exec(migration);
+  assert.equal((await db.query('SELECT partner_type FROM affiliate_users WHERE id=$1', [id])).rows[0].partner_type, '101');
 });

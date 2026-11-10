@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import nextEnv from '@next/env';
 import { getDatabase } from '../lib/affiliate/db.mjs';
@@ -16,11 +16,15 @@ if (command === 'generate-config') {
   getConfig();
   const db = getDatabase();
   try {
-    const migration = await readFile(new URL('../lib/affiliate/migrations/002_named_referrals.sql', import.meta.url), 'utf8');
+    const directory = new URL('../lib/affiliate/migrations/', import.meta.url);
+    const migrations = (await readdir(directory)).filter(name => name.endsWith('.sql')).sort();
     await db.transaction(async tx => {
-      for (const statement of migration.split(';').map(s => s.trim()).filter(Boolean)) await tx.query(statement);
+      for (const name of migrations) {
+        const migration = await readFile(new URL(name, directory), 'utf8');
+        for (const statement of migration.split(';').map(s => s.trim()).filter(Boolean)) await tx.query(statement);
+      }
     });
-    console.log('Named referral URL migration completed.');
+    console.log('Partner database migrations completed.');
   } finally { await db.close(); }
 } else if (command === 'init') {
   const [email, output] = args;

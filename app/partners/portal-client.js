@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { slugFromName, slugWithSuffix, validSlug } from '../../lib/affiliate/slug.mjs';
+import { slugWithSuffix, validSlug } from '../../lib/affiliate/slug.mjs';
+import { PARTNER_TYPES, validPartnerType, partnerTypeLabel } from '../../lib/affiliate/partner-types.mjs';
 import styles from './portal.module.css';
 
 async function api(path, body) {
@@ -106,13 +107,14 @@ export function Dashboard({ user, adminKey = '' }) {
   const [search, setSearch] = useState(''); const [slug, setSlug] = useState(''); const [issued, setIssued] = useState('');
   const [edit, setEdit] = useState(null); const [invitation, setInvitation] = useState(null);
   const [linkOwner, setLinkOwner] = useState(null);
-  const [accountSlug, setAccountSlug] = useState(''); const [slugEdited, setSlugEdited] = useState(false);
+  const [accountPartnerType, setAccountPartnerType] = useState('');
   const [accountSuffix, setAccountSuffix] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
   useEffect(() => {
     if (!edit && !invitation) return;
     const previous = document.activeElement;
     const dialog = document.querySelector('[role="dialog"]');
-    const focusable = () => Array.from(dialog?.querySelectorAll('button:not(:disabled),input:not(:disabled),textarea,a[href]') || []);
+    const focusable = () => Array.from(dialog?.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea,a[href]') || []);
     focusable()[0]?.focus();
     const trap = event => {
       if (event.key !== 'Tab') return;
@@ -134,22 +136,23 @@ export function Dashboard({ user, adminKey = '' }) {
     catch (e) { setError(e.message); return false; } finally { setPending(false); }
   }
   function namedLinkValues(form) {
-    const { suffix, ...values } = Object.fromEntries(new FormData(form));
-    values.slug = slugWithSuffix(values.slug, suffix);
-    if (!validSlug(values.slug)) { setError('URL全体を区切り文字も含めて3〜48文字にしてください。URL用の名前には半角英数字・アンダースコア・ハイフン、追加する英数字には半角英字・数字が使えます。先頭・末尾・連続した記号や予約語は使えません。'); return null; }
+    const values = Object.fromEntries(new FormData(form));
+    if (!validPartnerType(values.partner_type)) { setError('区分を「仲介業者（101）」「個人（201）」から選択してください。'); return null; }
+    if (!validSlug(slugWithSuffix(values.partner_type, values.suffix))) { setError('追加する英数字は半角英字・数字で入力し、URL全体を48文字以内にしてください。'); return null; }
     return values;
   }
   async function createAccount(event) {
     event.preventDefault(); const form = event.currentTarget; const values = namedLinkValues(form);
     if (!values) return;
-    if (await mutate('users', values, '担当者を登録し、紹介URLを発行しました。', setInvitation)) { form.reset(); setAccountSlug(''); setAccountSuffix(''); setSlugEdited(false); }
+    if (await mutate('users', values, '担当者を登録し、紹介URLを発行しました。', setInvitation)) { form.reset(); setAccountPartnerType(''); setAccountSuffix(''); }
   }
   async function createLink(event) {
     event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form));
     if (await mutate('links', values, '紹介リンクを発行しました。', r => setIssued(r.url))) { form.reset(); setSlug(''); }
   }
-  const users = (data?.users || []).filter(u => `${u.name} ${u.company} ${u.email}`.toLowerCase().includes(search.toLowerCase()));
-  const links = (data?.links || []).filter(l => (!linkOwner || l.user_id === linkOwner.id) && `${l.label} ${l.slug} ${l.name} ${l.company}`.toLowerCase().includes(search.toLowerCase()));
+  const matchesType = value => typeFilter === 'all' || (typeFilter === 'unset' ? !value : value === typeFilter);
+  const users = (data?.users || []).filter(u => matchesType(u.partner_type) && `${u.name} ${u.company} ${u.email} ${partnerTypeLabel(u.partner_type)}`.toLowerCase().includes(search.toLowerCase()));
+  const links = (data?.links || []).filter(l => matchesType(l.partner_type) && (!linkOwner || l.user_id === linkOwner.id) && `${l.label} ${l.slug} ${l.name} ${l.company} ${partnerTypeLabel(l.partner_type)}`.toLowerCase().includes(search.toLowerCase()));
   return <main className={styles.portal}>
     <header className={styles.header}><Brand /><div className={styles.identity}><span className={styles.role}>{admin ? '管理者' : 'パートナー'}</span><span>{user.name} 様</span><button disabled={pending} onClick={async () => { setPending(true); try { await api('logout', {}); window.location.assign(admin ? `/management/${adminKey}` : '/partners'); } catch(e) { setError(e.message); setPending(false); } }}>ログアウト</button></div></header>
     <div className={styles.main}>
@@ -160,14 +163,14 @@ export function Dashboard({ user, adminKey = '' }) {
         <div><span>{admin ? '発行済みリンク' : 'あなたの紹介コード'}</span>{admin ? <strong>{data?.links.length ?? '—'}<small>件</small></strong> : <code className={styles.partnerCode}>{user.code}</code>}</div>
       </div>
       <Alert>{error}</Alert><Alert success>{notice}</Alert>
-      {admin ? <section className={styles.card}><div className={styles.cardHeading}><div><span className={styles.eyebrow}>INVITE A PARTNER</span><h2>担当者を登録</h2></div><p>お名前の入った紹介URLを<br />登録と同時に発行します。</p></div>
+      {admin ? <section className={styles.card}><div className={styles.cardHeading}><div><span className={styles.eyebrow}>INVITE A PARTNER</span><h2>担当者を登録</h2></div><p>区分を選ぶと紹介URLを<br />自動で発行します。URLに名前は入りません。</p></div>
         <form onSubmit={createAccount}><fieldset disabled={pending} className={styles.createGrid}>
-          <label className={styles.field}><span>担当者名 <b>必須</b></span><input name="name" required maxLength={80} placeholder="山田 太郎" onChange={e => { if (!slugEdited) setAccountSlug(slugFromName(e.target.value)); }} /></label>
+          <label className={styles.field}><span>担当者名 <b>必須</b></span><input name="name" required maxLength={80} placeholder="山田 太郎" /><small>管理一覧に表示するお名前です。URLには入りません。</small></label>
+          <label className={styles.field}><span>区分 <b>必須</b></span><select name="partner_type" required value={accountPartnerType} onChange={e => setAccountPartnerType(e.target.value)}><option value="" disabled>選択してください</option>{PARTNER_TYPES.map(type => <option key={type.code} value={type.code}>{partnerTypeLabel(type.code)}</option>)}</select></label>
           <label className={styles.field}><span>会社名</span><input name="company" maxLength={120} placeholder="株式会社〇〇" /></label>
           <label className={styles.field}><span>メールアドレス <b>必須</b></span><input name="email" type="email" required maxLength={254} placeholder="name@example.com" /></label>
-          <label className={styles.field}><span>URL用の名前 <b>必須</b></span><input name="slug" required minLength={3} maxLength={48} pattern="[a-z0-9][a-z0-9_\-]{1,46}[a-z0-9]" value={accountSlug} onChange={e => { setSlugEdited(true); setAccountSlug(e.target.value.toLowerCase()); }} placeholder="yamada_taro" autoCapitalize="none" spellCheck="false" /><small>ローマ字のお名前や、お好きな英数字を入力できます。</small></label>
-          <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={accountSuffix} onChange={e => setAccountSuffix(e.target.value.toLowerCase())} maxLength={44} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>名前の後ろに付ける半角英字・数字。英大文字は小文字に揃えます。</small></label>
-          <div className={`${styles.urlPreview} ${styles.accountPreview}`}><span>発行される紹介URL</span><code>{data?.origin || 'https://timelesscondominium.com'}/r/<strong>{slugWithSuffix(accountSlug || 'yamada_taro', accountSuffix) || '入力内容を確認してください'}</strong></code><small>全体で3〜48文字。同じURL名がある場合は、末尾に番号が付きます。</small></div>
+          <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={accountSuffix} onChange={e => setAccountSuffix(e.target.value.toLowerCase())} maxLength={44} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>区分コードの後ろに追加できます。空欄でも自動発行できます。</small></label>
+          <div className={`${styles.urlPreview} ${styles.accountPreview}`}><span>発行される紹介URL</span><code>{data?.origin || 'https://timelesscondominium.com'}/r/<strong>{accountPartnerType ? slugWithSuffix(accountPartnerType, accountSuffix) || '入力内容を確認してください' : '区分を選択してください'}</strong></code><small>同じURL名がある場合は、末尾に番号が付きます（例：101_2）。</small></div>
           <button className={styles.primary} type="submit">担当者を登録 <span aria-hidden="true">＋</span></button>
         </fieldset></form>
       </section> : <section className={styles.card}><div className={styles.cardHeading}><div><span className={styles.eyebrow}>CREATE A LINK</span><h2>新しい紹介リンク</h2></div><p>URLの末尾を自由に設定できます。</p></div>
@@ -184,26 +187,26 @@ export function Dashboard({ user, adminKey = '' }) {
           {admin && <button role="tab" aria-selected={tab === 'users'} onClick={() => { setTab('users'); setSearch(''); }}>担当者一覧</button>}
           <button role="tab" aria-selected={tab === 'links'} onClick={() => { setTab('links'); setSearch(''); setLinkOwner(null); }}>紹介リンク一覧</button>
           {admin && <button role="tab" aria-selected={tab === 'activity'} onClick={() => { setTab('activity'); setSearch(''); }}>操作履歴</button>}
-        </div>{tab !== 'activity' && <label className={styles.search}><span className={styles.srOnly}>一覧を検索</span><input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder={tab === 'users' ? '担当者・会社名で検索' : 'リンク名・URL名で検索'} /></label>}</div>
+        </div>{tab !== 'activity' && <div className={styles.listFilters}>{admin && <label className={styles.field}><span className={styles.srOnly}>区分で絞り込み</span><select aria-label="区分で絞り込み" value={typeFilter} onChange={e => setTypeFilter(e.target.value)}><option value="all">すべての区分</option>{PARTNER_TYPES.map(type => <option key={type.code} value={type.code}>{partnerTypeLabel(type.code)}</option>)}<option value="unset">区分未設定</option></select></label>}<label className={styles.search}><span className={styles.srOnly}>一覧を検索</span><input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder={tab === 'users' ? '担当者・会社名・区分で検索' : 'リンク名・URL名で検索'} /></label></div>}</div>
         {!data ? <div className={styles.empty}>読み込んでいます…</div> : tab === 'users' ? <div className={styles.rows}>
-          {!users.length && <div className={styles.empty}>{search ? '一致する担当者がいません。' : '担当者はまだ登録されていません。上のフォームから最初の担当者を登録できます。'}</div>}
+          {!users.length && <div className={styles.empty}>{search || typeFilter !== 'all' ? '条件に一致する担当者がいません。' : '担当者はまだ登録されていません。上のフォームから最初の担当者を登録できます。'}</div>}
           {users.map(u => <article className={styles.userRow} key={u.id}>
             <div className={styles.avatar} aria-hidden="true">{u.name.slice(0, 1)}</div>
-            <div className={styles.rowMain}><div className={styles.rowTitle}><h3>{u.name}</h3><span className={u.active ? styles.badge : styles.badgeOff}>{u.active ? '利用中' : '利用停止'}</span></div><p>{u.company || '会社名未登録'} <span>·</span> {u.email}</p>
+            <div className={styles.rowMain}><div className={styles.rowTitle}><h3>{u.name}</h3><span className={u.partner_type ? styles.badge : styles.badgeOff}>{partnerTypeLabel(u.partner_type)}</span><span className={u.active ? styles.badge : styles.badgeOff}>{u.active ? '利用中' : '利用停止'}</span></div><p>{u.company || '会社名未登録'} <span>·</span> {u.email}</p>
               {u.primary_slug && <code className={styles.linkUrl}>{data.origin}/r/{u.primary_slug}{!u.primary_active && '（リンク停止中）'}</code>}
               <small>紹介コード {u.code} · リンク {u.link_count}件 · {u.activated ? 'ログイン設定済み' : 'ログイン未設定'}</small>
             </div>
             <div className={styles.rowActions}>
-              <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => { setError(''); setEdit({ type: 'referral', ...u, slug: u.primary_slug || slugFromName(u.name), suffix: '' }); }}>{u.primary_slug ? '紹介URLを追加発行' : '紹介URLを発行'}</button>
-              {u.link_count > 0 && <button className={styles.smallButton} disabled={pending} onClick={() => { setTab('links'); setSearch(''); setLinkOwner({ id: u.id, name: u.name }); }}>発行済みURL（{u.link_count}件）</button>}
+              <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => { setError(''); setEdit({ type: 'referral', ...u, suffix: '' }); }}>{u.primary_slug ? '紹介URLを追加発行' : '紹介URLを発行'}</button>
+              {u.link_count > 0 && <button className={styles.smallButton} disabled={pending} onClick={() => { setTab('links'); setSearch(''); setTypeFilter('all'); setLinkOwner({ id: u.id, name: u.name }); }}>発行済みURL（{u.link_count}件）</button>}
               <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => mutate(`users/${u.id}/invite`, {}, 'ログイン設定URLを再発行しました。', setInvitation)}>ログイン設定URL</button>
               <button className={styles.smallButton} disabled={pending} onClick={() => { setError(''); setEdit({ type: 'user', ...u }); }}>編集</button>
             </div>
           </article>)}
         </div> : tab === 'links' ? <div className={styles.rows}>
           {linkOwner && <div className={styles.note}>{linkOwner.name}さんの発行済みURL <button className={styles.smallButton} onClick={() => { setLinkOwner(null); setSearch(''); }}>全担当者を表示</button></div>}
-          {!links.length && <div className={styles.empty}>{search ? '一致する紹介リンクがありません。' : admin ? '担当者の紹介リンクがここに表示されます。' : '紹介リンクはまだありません。上のフォームから最初のリンクを発行しましょう。'}</div>}
-          {links.map(l => <article className={styles.linkRow} key={l.id}><div className={styles.rowMain}><div className={styles.rowTitle}><h3>{l.label}</h3><span className={l.active && l.owner_active ? styles.badge : styles.badgeOff}>{l.active && l.owner_active ? '利用中' : '停止中'}</span></div><code className={styles.linkUrl}>{data.origin}/r/{l.slug}</code><small>{admin && `${l.company ? l.company + ' / ' : ''}${l.name} · `}{date(l.created_at)} 発行</small></div><div className={styles.rowActions}><Copy value={`${data.origin}/r/${l.slug}`} /><button className={styles.smallButton} disabled={pending} onClick={() => { setError(''); setEdit({ type: 'link', ...l }); }}>編集</button></div></article>)}
+          {!links.length && <div className={styles.empty}>{search || typeFilter !== 'all' ? '条件に一致する紹介リンクがありません。' : admin ? '担当者の紹介リンクがここに表示されます。' : '紹介リンクはまだありません。上のフォームから最初のリンクを発行しましょう。'}</div>}
+          {links.map(l => <article className={styles.linkRow} key={l.id}><div className={styles.rowMain}><div className={styles.rowTitle}><h3>{l.label}</h3>{admin && <span className={l.partner_type ? styles.badge : styles.badgeOff}>{partnerTypeLabel(l.partner_type)}</span>}<span className={l.active && l.owner_active ? styles.badge : styles.badgeOff}>{l.active && l.owner_active ? '利用中' : '停止中'}</span></div><code className={styles.linkUrl}>{data.origin}/r/{l.slug}</code><small>{admin && `${l.company ? l.company + ' / ' : ''}${l.name} · `}{date(l.created_at)} 発行</small></div><div className={styles.rowActions}><Copy value={`${data.origin}/r/${l.slug}`} /><button className={styles.smallButton} disabled={pending} onClick={() => { setError(''); setEdit({ type: 'link', ...l }); }}>編集</button></div></article>)}
         </div> : <div className={styles.rows}>{!data.activity.length && <div className={styles.empty}>操作履歴はありません。</div>}{data.activity.map((a, i) => <div className={styles.activity} key={`${a.created_at}-${i}`}><span>{actions[a.action] || a.action}</span><span>{a.actor_name || 'システム'}</span><time>{new Date(a.created_at).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}</time></div>)}</div>}
       </section>
       <footer className={styles.footer}><span>THE TIMELESS CONDOMINIUM</span><span>PARTNER PORTAL</span></footer>
@@ -212,7 +215,7 @@ export function Dashboard({ user, adminKey = '' }) {
       <span className={styles.eyebrow}>{invitation.referralUrl ? 'PARTNER REFERRAL URL' : 'ACCOUNT INVITATION'}</span>
       <h2 id="invite-heading">{invitation.name}さんの{invitation.referralUrl ? '紹介URL' : 'ログイン設定URL'}</h2>
       {invitation.referralUrl ? <>
-        <p>担当者のお名前が入った紹介URLです。そのままお客様にお渡しいただけます。</p>
+        <p>自動発行した紹介URLです。そのままお客様にお渡しいただけます。</p>
         <div className={styles.inviteBox}><textarea readOnly aria-label="担当者の紹介URL" value={invitation.referralUrl} rows={3} /><Copy value={invitation.referralUrl} label="紹介URLをコピー" /></div>
         <p className={styles.note}>{invitation.link?.active === false ? 'この紹介URLは停止中です。紹介リンク一覧から再開できます。' : 'このURLからのお問い合わせは、担当者に紐づきます。パスワード設定前でも紹介URLをご利用いただけます。'}</p>
         {invitation.inviteUrl && <details className={styles.loginSetup}><summary>担当者のログイン設定</summary><p>担当者が管理画面を使う場合は、こちらのURLからパスワードを設定できます。</p><div className={styles.inviteBox}><textarea readOnly aria-label="担当者のログイン設定URL" value={invitation.inviteUrl} rows={4} /><Copy value={invitation.inviteUrl} label="ログイン設定URLをコピー" /></div><p className={styles.note}>ログイン設定URLは48時間有効・1回限りです。</p></details>}
@@ -225,9 +228,9 @@ export function Dashboard({ user, adminKey = '' }) {
     </section></div>}
     {edit?.type === 'referral' && <div className={styles.backdrop}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="referral-heading"><h2 id="referral-heading">{edit.name}さんの紹介URLを発行</h2>
       <form onSubmit={async event => { event.preventDefault(); const values = namedLinkValues(event.currentTarget); if (values && await mutate(`users/${edit.id}/referral`, values, '紹介URLを発行しました。', setInvitation)) setEdit(null); }}><fieldset disabled={pending} className={styles.fields}>
-        <label className={styles.field}><span>URL用の名前</span><input name="slug" required minLength={3} maxLength={48} pattern="[a-z0-9][a-z0-9_\-]{1,46}[a-z0-9]" value={edit.slug} placeholder="yamada_taro" autoCapitalize="none" spellCheck="false" onChange={e => setEdit({ ...edit, slug: e.target.value.toLowerCase() })} /><small>ローマ字のお名前や、お好きな英数字を入力できます。</small></label>
-        <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={edit.suffix} onChange={e => setEdit({ ...edit, suffix: e.target.value.toLowerCase() })} maxLength={44} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>名前の後ろに付ける半角英字・数字。英大文字は小文字に揃えます。</small></label>
-        <div className={styles.urlPreview}><span>発行される紹介URL</span><code>{data?.origin}/r/<strong>{slugWithSuffix(edit.slug || 'yamada_taro', edit.suffix) || '入力内容を確認してください'}</strong></code><small>全体で3〜48文字。同じURL名がある場合は、末尾に番号が付きます。</small></div>
+        <label className={styles.field}><span>区分 <b>必須</b></span><select name="partner_type" required value={edit.partner_type || ''} onChange={e => setEdit({ ...edit, partner_type: e.target.value })}><option value="" disabled>選択してください</option>{PARTNER_TYPES.map(type => <option key={type.code} value={type.code}>{partnerTypeLabel(type.code)}</option>)}</select><small>選択した区分は担当者一覧にも保存されます。発行済みURLは変わりません。</small></label>
+        <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={edit.suffix} onChange={e => setEdit({ ...edit, suffix: e.target.value.toLowerCase() })} maxLength={44} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>区分コードの後ろに追加できます。空欄でも自動発行できます。</small></label>
+        <div className={styles.urlPreview}><span>発行される紹介URL</span><code>{data?.origin}/r/<strong>{edit.partner_type ? slugWithSuffix(edit.partner_type, edit.suffix) || '入力内容を確認してください' : '区分を選択してください'}</strong></code><small>同じURL名がある場合は、末尾に番号が付きます。URLに名前は入りません。</small></div>
         <label className={styles.field}><span>管理用の表示名（任意）</span><input name="label" maxLength={100} placeholder="例：京都のお客様へのご案内" /></label>
         <p className={styles.note}>同じURL名がある場合は末尾に番号が付きます。発行のたびに新しいURLを作成し、発行済みのURLも引き続き使えます。1担当者につき100件まで発行できます。</p>
         <Alert>{error}</Alert><div className={styles.modalActions}><button type="button" className={styles.secondary} onClick={() => setEdit(null)}>キャンセル</button><button className={styles.primary} type="submit">{pending ? '発行しています…' : '紹介URLを発行'}</button></div>
@@ -236,6 +239,7 @@ export function Dashboard({ user, adminKey = '' }) {
     {edit && edit.type !== 'referral' && <div className={styles.backdrop}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="edit-heading"><h2 id="edit-heading">{edit.type === 'user' ? '担当者情報を編集' : '紹介リンクを編集'}</h2>
       <form onSubmit={async event => { event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); const ok = await mutate(`${edit.type === 'user' ? 'users' : 'links'}/${edit.id}`, { ...values, active: values.active === 'on' }, '変更を保存しました。'); if (ok) setEdit(null); }}><fieldset disabled={pending} className={styles.fields}>
         <label className={styles.field}><span>{edit.type === 'user' ? '担当者名' : '管理用の表示名'}</span><input autoFocus name={edit.type === 'user' ? 'name' : 'label'} required maxLength={edit.type === 'user' ? 80 : 100} defaultValue={edit.type === 'user' ? edit.name : edit.label} /></label>
+        {edit.type === 'user' && <label className={styles.field}><span>区分 <b>必須</b></span><select name="partner_type" required defaultValue={edit.partner_type || ''}><option value="" disabled>選択してください</option>{PARTNER_TYPES.map(type => <option key={type.code} value={type.code}>{partnerTypeLabel(type.code)}</option>)}</select></label>}
         {edit.type === 'user' && <label className={styles.field}><span>会社名</span><input name="company" defaultValue={edit.company} maxLength={120} /></label>}
         <label className={styles.checkbox}><input type="checkbox" name="active" defaultChecked={edit.active} />利用を有効にする</label>
         <p className={styles.note}>{edit.type === 'user' ? '名前を変更しても発行済みURLは変わりません。停止するとログインと全紹介リンクが無効になります。再開すると紹介リンクも再び利用できます。' : '停止すると、この紹介リンクからの案内が無効になります。URL名は変更・再利用されません。'}</p><Alert>{error}</Alert><div className={styles.modalActions}><button type="button" className={styles.secondary} onClick={() => setEdit(null)}>キャンセル</button><button className={styles.primary} type="submit">{pending ? '保存中…' : '変更を保存'}</button></div>
