@@ -1,6 +1,7 @@
 // Run against the isolated preview: node tests/affiliate-http.mjs
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { slugWithSuffix } from '../lib/affiliate/slug.mjs';
 const base = 'http://127.0.0.1:3100';
 const post = (path, body, cookie = '', origin = base) => fetch(`${base}/api/partners/${path}`, {
   method: 'POST', headers: { 'Content-Type': 'application/json', Origin: origin, Cookie: cookie }, body: JSON.stringify(body)
@@ -57,7 +58,7 @@ if (process.argv[2]) {
   const adminLogin = await post('login', { email: credentials.adminEmail, password: credentials.password, adminKey, code: credentials.recoveryCodes[0] });
   assert.equal(adminLogin.status, 200);
   const adminCookie = adminLogin.headers.getSetCookie().map(s => s.split(';')[0]).join('; ');
-  const slug = `http_urls_${Date.now()}`;
+  const slug = slugWithSuffix(`http_urls_${Date.now()}`, 'ABC123');
   const created = await post('users', { name: '追加発行テスト担当者', email: `${slug}@example.test`, slug }, adminCookie);
   assert.equal(created.status, 200);
   const account = await created.json();

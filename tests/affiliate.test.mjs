@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { PGlite } from '@electric-sql/pglite';
 import { createService, validSlug } from '../lib/affiliate/service.mjs';
 import { digest, totp, readReferral, signReferral } from '../lib/affiliate/crypto.mjs';
-import { slugFromName } from '../lib/affiliate/slug.mjs';
+import { slugFromName, slugWithSuffix } from '../lib/affiliate/slug.mjs';
 
 const password = 'A-long-test-passphrase-2026!';
 const config = { secret: 'test-only-secret-0000000000000000000000000000', origin: 'https://example.test', adminPath: 'test-admin-path-0123456789012345' };
@@ -174,6 +174,18 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
     assert.equal(issued.filter(l => l.is_primary).length, 1);
     assert.equal(issued.filter(l => l.slug === partner.link.slug).length, 1);
   });
+  await t.test('alphanumeric additions work for registration and subsequent referral URLs', async () => {
+    const partner = await service.createUser(admin, { name: '英数字追加担当者', email: 'suffix@example.test', slug: slugWithSuffix('suffix_partner', 'ABC123') });
+    assert.equal(partner.link.slug, 'suffix_partner_abc123');
+    const additional = await service.issueReferral(admin, partner.user.id, { slug: slugWithSuffix('suffix_partner', '2026') });
+    assert.equal(additional.link.slug, 'suffix_partner_2026');
+    const duplicate = await service.issueReferral(admin, partner.user.id, { slug: slugWithSuffix('suffix_partner', '2026') });
+    assert.equal(duplicate.link.slug, 'suffix_partner_2026_2');
+    for (const result of [partner, additional, duplicate]) {
+      assert.equal((await service.publicLink(result.link.slug)).code, partner.user.code);
+      assert.equal((await service.attribution(signReferral(result.link.id, config.secret))).name, partner.user.name);
+    }
+  });
   await t.test('concurrent additional issuance respects the existing per-partner limit', async () => {
     const partner = await service.createUser(admin, { name: '上限確認', email: 'limit@example.test', slug: 'limit_check' });
     await db.query(`INSERT INTO affiliate_links(id,user_id,slug,label)
@@ -190,6 +202,15 @@ test('URL names reject reserved paths, traversal and invalid names', () => {
   assert.equal(validSlug('yamada_taro'), true);
   assert.equal(slugFromName('Yamada Taro'), 'yamada_taro');
   assert.equal(slugFromName('山田 太郎'), '');
+});
+test('optional alphanumeric additions preserve names, normalize case and obey URL limits', () => {
+  assert.equal(slugWithSuffix('yamada_taro'), 'yamada_taro');
+  assert.equal(slugWithSuffix('yamada_taro', 'ABC123'), 'yamada_taro_abc123');
+  assert.equal(slugWithSuffix('yamada_taro', '2026'), 'yamada_taro_2026');
+  for (const suffix of ['日本語', '../test', 'abc-123', 'abc_123', 'abc 123', 'x?y=1']) assert.equal(slugWithSuffix('yamada_taro', suffix), '');
+  assert.equal(slugWithSuffix('', 'abc123'), '');
+  assert.equal(validSlug(slugWithSuffix('abc', 'x'.repeat(44))), true);
+  assert.equal(validSlug(slugWithSuffix('abcd', 'x'.repeat(44))), false);
 });
 test('migration preserves legacy links and supports names for existing partners', async t => {
   const db = new PGlite();

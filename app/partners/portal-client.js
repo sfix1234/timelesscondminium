@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { slugFromName, validSlug } from '../../lib/affiliate/slug.mjs';
+import { slugFromName, slugWithSuffix, validSlug } from '../../lib/affiliate/slug.mjs';
 import styles from './portal.module.css';
 
 async function api(path, body) {
@@ -107,6 +107,7 @@ export function Dashboard({ user, adminKey = '' }) {
   const [edit, setEdit] = useState(null); const [invitation, setInvitation] = useState(null);
   const [linkOwner, setLinkOwner] = useState(null);
   const [accountSlug, setAccountSlug] = useState(''); const [slugEdited, setSlugEdited] = useState(false);
+  const [accountSuffix, setAccountSuffix] = useState('');
   useEffect(() => {
     if (!edit && !invitation) return;
     const previous = document.activeElement;
@@ -132,10 +133,16 @@ export function Dashboard({ user, adminKey = '' }) {
     try { const result = await api(path, body); if (callback) callback(result); await refresh(); setNotice(success); return true; }
     catch (e) { setError(e.message); return false; } finally { setPending(false); }
   }
+  function namedLinkValues(form) {
+    const { suffix, ...values } = Object.fromEntries(new FormData(form));
+    values.slug = slugWithSuffix(values.slug, suffix);
+    if (!validSlug(values.slug)) { setError('URL全体を区切り文字も含めて3〜48文字にしてください。URL用の名前には半角英数字・アンダースコア・ハイフン、追加する英数字には半角英字・数字が使えます。先頭・末尾・連続した記号や予約語は使えません。'); return null; }
+    return values;
+  }
   async function createAccount(event) {
-    event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form));
-    if (!validSlug(values.slug)) { setError('URL用の名前は3〜48文字の半角英小文字・数字・アンダースコア・ハイフンで入力してください。先頭・末尾・連続した記号は使えません。'); return; }
-    if (await mutate('users', values, '担当者を登録し、紹介URLを発行しました。', setInvitation)) { form.reset(); setAccountSlug(''); setSlugEdited(false); }
+    event.preventDefault(); const form = event.currentTarget; const values = namedLinkValues(form);
+    if (!values) return;
+    if (await mutate('users', values, '担当者を登録し、紹介URLを発行しました。', setInvitation)) { form.reset(); setAccountSlug(''); setAccountSuffix(''); setSlugEdited(false); }
   }
   async function createLink(event) {
     event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form));
@@ -158,8 +165,9 @@ export function Dashboard({ user, adminKey = '' }) {
           <label className={styles.field}><span>担当者名 <b>必須</b></span><input name="name" required maxLength={80} placeholder="山田 太郎" onChange={e => { if (!slugEdited) setAccountSlug(slugFromName(e.target.value)); }} /></label>
           <label className={styles.field}><span>会社名</span><input name="company" maxLength={120} placeholder="株式会社〇〇" /></label>
           <label className={styles.field}><span>メールアドレス <b>必須</b></span><input name="email" type="email" required maxLength={254} placeholder="name@example.com" /></label>
-          <label className={styles.field}><span>URL用の名前 <b>必須</b></span><input name="slug" required minLength={3} maxLength={48} pattern="[a-z0-9][a-z0-9_\-]{1,46}[a-z0-9]" value={accountSlug} onChange={e => { setSlugEdited(true); setAccountSlug(e.target.value.toLowerCase()); }} placeholder="yamada_taro" autoCapitalize="none" spellCheck="false" /><small>お名前をローマ字で入力してください。</small></label>
-          <div className={`${styles.urlPreview} ${styles.accountPreview}`}><span>発行される紹介URL</span><code>{data?.origin || 'https://timelesscondominium.com'}/r/<strong>{accountSlug || 'yamada_taro'}</strong></code><small>同じURL名がある場合は、末尾に番号が付きます。</small></div>
+          <label className={styles.field}><span>URL用の名前 <b>必須</b></span><input name="slug" required minLength={3} maxLength={48} pattern="[a-z0-9][a-z0-9_\-]{1,46}[a-z0-9]" value={accountSlug} onChange={e => { setSlugEdited(true); setAccountSlug(e.target.value.toLowerCase()); }} placeholder="yamada_taro" autoCapitalize="none" spellCheck="false" /><small>ローマ字のお名前や、お好きな英数字を入力できます。</small></label>
+          <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={accountSuffix} onChange={e => setAccountSuffix(e.target.value.toLowerCase())} maxLength={44} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>名前の後ろに付ける半角英字・数字。英大文字は小文字に揃えます。</small></label>
+          <div className={`${styles.urlPreview} ${styles.accountPreview}`}><span>発行される紹介URL</span><code>{data?.origin || 'https://timelesscondominium.com'}/r/<strong>{slugWithSuffix(accountSlug || 'yamada_taro', accountSuffix) || '入力内容を確認してください'}</strong></code><small>全体で3〜48文字。同じURL名がある場合は、末尾に番号が付きます。</small></div>
           <button className={styles.primary} type="submit">担当者を登録 <span aria-hidden="true">＋</span></button>
         </fieldset></form>
       </section> : <section className={styles.card}><div className={styles.cardHeading}><div><span className={styles.eyebrow}>CREATE A LINK</span><h2>新しい紹介リンク</h2></div><p>URLの末尾を自由に設定できます。</p></div>
@@ -186,7 +194,7 @@ export function Dashboard({ user, adminKey = '' }) {
               <small>紹介コード {u.code} · リンク {u.link_count}件 · {u.activated ? 'ログイン設定済み' : 'ログイン未設定'}</small>
             </div>
             <div className={styles.rowActions}>
-              <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => { setError(''); setEdit({ type: 'referral', ...u }); }}>{u.primary_slug ? '紹介URLを追加発行' : '紹介URLを発行'}</button>
+              <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => { setError(''); setEdit({ type: 'referral', ...u, slug: u.primary_slug || slugFromName(u.name), suffix: '' }); }}>{u.primary_slug ? '紹介URLを追加発行' : '紹介URLを発行'}</button>
               {u.link_count > 0 && <button className={styles.smallButton} disabled={pending} onClick={() => { setTab('links'); setSearch(''); setLinkOwner({ id: u.id, name: u.name }); }}>発行済みURL（{u.link_count}件）</button>}
               <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => mutate(`users/${u.id}/invite`, {}, 'ログイン設定URLを再発行しました。', setInvitation)}>ログイン設定URL</button>
               <button className={styles.smallButton} disabled={pending} onClick={() => { setError(''); setEdit({ type: 'user', ...u }); }}>編集</button>
@@ -216,8 +224,10 @@ export function Dashboard({ user, adminKey = '' }) {
       <button className={styles.primary} onClick={() => setInvitation(null)}>閉じる</button>
     </section></div>}
     {edit?.type === 'referral' && <div className={styles.backdrop}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="referral-heading"><h2 id="referral-heading">{edit.name}さんの紹介URLを発行</h2>
-      <form onSubmit={async event => { event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); if (await mutate(`users/${edit.id}/referral`, values, '紹介URLを発行しました。', setInvitation)) setEdit(null); }}><fieldset disabled={pending} className={styles.fields}>
-        <label className={styles.field}><span>URL用の名前</span><input name="slug" required minLength={3} maxLength={48} pattern="[a-z0-9][a-z0-9_\-]{1,46}[a-z0-9]" defaultValue={edit.primary_slug || slugFromName(edit.name)} placeholder="yamada_taro" autoCapitalize="none" spellCheck="false" onChange={e => { e.target.value = e.target.value.toLowerCase(); }} /><small>お名前をローマ字で入力してください。例：yamada_taro</small></label>
+      <form onSubmit={async event => { event.preventDefault(); const values = namedLinkValues(event.currentTarget); if (values && await mutate(`users/${edit.id}/referral`, values, '紹介URLを発行しました。', setInvitation)) setEdit(null); }}><fieldset disabled={pending} className={styles.fields}>
+        <label className={styles.field}><span>URL用の名前</span><input name="slug" required minLength={3} maxLength={48} pattern="[a-z0-9][a-z0-9_\-]{1,46}[a-z0-9]" value={edit.slug} placeholder="yamada_taro" autoCapitalize="none" spellCheck="false" onChange={e => setEdit({ ...edit, slug: e.target.value.toLowerCase() })} /><small>ローマ字のお名前や、お好きな英数字を入力できます。</small></label>
+        <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={edit.suffix} onChange={e => setEdit({ ...edit, suffix: e.target.value.toLowerCase() })} maxLength={44} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>名前の後ろに付ける半角英字・数字。英大文字は小文字に揃えます。</small></label>
+        <div className={styles.urlPreview}><span>発行される紹介URL</span><code>{data?.origin}/r/<strong>{slugWithSuffix(edit.slug || 'yamada_taro', edit.suffix) || '入力内容を確認してください'}</strong></code><small>全体で3〜48文字。同じURL名がある場合は、末尾に番号が付きます。</small></div>
         <label className={styles.field}><span>管理用の表示名（任意）</span><input name="label" maxLength={100} placeholder="例：京都のお客様へのご案内" /></label>
         <p className={styles.note}>同じURL名がある場合は末尾に番号が付きます。発行のたびに新しいURLを作成し、発行済みのURLも引き続き使えます。1担当者につき100件まで発行できます。</p>
         <Alert>{error}</Alert><div className={styles.modalActions}><button type="button" className={styles.secondary} onClick={() => setEdit(null)}>キャンセル</button><button className={styles.primary} type="submit">{pending ? '発行しています…' : '紹介URLを発行'}</button></div>
