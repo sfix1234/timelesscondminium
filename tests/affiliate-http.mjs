@@ -1,5 +1,6 @@
 // Run against the isolated preview: node tests/affiliate-http.mjs
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 const base = 'http://127.0.0.1:3100';
 const post = (path, body, cookie = '', origin = base) => fetch(`${base}/api/partners/${path}`, {
   method: 'POST', headers: { 'Content-Type': 'application/json', Origin: origin, Cookie: cookie }, body: JSON.stringify(body)
@@ -48,6 +49,46 @@ assert.match(await whatsapp(satoCookie), /^佐藤 花子様のご紹介/);
 assert.match(await whatsapp(referralCookie, '?name=Fake&slug=sato_hanako'), /^山田 太郎様のご紹介/);
 assert.equal(await whatsapp(), 'THE SILENCEについて詳しく伺いたいです。');
 assert.equal(await whatsapp('ttc_referral=invalid'), 'THE SILENCEについて詳しく伺いたいです。');
+// Pass the preview credentials path printed by `npm run preview:partners`
+// to also exercise administrator issuance without touching production data.
+if (process.argv[2]) {
+  const credentials = JSON.parse(await readFile(process.argv[2], 'utf8'));
+  const adminKey = new URL(credentials.adminUrl).pathname.split('/').pop();
+  const adminLogin = await post('login', { email: credentials.adminEmail, password: credentials.password, adminKey, code: credentials.recoveryCodes[0] });
+  assert.equal(adminLogin.status, 200);
+  const adminCookie = adminLogin.headers.getSetCookie().map(s => s.split(';')[0]).join('; ');
+  const slug = `http_urls_${Date.now()}`;
+  const created = await post('users', { name: '追加発行テスト担当者', email: `${slug}@example.test`, slug }, adminCookie);
+  assert.equal(created.status, 200);
+  const account = await created.json();
+  assert.equal((await post(`users/${account.user.id}/referral`, { slug }, cookie)).status, 403);
+  assert.equal((await post(`users/${account.user.id}/referral`, { slug }, adminCookie, 'https://attacker.example')).status, 403);
+  for (const suffix of ['', '_2', '_3']) {
+    if (suffix) {
+      const issued = await post(`users/${account.user.id}/referral`, { slug, label: 'HTTP追加発行' }, adminCookie);
+      assert.equal(issued.status, 200);
+      const result = await issued.json();
+      assert.equal(result.link.slug, `${slug}${suffix}`);
+      assert.equal(result.link.user_id, account.user.id);
+      assert.equal(result.referralUrl, `${base}/r/${slug}${suffix}`);
+    }
+    const response = await fetch(`${base}/r/${slug}${suffix}`, { redirect: 'manual' });
+    assert.equal(response.status, 302);
+    assert.equal(new URL(response.headers.get('location')).searchParams.get('utm_source'), account.user.code);
+    const signedCookie = response.headers.getSetCookie().find(s => s.startsWith('ttc_referral=')).split(';')[0];
+    assert.match(await whatsapp(signedCookie), /^追加発行テスト担当者様のご紹介/);
+  }
+  const adminState = await (await fetch(`${base}/api/partners/state`, { headers: { Cookie: adminCookie } })).json();
+  const owner = adminState.users.find(u => u.id === account.user.id);
+  assert.equal(owner.link_count, 3);
+  assert.equal(owner.primary_slug, slug);
+  assert.equal(owner.activated, false);
+  const adminPage = await fetch(credentials.adminUrl, { headers: { Cookie: adminCookie } });
+  assert.equal(adminPage.status, 200);
+  assert.match(await adminPage.text(), /紹介パートナー管理/);
+  await post('logout', {}, adminCookie);
+  console.log('PASS: administrator repeatedly issues URLs, preserves the primary URL, rejects other partners and CSRF, and attributes every URL before login setup.');
+}
 const primaryLink = state.links.find(l => l.slug === 'yamada_taro');
 assert.equal((await post(`links/${primaryLink.id}`, { active: false }, cookie)).status, 200);
 assert.equal(await whatsapp(referralCookie), 'THE SILENCEについて詳しく伺いたいです。');

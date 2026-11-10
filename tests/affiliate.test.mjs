@@ -109,27 +109,45 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
     assert.equal(second.referralUrl, 'https://example.test/r/yamada_taro_2');
     assert.equal((await service.publicLink('yamada_taro')).code, first.user.code);
     assert.equal((await service.publicLink('yamada_taro_2')).code, second.user.code);
-    assert.equal((await service.issueReferral(admin, first.user.id, { slug: 'another_name' })).referralUrl, first.referralUrl);
+    const additional = await service.issueReferral(admin, first.user.id, { slug: 'another_name', label: '京都のお客様用' });
+    assert.equal(additional.referralUrl, 'https://example.test/r/another_name');
+    assert.equal(additional.link.label, '京都のお客様用');
+    assert.equal(additional.link.is_primary, false);
+    assert.equal((await service.publicLink('another_name')).code, first.user.code);
+    const additionalReferral = signReferral(additional.link.id, config.secret);
+    assert.equal((await service.attribution(additionalReferral)).name, '山田 太郎');
     await assert.rejects(service.issueReferral(userA, first.user.id), e => e.status === 403);
     await assert.rejects(service.createUser(admin, { name: '山田 三郎', email: 'bad@example.test', slug: 'invalid/name' }), /URL用/);
     await assert.rejects(service.createUser(admin, { name: '山田 三郎', email: 'missing@example.test' }), /URL用/);
+    await assert.rejects(service.issueReferral(admin, first.user.id, { slug: 'invalid/name' }), /URL用/);
     await service.updateUser(admin, first.user.id, { name: '山田 次郎' });
-    assert.equal((await service.issueReferral(admin, first.user.id)).referralUrl, first.referralUrl);
+    assert.equal((await service.publicLink('yamada_taro')).name, '山田 次郎');
     const referral = signReferral(first.link.id, config.secret);
     await service.updateUser(admin, first.user.id, { active: false });
     assert.equal(await service.publicLink('yamada_taro'), undefined);
     assert.equal(await service.attribution(referral), undefined);
+    assert.equal(await service.publicLink('another_name'), undefined);
+    assert.equal(await service.attribution(additionalReferral), undefined);
+    await assert.rejects(service.issueReferral(admin, first.user.id), e => e.status === 404);
     await service.updateUser(admin, first.user.id, { active: true });
     assert.equal((await service.attribution(referral)).name, '山田 次郎');
     await service.updateLink(admin, first.link.id, { active: false });
     assert.equal(await service.publicLink('yamada_taro'), undefined);
-    assert.equal((await service.issueReferral(admin, first.user.id)).link.active, false);
+    const replacement = await service.issueReferral(admin, first.user.id);
+    assert.equal(replacement.link.slug, 'yamada_taro_3');
+    assert.equal(replacement.link.active, true);
+    assert.equal(await service.publicLink('yamada_taro'), undefined);
+    assert.equal((await service.publicLink(replacement.link.slug)).code, first.user.code);
+    await service.updateLink(admin, additional.link.id, { active: false });
+    assert.equal(await service.publicLink('another_name'), undefined);
+    assert.equal(await service.attribution(additionalReferral), undefined);
+    assert.equal((await service.publicLink(replacement.link.slug)).code, first.user.code);
     await service.updateLink(admin, first.link.id, { active: true });
     await activate((await service.reissue(admin, first.user.id)).inviteUrl);
     assert.equal((await service.publicLink('yamada_taro')).code, first.user.code);
     const row = (await service.dashboard(admin)).users.find(u => u.id === first.user.id);
     assert.equal(row.primary_slug, 'yamada_taro');
-    assert.equal(row.link_count, 1);
+    assert.equal(row.link_count, 3);
     const concurrent = await Promise.all([1, 2].map(n => service.createUser(admin, { name: '同姓同名', email: `same${n}@example.test`, slug: 'same_name' })));
     assert.deepEqual(concurrent.map(r => r.link.slug).sort(), ['same_name', 'same_name_2']);
     const long = 'a'.repeat(48);
@@ -138,6 +156,32 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
     assert.equal(longFirst.link.slug.length, 48);
     assert.equal(longSecond.link.slug.length, 48);
     assert.ok(validSlug(longSecond.link.slug));
+    const longAdditional = await service.issueReferral(admin, longFirst.user.id);
+    assert.equal(longAdditional.link.slug.length, 48);
+    assert.ok(validSlug(longAdditional.link.slug));
+  });
+  await t.test('repeated issuance keeps existing links, owner attribution and login setup intact', async () => {
+    const partner = await service.createUser(admin, { name: '追加発行担当者', email: 'multiple@example.test', slug: 'multiple_urls' });
+    const results = await Promise.all([1, 2, 3].map(() => service.issueReferral(admin, partner.user.id)));
+    assert.deepEqual(results.map(r => r.link.slug).sort(), ['multiple_urls_2', 'multiple_urls_3', 'multiple_urls_4']);
+    for (const result of [partner, ...results]) {
+      assert.equal((await service.publicLink(result.link.slug)).code, partner.user.code);
+      assert.equal((await service.attribution(signReferral(result.link.id, config.secret))).name, partner.user.name);
+    }
+    assert.equal((await service.inviteInfo(tokenOf(partner.inviteUrl), 'multiple')).email, partner.user.email);
+    assert.equal((await service.dashboard(admin)).users.find(u => u.id === partner.user.id).link_count, 4);
+    const issued = (await service.dashboard(admin)).links.filter(l => l.user_id === partner.user.id);
+    assert.equal(issued.filter(l => l.is_primary).length, 1);
+    assert.equal(issued.filter(l => l.slug === partner.link.slug).length, 1);
+  });
+  await t.test('concurrent additional issuance respects the existing per-partner limit', async () => {
+    const partner = await service.createUser(admin, { name: '上限確認', email: 'limit@example.test', slug: 'limit_check' });
+    await db.query(`INSERT INTO affiliate_links(id,user_id,slug,label)
+      SELECT md5('limit-' || n)::uuid,$1,'limit_check_' || n,'上限確認' FROM generate_series(2,99) AS n`, [partner.user.id]);
+    const attempts = await Promise.allSettled([service.issueReferral(admin, partner.user.id), service.issueReferral(admin, partner.user.id)]);
+    assert.equal(attempts.filter(r => r.status === 'fulfilled').length, 1);
+    assert.match(attempts.find(r => r.status === 'rejected').reason.message, /100件/);
+    assert.equal((await service.dashboard(admin)).users.find(u => u.id === partner.user.id).link_count, 100);
   });
 });
 test('URL names reject reserved paths, traversal and invalid names', () => {
@@ -169,5 +213,9 @@ test('migration preserves legacy links and supports names for existing partners'
   assert.equal((await service.publicLink('yamada_taro')).code, 'LEGACY');
   const links = (await db.query('SELECT slug,label,is_primary FROM affiliate_links ORDER BY slug')).rows;
   assert.deepEqual(links, [{ slug: 'legacy-link', label: 'Original', is_primary: false }, { slug: 'yamada_taro', label: '山田 太郎の紹介URL', is_primary: true }]);
-  assert.equal((await service.issueReferral(admin, partnerId)).link.id, result.link.id);
+  const additional = await service.issueReferral(admin, partnerId);
+  assert.equal(additional.link.slug, 'yamada_taro_2');
+  assert.equal(additional.link.is_primary, false);
+  assert.equal((await service.publicLink(additional.link.slug)).code, 'LEGACY');
+  assert.equal((await service.publicLink(result.link.slug)).code, 'LEGACY');
 });

@@ -105,6 +105,7 @@ export function Dashboard({ user, adminKey = '' }) {
   const [error, setError] = useState(''); const [notice, setNotice] = useState(''); const [pending, setPending] = useState(false);
   const [search, setSearch] = useState(''); const [slug, setSlug] = useState(''); const [issued, setIssued] = useState('');
   const [edit, setEdit] = useState(null); const [invitation, setInvitation] = useState(null);
+  const [linkOwner, setLinkOwner] = useState(null);
   const [accountSlug, setAccountSlug] = useState(''); const [slugEdited, setSlugEdited] = useState(false);
   useEffect(() => {
     if (!edit && !invitation) return;
@@ -141,7 +142,7 @@ export function Dashboard({ user, adminKey = '' }) {
     if (await mutate('links', values, '紹介リンクを発行しました。', r => setIssued(r.url))) { form.reset(); setSlug(''); }
   }
   const users = (data?.users || []).filter(u => `${u.name} ${u.company} ${u.email}`.toLowerCase().includes(search.toLowerCase()));
-  const links = (data?.links || []).filter(l => `${l.label} ${l.slug} ${l.name} ${l.company}`.toLowerCase().includes(search.toLowerCase()));
+  const links = (data?.links || []).filter(l => (!linkOwner || l.user_id === linkOwner.id) && `${l.label} ${l.slug} ${l.name} ${l.company}`.toLowerCase().includes(search.toLowerCase()));
   return <main className={styles.portal}>
     <header className={styles.header}><Brand /><div className={styles.identity}><span className={styles.role}>{admin ? '管理者' : 'パートナー'}</span><span>{user.name} 様</span><button disabled={pending} onClick={async () => { setPending(true); try { await api('logout', {}); window.location.assign(admin ? `/management/${adminKey}` : '/partners'); } catch(e) { setError(e.message); setPending(false); } }}>ログアウト</button></div></header>
     <div className={styles.main}>
@@ -173,7 +174,7 @@ export function Dashboard({ user, adminKey = '' }) {
       <section className={styles.listSection}>
         <div className={styles.listHead}><div className={styles.tabs} role="tablist" aria-label="表示する一覧">
           {admin && <button role="tab" aria-selected={tab === 'users'} onClick={() => { setTab('users'); setSearch(''); }}>担当者一覧</button>}
-          <button role="tab" aria-selected={tab === 'links'} onClick={() => { setTab('links'); setSearch(''); }}>紹介リンク一覧</button>
+          <button role="tab" aria-selected={tab === 'links'} onClick={() => { setTab('links'); setSearch(''); setLinkOwner(null); }}>紹介リンク一覧</button>
           {admin && <button role="tab" aria-selected={tab === 'activity'} onClick={() => { setTab('activity'); setSearch(''); }}>操作履歴</button>}
         </div>{tab !== 'activity' && <label className={styles.search}><span className={styles.srOnly}>一覧を検索</span><input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder={tab === 'users' ? '担当者・会社名で検索' : 'リンク名・URL名で検索'} /></label>}</div>
         {!data ? <div className={styles.empty}>読み込んでいます…</div> : tab === 'users' ? <div className={styles.rows}>
@@ -185,12 +186,14 @@ export function Dashboard({ user, adminKey = '' }) {
               <small>紹介コード {u.code} · リンク {u.link_count}件 · {u.activated ? 'ログイン設定済み' : 'ログイン未設定'}</small>
             </div>
             <div className={styles.rowActions}>
-              <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => { setError(''); if (u.primary_slug) setInvitation({ name: u.name, referralUrl: `${data.origin}/r/${u.primary_slug}`, link: { active: u.primary_active } }); else setEdit({ type: 'referral', ...u }); }}>{u.primary_slug ? '紹介URLを表示' : '紹介URLを発行'}</button>
+              <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => { setError(''); setEdit({ type: 'referral', ...u }); }}>{u.primary_slug ? '紹介URLを追加発行' : '紹介URLを発行'}</button>
+              {u.link_count > 0 && <button className={styles.smallButton} disabled={pending} onClick={() => { setTab('links'); setSearch(''); setLinkOwner({ id: u.id, name: u.name }); }}>発行済みURL（{u.link_count}件）</button>}
               <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => mutate(`users/${u.id}/invite`, {}, 'ログイン設定URLを再発行しました。', setInvitation)}>ログイン設定URL</button>
               <button className={styles.smallButton} disabled={pending} onClick={() => { setError(''); setEdit({ type: 'user', ...u }); }}>編集</button>
             </div>
           </article>)}
         </div> : tab === 'links' ? <div className={styles.rows}>
+          {linkOwner && <div className={styles.note}>{linkOwner.name}さんの発行済みURL <button className={styles.smallButton} onClick={() => { setLinkOwner(null); setSearch(''); }}>全担当者を表示</button></div>}
           {!links.length && <div className={styles.empty}>{search ? '一致する紹介リンクがありません。' : admin ? '担当者の紹介リンクがここに表示されます。' : '紹介リンクはまだありません。上のフォームから最初のリンクを発行しましょう。'}</div>}
           {links.map(l => <article className={styles.linkRow} key={l.id}><div className={styles.rowMain}><div className={styles.rowTitle}><h3>{l.label}</h3><span className={l.active && l.owner_active ? styles.badge : styles.badgeOff}>{l.active && l.owner_active ? '利用中' : '停止中'}</span></div><code className={styles.linkUrl}>{data.origin}/r/{l.slug}</code><small>{admin && `${l.company ? l.company + ' / ' : ''}${l.name} · `}{date(l.created_at)} 発行</small></div><div className={styles.rowActions}><Copy value={`${data.origin}/r/${l.slug}`} /><button className={styles.smallButton} disabled={pending} onClick={() => { setError(''); setEdit({ type: 'link', ...l }); }}>編集</button></div></article>)}
         </div> : <div className={styles.rows}>{!data.activity.length && <div className={styles.empty}>操作履歴はありません。</div>}{data.activity.map((a, i) => <div className={styles.activity} key={`${a.created_at}-${i}`}><span>{actions[a.action] || a.action}</span><span>{a.actor_name || 'システム'}</span><time>{new Date(a.created_at).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}</time></div>)}</div>}
@@ -214,8 +217,9 @@ export function Dashboard({ user, adminKey = '' }) {
     </section></div>}
     {edit?.type === 'referral' && <div className={styles.backdrop}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="referral-heading"><h2 id="referral-heading">{edit.name}さんの紹介URLを発行</h2>
       <form onSubmit={async event => { event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); if (await mutate(`users/${edit.id}/referral`, values, '紹介URLを発行しました。', setInvitation)) setEdit(null); }}><fieldset disabled={pending} className={styles.fields}>
-        <label className={styles.field}><span>URL用の名前</span><input name="slug" required minLength={3} maxLength={48} pattern="[a-z0-9][a-z0-9_\-]{1,46}[a-z0-9]" defaultValue={slugFromName(edit.name)} placeholder="yamada_taro" autoCapitalize="none" spellCheck="false" onChange={e => { e.target.value = e.target.value.toLowerCase(); }} /><small>お名前をローマ字で入力してください。例：yamada_taro</small></label>
-        <p className={styles.note}>同じURL名がある場合は末尾に番号が付きます。発行後のURL名は変更できません。</p>
+        <label className={styles.field}><span>URL用の名前</span><input name="slug" required minLength={3} maxLength={48} pattern="[a-z0-9][a-z0-9_\-]{1,46}[a-z0-9]" defaultValue={edit.primary_slug || slugFromName(edit.name)} placeholder="yamada_taro" autoCapitalize="none" spellCheck="false" onChange={e => { e.target.value = e.target.value.toLowerCase(); }} /><small>お名前をローマ字で入力してください。例：yamada_taro</small></label>
+        <label className={styles.field}><span>管理用の表示名（任意）</span><input name="label" maxLength={100} placeholder="例：京都のお客様へのご案内" /></label>
+        <p className={styles.note}>同じURL名がある場合は末尾に番号が付きます。発行のたびに新しいURLを作成し、発行済みのURLも引き続き使えます。1担当者につき100件まで発行できます。</p>
         <Alert>{error}</Alert><div className={styles.modalActions}><button type="button" className={styles.secondary} onClick={() => setEdit(null)}>キャンセル</button><button className={styles.primary} type="submit">{pending ? '発行しています…' : '紹介URLを発行'}</button></div>
       </fieldset></form>
     </section></div>}
