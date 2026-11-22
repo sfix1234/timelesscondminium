@@ -1,0 +1,1 @@
+ALTER TABLE affiliate_users ALTER COLUMN email DROP NOT NULL;

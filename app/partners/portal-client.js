@@ -169,7 +169,7 @@ export function Dashboard({ user, adminKey = '' }) {
           <label className={styles.field}><span>担当者名 <b>必須</b></span><input name="name" required maxLength={80} placeholder="山田 太郎" /><small>管理一覧に表示するお名前です。URLには入りません。</small></label>
           <label className={styles.field}><span>区分 <b>必須</b></span><select name="partner_type" required value={accountPartnerType} onChange={e => setAccountPartnerType(e.target.value)}><option value="" disabled>選択してください</option>{PARTNER_TYPES.map(type => <option key={type.code} value={type.code}>{partnerTypeLabel(type.code)}</option>)}</select></label>
           <label className={styles.field}><span>会社名</span><input name="company" maxLength={120} placeholder="株式会社〇〇" /></label>
-          <label className={styles.field}><span>メールアドレス <b>必須</b></span><input name="email" type="email" required maxLength={254} placeholder="name@example.com" /></label>
+          <label className={styles.field}><span>メールアドレス（任意）</span><input name="email" type="email" maxLength={254} placeholder="name@example.com" /><small>紹介リンクだけなら不要です。本人がログインする場合に登録してください。</small></label>
           <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={accountSuffix} onChange={e => setAccountSuffix(e.target.value.toLowerCase())} maxLength={45} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>100／200の後ろに追加できます。例：100abc123。空欄なら連番を自動発行します。</small></label>
           <div className={`${styles.urlPreview} ${styles.accountPreview}`}><span>発行される紹介URL</span><code>{data?.origin || 'https://timelesscondominium.com'}/r/<strong>{accountPartnerType ? referralPreview(accountPartnerType, accountSuffix) || '入力内容を確認してください' : '区分を選択してください'}</strong></code><small>x部分は自動採番します。仲介業者は1001、1002…、個人紹介は2001、2002…です。</small></div>
           <button className={styles.primary} type="submit">担当者を登録 <span aria-hidden="true">＋</span></button>
@@ -193,14 +193,14 @@ export function Dashboard({ user, adminKey = '' }) {
           {!users.length && <div className={styles.empty}>{search || typeFilter !== 'all' ? '条件に一致する担当者がいません。' : '担当者はまだ登録されていません。上のフォームから最初の担当者を登録できます。'}</div>}
           {users.map(u => <article className={styles.userRow} key={u.id}>
             <div className={styles.avatar} aria-hidden="true">{u.name.slice(0, 1)}</div>
-            <div className={styles.rowMain}><div className={styles.rowTitle}><h3>{u.name}</h3><span className={u.partner_type ? styles.badge : styles.badgeOff}>{partnerTypeLabel(u.partner_type)}</span><span className={u.active ? styles.badge : styles.badgeOff}>{u.active ? '利用中' : '利用停止'}</span></div><p>{u.company || '会社名未登録'} <span>·</span> {u.email}</p>
+            <div className={styles.rowMain}><div className={styles.rowTitle}><h3>{u.name}</h3><span className={u.partner_type ? styles.badge : styles.badgeOff}>{partnerTypeLabel(u.partner_type)}</span><span className={u.active ? styles.badge : styles.badgeOff}>{u.active ? '利用中' : '利用停止'}</span></div><p>{u.company || '会社名未登録'} <span>·</span> {u.email || 'メール未登録（紹介リンクのみ）'}</p>
               {u.primary_slug && <code className={styles.linkUrl}>{data.origin}/r/{u.primary_slug}{!u.primary_active && '（リンク停止中）'}</code>}
               <small>紹介コード {u.code} · リンク {u.link_count}件 · {u.activated ? 'ログイン設定済み' : 'ログイン未設定'}</small>
             </div>
             <div className={styles.rowActions}>
               <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => { setError(''); setEdit({ type: 'referral', ...u, suffix: '' }); }}>{u.primary_slug ? '紹介URLを追加発行' : '紹介URLを発行'}</button>
               {u.link_count > 0 && <button className={styles.smallButton} disabled={pending} onClick={() => { setTab('links'); setSearch(''); setTypeFilter('all'); setLinkOwner({ id: u.id, name: u.name }); }}>発行済みURL（{u.link_count}件）</button>}
-              <button className={styles.smallButton} disabled={pending || !u.active} onClick={() => mutate(`users/${u.id}/invite`, {}, 'ログイン設定URLを再発行しました。', setInvitation)}>ログイン設定URL</button>
+              <button className={styles.smallButton} disabled={pending || !u.active || !u.email} onClick={() => mutate(`users/${u.id}/invite`, {}, 'ログイン設定URLを再発行しました。', setInvitation)}>ログイン設定URL</button>
               <button className={styles.smallButton} disabled={pending} onClick={() => { setError(''); setEdit({ type: 'user', ...u }); }}>編集</button>
             </div>
           </article>)}
@@ -241,6 +241,7 @@ export function Dashboard({ user, adminKey = '' }) {
       <form onSubmit={async event => { event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); const ok = await mutate(`${edit.type === 'user' ? 'users' : 'links'}/${edit.id}`, { ...values, active: values.active === 'on' }, '変更を保存しました。'); if (ok) setEdit(null); }}><fieldset disabled={pending} className={styles.fields}>
         <label className={styles.field}><span>{edit.type === 'user' ? '担当者名' : '管理用の表示名'}</span><input autoFocus name={edit.type === 'user' ? 'name' : 'label'} required maxLength={edit.type === 'user' ? 80 : 100} defaultValue={edit.type === 'user' ? edit.name : edit.label} /></label>
         {edit.type === 'user' && <label className={styles.field}><span>区分 <b>必須</b></span><select name="partner_type" required defaultValue={edit.partner_type || ''}><option value="" disabled>選択してください</option>{PARTNER_TYPES.map(type => <option key={type.code} value={type.code}>{partnerTypeLabel(type.code)}</option>)}</select></label>}
+        {edit.type === 'user' && !edit.email && <label className={styles.field}><span>メールアドレス（任意）</span><input name="email" type="email" maxLength={254} placeholder="name@example.com" /><small>登録すると本人のログイン設定URLを発行できるようになります。</small></label>}
         {edit.type === 'user' && <label className={styles.field}><span>会社名</span><input name="company" defaultValue={edit.company} maxLength={120} /></label>}
         <label className={styles.checkbox}><input type="checkbox" name="active" defaultChecked={edit.active} />利用を有効にする</label>
         <p className={styles.note}>{edit.type === 'user' ? '名前を変更しても発行済みURLは変わりません。停止するとログインと全紹介リンクが無効になります。再開すると紹介リンクも再び利用できます。' : '停止すると、この紹介リンクからの案内が無効になります。URL名は変更・再利用されません。'}</p><Alert>{error}</Alert><div className={styles.modalActions}><button type="button" className={styles.secondary} onClick={() => setEdit(null)}>キャンセル</button><button className={styles.primary} type="submit">{pending ? '保存中…' : '変更を保存'}</button></div>

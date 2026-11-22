@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS affiliate_users (
   id uuid PRIMARY KEY,
-  email text NOT NULL UNIQUE CHECK (email = lower(email)),
+  email text UNIQUE CHECK (email = lower(email)),
   name text NOT NULL,
   company text NOT NULL DEFAULT '',
   partner_type text CONSTRAINT affiliate_users_partner_type_check CHECK (partner_type IN ('101', '201')),

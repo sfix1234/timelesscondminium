@@ -330,3 +330,40 @@ test('partner type migration is repeatable and preserves existing accounts and U
   await db.exec(migration);
   assert.equal((await db.query('SELECT partner_type FROM affiliate_users WHERE id=$1', [id])).rows[0].partner_type, '101');
 });
+
+test('referral-only partners get exact numeric URLs without email, and can enable login later', async t => {
+  const db = new PGlite();
+  t.after(() => db.close());
+  const schema = (await readFile(new URL('../lib/affiliate/schema.sql', import.meta.url), 'utf8'))
+    .replace('email text UNIQUE', 'email text NOT NULL UNIQUE');
+  await db.exec(schema);
+  const admin = (await db.query("INSERT INTO affiliate_users(id,email,name,role,code) VALUES('00000000-0000-4000-8000-000000000021','admin@example.test','Admin','admin','ADMIN') RETURNING *")).rows[0];
+  const before = (await db.query('SELECT * FROM affiliate_users')).rows;
+  const migration = await readFile(new URL('../lib/affiliate/migrations/004_referral_only_partners.sql', import.meta.url), 'utf8');
+  await db.exec(migration);
+  await db.exec(migration);
+  assert.deepEqual((await db.query('SELECT * FROM affiliate_users')).rows, before);
+  const service = createService({ db, ...config });
+  const partners = [];
+  for (const [index, name] of ['Sawada', 'Hirotorakusho', 'Ito Toryo', 'Takagi Shinichiro'].entries()) {
+    const partner = await service.createUser(admin, { name, partner_type: '201', suffix: String(index + 1) });
+    partners.push(partner);
+    assert.equal(partner.link.slug, `200${index + 1}`);
+    assert.equal(partner.user.email, null);
+    assert.equal(partner.inviteUrl, null);
+    assert.equal((await service.publicLink(partner.link.slug)).name, name);
+    assert.equal((await service.attribution(signReferral(partner.link.id, config.secret))).name, name);
+    await assert.rejects(service.reissue(admin, partner.user.id), /メールアドレス/);
+  }
+  assert.equal((await db.query('SELECT * FROM affiliate_invites')).rows.length, 0);
+  assert.equal((await service.dashboard(admin)).users.length, 4);
+  assert.equal((await service.issueReferral(admin, partners[0].user.id)).link.slug, '2005');
+  await assert.rejects(service.createUser(admin, { name: 'Invalid', email: 'invalid', partner_type: '201' }), /メールアドレス/);
+  await assert.rejects(service.updateUser(admin, partners[0].user.id, { email: 'admin@example.test' }), /登録済み/);
+  await service.updateUser(admin, partners[0].user.id, { email: 'sawada@example.test' });
+  const invitation = await service.reissue(admin, partners[0].user.id);
+  const auth = await service.activate({ token: tokenOf(invitation.inviteUrl), password }, 'referral-only');
+  assert.equal((await service.getActor(auth.session.value)).email, 'sawada@example.test');
+  assert.equal((await service.publicLink('2001')).name, 'Sawada');
+  await assert.rejects(service.updateUser(admin, partners[0].user.id, { email: 'other@example.test' }), /変更できません/);
+});
