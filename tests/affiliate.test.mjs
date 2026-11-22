@@ -5,7 +5,7 @@ import { PGlite } from '@electric-sql/pglite';
 import { createService, validSlug } from '../lib/affiliate/service.mjs';
 import { digest, totp, readReferral, signReferral } from '../lib/affiliate/crypto.mjs';
 import { slugFromName, slugWithSuffix } from '../lib/affiliate/slug.mjs';
-import { validPartnerType, partnerTypeLabel } from '../lib/affiliate/partner-types.mjs';
+import { validPartnerType, partnerTypeLabel, partnerUrlPrefix, partnerReferralSlug } from '../lib/affiliate/partner-types.mjs';
 
 const password = 'A-long-test-passphrase-2026!';
 const config = { secret: 'test-only-secret-0000000000000000000000000000', origin: 'https://example.test', adminPath: 'test-admin-path-0123456789012345' };
@@ -190,28 +190,35 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
   await t.test('partner types generate numeric URLs, remain editable, and preserve attribution', async () => {
     const agency = await service.createUser(admin, { name: '仲介担当者', email: 'agency@example.test', partner_type: '101', slug: 'name_should_not_be_used' });
     const individual = await service.createUser(admin, { name: '個人担当者', email: 'individual@example.test', partner_type: '201' });
-    assert.equal(agency.link.slug, '101');
-    assert.equal(individual.link.slug, '201');
+    assert.equal(agency.link.slug, '1001');
+    assert.equal(individual.link.slug, '2001');
     assert.equal(agency.user.partner_type, '101');
     assert.equal(individual.user.partner_type, '201');
     const sameType = await service.createUser(admin, { name: '別の仲介担当者', email: 'agency2@example.test', partner_type: '101' });
-    assert.equal(sameType.link.slug, '101_2');
+    assert.equal(sameType.link.slug, '1002');
     const issued = await Promise.all([1, 2].map(() => service.issueReferral(admin, agency.user.id)));
-    assert.deepEqual(issued.map(r => r.link.slug).sort(), ['101_3', '101_4']);
+    assert.deepEqual(issued.map(r => r.link.slug).sort(), ['1003', '1004']);
     const extra = await service.issueReferral(admin, agency.user.id, { suffix: 'ABC123' });
-    assert.equal(extra.link.slug, '101_abc123');
+    assert.equal(extra.link.slug, '100abc123');
     for (const result of [agency, ...issued, extra]) {
       assert.equal((await service.publicLink(result.link.slug)).code, agency.user.code);
       assert.equal((await service.attribution(signReferral(result.link.id, config.secret))).name, '仲介担当者');
     }
-    assert.equal((await service.publicLink('101_2')).code, sameType.user.code);
+    assert.equal((await service.publicLink('1002')).code, sameType.user.code);
+    const reservedNumber = await service.createLink(userA, { slug: '1009', label: '既存の番号' });
+    await service.updateLink(userA, reservedNumber.link.id, { active: false });
+    const nextNumbers = await Promise.all([service.issueReferral(admin, agency.user.id), service.issueReferral(admin, sameType.user.id)]);
+    assert.deepEqual(nextNumbers.map(r => r.link.slug).sort(), ['10010', '10011']);
+    const oldUrl = await service.createLink(userA, { slug: '101', label: '以前のURL' });
+    assert.equal((await service.publicLink('101')).code, userA.code);
+    assert.equal((await service.attribution(signReferral(oldUrl.link.id, config.secret))).name, userA.name);
     await service.updateUser(admin, agency.user.id, { name: '変更した担当者', partner_type: '201' });
     const renamed = (await service.dashboard(admin)).users.find(u => u.id === agency.user.id);
     assert.equal(renamed.name, '変更した担当者');
     assert.equal(renamed.partner_type, '201');
-    assert.equal(renamed.primary_slug, '101');
+    assert.equal(renamed.primary_slug, '1001');
     assert.equal((await service.attribution(signReferral(agency.link.id, config.secret))).name, '変更した担当者');
-    assert.equal((await service.issueReferral(admin, agency.user.id)).link.slug, '201_2');
+    assert.equal((await service.issueReferral(admin, agency.user.id)).link.slug, '2002');
     assert.ok((await service.dashboard(admin)).links.filter(l => l.user_id === agency.user.id).every(l => l.partner_type === '201'));
     await assert.rejects(service.updateUser(userA, agency.user.id, { partner_type: '101' }), e => e.status === 403);
     for (const value of ['', '999', 101, '個人']) {
@@ -222,10 +229,10 @@ test('portal security and referral lifecycle on real PostgreSQL semantics', asyn
     await assert.rejects(service.issueReferral(admin, agency.user.id, { suffix: '../abc' }), /英数字/);
     const legacy = await service.createUser(admin, { name: '既存担当者', email: 'unclassified@example.test', slug: 'legacy_unclassified' });
     assert.equal(legacy.user.partner_type, null);
-    await assert.rejects(service.issueReferral(admin, legacy.user.id, { partner_type: '101', suffix: 'x'.repeat(45) }), /48文字/);
+    await assert.rejects(service.issueReferral(admin, legacy.user.id, { partner_type: '101', suffix: 'x'.repeat(46) }), /48文字/);
     assert.equal((await service.dashboard(admin)).users.find(u => u.id === legacy.user.id).partner_type, null);
     const classified = await service.issueReferral(admin, legacy.user.id, { partner_type: '101' });
-    assert.match(classified.link.slug, /^101_\d+$/);
+    assert.match(classified.link.slug, /^100[1-9]\d*$/);
     assert.equal((await service.dashboard(admin)).users.find(u => u.id === legacy.user.id).partner_type, '101');
     assert.equal((await service.publicLink('legacy_unclassified')).code, legacy.user.code);
     assert.equal((await service.inviteInfo(tokenOf(legacy.inviteUrl), 'types')).name, '既存担当者');
@@ -260,9 +267,17 @@ test('type codes distinguish agencies, individuals and unclassified legacy partn
   assert.equal(validPartnerType('101'), true);
   assert.equal(validPartnerType('201'), true);
   for (const value of [undefined, null, '', '999', 101, 'broker']) assert.equal(validPartnerType(value), false);
-  assert.equal(partnerTypeLabel('101'), '仲介業者（101）');
-  assert.equal(partnerTypeLabel('201'), '個人（201）');
+  assert.equal(partnerTypeLabel('101'), '仲介業者（100x）');
+  assert.equal(partnerTypeLabel('201'), '個人紹介（200x）');
   assert.equal(partnerTypeLabel(null), '区分未設定');
+  assert.equal(partnerUrlPrefix('101'), '100');
+  assert.equal(partnerUrlPrefix('201'), '200');
+  assert.equal(partnerReferralSlug('101'), '1001');
+  assert.equal(partnerReferralSlug('201', 'ABC123'), '200abc123');
+  assert.equal(partnerReferralSlug('101', '../abc'), '');
+  assert.equal(partnerReferralSlug('999'), '');
+  assert.equal(validSlug(partnerReferralSlug('101', 'x'.repeat(45))), true);
+  assert.equal(validSlug(partnerReferralSlug('101', 'x'.repeat(46))), false);
 });
 test('migration preserves legacy links and supports names for existing partners', async t => {
   const db = new PGlite();

@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { slugWithSuffix, validSlug } from '../../lib/affiliate/slug.mjs';
-import { PARTNER_TYPES, validPartnerType, partnerTypeLabel } from '../../lib/affiliate/partner-types.mjs';
+import { validSlug } from '../../lib/affiliate/slug.mjs';
+import { PARTNER_TYPES, validPartnerType, partnerTypeLabel, partnerUrlPrefix, partnerReferralSlug } from '../../lib/affiliate/partner-types.mjs';
 import styles from './portal.module.css';
 
 async function api(path, body) {
@@ -15,6 +15,7 @@ async function api(path, body) {
   if (!response.ok) { const error = new Error(data.error || '操作を完了できませんでした。'); error.status = response.status; throw error; }
   return data;
 }
+const referralPreview = (type, suffix) => String(suffix || '').trim() ? partnerReferralSlug(type, suffix) || '入力内容を確認してください' : `${partnerUrlPrefix(type)}x`;
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 function Brand() { return <a className={styles.brand} href="/" aria-label="THE TIMELESS CONDOMINIUM トップ"><img src="/assets/images/hero-center-logo.png" alt="TIMELESS" width="660" height="129" /><span>PARTNER PORTAL</span></a>; }
 function Alert({ children, success = false }) { return children ? <p role={success ? 'status' : 'alert'} className={success ? styles.success : styles.error}>{children}</p> : null; }
@@ -137,8 +138,8 @@ export function Dashboard({ user, adminKey = '' }) {
   }
   function namedLinkValues(form) {
     const values = Object.fromEntries(new FormData(form));
-    if (!validPartnerType(values.partner_type)) { setError('区分を「仲介業者（101）」「個人（201）」から選択してください。'); return null; }
-    if (!validSlug(slugWithSuffix(values.partner_type, values.suffix))) { setError('追加する英数字は半角英字・数字で入力し、URL全体を48文字以内にしてください。'); return null; }
+    if (!validPartnerType(values.partner_type)) { setError('区分を「仲介業者（100x）」「個人紹介（200x）」から選択してください。'); return null; }
+    if (!validSlug(partnerReferralSlug(values.partner_type, values.suffix))) { setError('追加する英数字は半角英字・数字で入力し、URL全体を48文字以内にしてください。'); return null; }
     return values;
   }
   async function createAccount(event) {
@@ -156,7 +157,7 @@ export function Dashboard({ user, adminKey = '' }) {
   return <main className={styles.portal}>
     <header className={styles.header}><Brand /><div className={styles.identity}><span className={styles.role}>{admin ? '管理者' : 'パートナー'}</span><span>{user.name} 様</span><button disabled={pending} onClick={async () => { setPending(true); try { await api('logout', {}); window.location.assign(admin ? `/management/${adminKey}` : '/partners'); } catch(e) { setError(e.message); setPending(false); } }}>ログアウト</button></div></header>
     <div className={styles.main}>
-      <div className={styles.pageHeading}><div><span className={styles.eyebrow}>{admin ? 'PARTNER MANAGEMENT' : 'YOUR CONNECTIONS'}</span><h1>{admin ? '紹介パートナー管理' : '紹介リンク管理'}</h1><p className={styles.muted}>{admin ? '担当者の登録と、紹介リンクの利用状況を管理します。' : 'あなたらしいURLで、特別な出会いをつなぎましょう。'}</p></div><a href="/" className={styles.textLink}>サイトを見る <Arrow /></a></div>
+      <div className={styles.pageHeading}><div><span className={styles.eyebrow}>{admin ? 'PARTNER MANAGEMENT' : 'YOUR CONNECTIONS'}</span><h1>{admin ? '紹介パートナー管理' : '紹介リンク管理'}</h1><p className={styles.muted}>{admin ? '仲介業者（100x）・個人紹介（200x）ごとに、担当者と紹介リンクを管理します。' : 'あなたらしいURLで、特別な出会いをつなぎましょう。'}</p></div><a href="/" className={styles.textLink}>サイトを見る <Arrow /></a></div>
       <div className={styles.stats}>
         <div><span>{admin ? '登録担当者' : '発行したリンク'}</span><strong>{data ? (admin ? data.users.length : data.links.length) : '—'}<small>件</small></strong></div>
         <div><span>{admin ? '利用中の担当者' : '利用中のリンク'}</span><strong>{data ? (admin ? data.users.filter(u => u.active).length : data.links.filter(l => l.active).length) : '—'}<small>件</small></strong></div>
@@ -169,8 +170,8 @@ export function Dashboard({ user, adminKey = '' }) {
           <label className={styles.field}><span>区分 <b>必須</b></span><select name="partner_type" required value={accountPartnerType} onChange={e => setAccountPartnerType(e.target.value)}><option value="" disabled>選択してください</option>{PARTNER_TYPES.map(type => <option key={type.code} value={type.code}>{partnerTypeLabel(type.code)}</option>)}</select></label>
           <label className={styles.field}><span>会社名</span><input name="company" maxLength={120} placeholder="株式会社〇〇" /></label>
           <label className={styles.field}><span>メールアドレス <b>必須</b></span><input name="email" type="email" required maxLength={254} placeholder="name@example.com" /></label>
-          <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={accountSuffix} onChange={e => setAccountSuffix(e.target.value.toLowerCase())} maxLength={44} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>区分コードの後ろに追加できます。空欄でも自動発行できます。</small></label>
-          <div className={`${styles.urlPreview} ${styles.accountPreview}`}><span>発行される紹介URL</span><code>{data?.origin || 'https://timelesscondominium.com'}/r/<strong>{accountPartnerType ? slugWithSuffix(accountPartnerType, accountSuffix) || '入力内容を確認してください' : '区分を選択してください'}</strong></code><small>同じURL名がある場合は、末尾に番号が付きます（例：101_2）。</small></div>
+          <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={accountSuffix} onChange={e => setAccountSuffix(e.target.value.toLowerCase())} maxLength={45} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>100／200の後ろに追加できます。例：100abc123。空欄なら連番を自動発行します。</small></label>
+          <div className={`${styles.urlPreview} ${styles.accountPreview}`}><span>発行される紹介URL</span><code>{data?.origin || 'https://timelesscondominium.com'}/r/<strong>{accountPartnerType ? referralPreview(accountPartnerType, accountSuffix) || '入力内容を確認してください' : '区分を選択してください'}</strong></code><small>x部分は自動採番します。仲介業者は1001、1002…、個人紹介は2001、2002…です。</small></div>
           <button className={styles.primary} type="submit">担当者を登録 <span aria-hidden="true">＋</span></button>
         </fieldset></form>
       </section> : <section className={styles.card}><div className={styles.cardHeading}><div><span className={styles.eyebrow}>CREATE A LINK</span><h2>新しい紹介リンク</h2></div><p>URLの末尾を自由に設定できます。</p></div>
@@ -229,10 +230,10 @@ export function Dashboard({ user, adminKey = '' }) {
     {edit?.type === 'referral' && <div className={styles.backdrop}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="referral-heading"><h2 id="referral-heading">{edit.name}さんの紹介URLを発行</h2>
       <form onSubmit={async event => { event.preventDefault(); const values = namedLinkValues(event.currentTarget); if (values && await mutate(`users/${edit.id}/referral`, values, '紹介URLを発行しました。', setInvitation)) setEdit(null); }}><fieldset disabled={pending} className={styles.fields}>
         <label className={styles.field}><span>区分 <b>必須</b></span><select name="partner_type" required value={edit.partner_type || ''} onChange={e => setEdit({ ...edit, partner_type: e.target.value })}><option value="" disabled>選択してください</option>{PARTNER_TYPES.map(type => <option key={type.code} value={type.code}>{partnerTypeLabel(type.code)}</option>)}</select><small>選択した区分は担当者一覧にも保存されます。発行済みURLは変わりません。</small></label>
-        <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={edit.suffix} onChange={e => setEdit({ ...edit, suffix: e.target.value.toLowerCase() })} maxLength={44} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>区分コードの後ろに追加できます。空欄でも自動発行できます。</small></label>
-        <div className={styles.urlPreview}><span>発行される紹介URL</span><code>{data?.origin}/r/<strong>{edit.partner_type ? slugWithSuffix(edit.partner_type, edit.suffix) || '入力内容を確認してください' : '区分を選択してください'}</strong></code><small>同じURL名がある場合は、末尾に番号が付きます。URLに名前は入りません。</small></div>
+        <label className={styles.field}><span>追加する英数字（任意）</span><input name="suffix" value={edit.suffix} onChange={e => setEdit({ ...edit, suffix: e.target.value.toLowerCase() })} maxLength={45} pattern="[a-zA-Z0-9]+" placeholder="例：abc123" autoCapitalize="none" spellCheck="false" /><small>100／200の後ろに追加できます。例：100abc123。空欄なら連番を自動発行します。</small></label>
+        <div className={styles.urlPreview}><span>発行される紹介URL</span><code>{data?.origin}/r/<strong>{edit.partner_type ? referralPreview(edit.partner_type, edit.suffix) || '入力内容を確認してください' : '区分を選択してください'}</strong></code><small>空欄なら1001、1002…／2001、2002…と自動採番します。URLに名前は入りません。</small></div>
         <label className={styles.field}><span>管理用の表示名（任意）</span><input name="label" maxLength={100} placeholder="例：京都のお客様へのご案内" /></label>
-        <p className={styles.note}>同じURL名がある場合は末尾に番号が付きます。発行のたびに新しいURLを作成し、発行済みのURLも引き続き使えます。1担当者につき100件まで発行できます。</p>
+        <p className={styles.note}>番号は区分ごとに発行済みURLと重複しないよう自動採番します。英数字を指定して同じURL名がある場合は末尾に番号が付きます。発行済みのURLも引き続き使えます。1担当者につき100件まで発行できます。</p>
         <Alert>{error}</Alert><div className={styles.modalActions}><button type="button" className={styles.secondary} onClick={() => setEdit(null)}>キャンセル</button><button className={styles.primary} type="submit">{pending ? '発行しています…' : '紹介URLを発行'}</button></div>
       </fieldset></form>
     </section></div>}

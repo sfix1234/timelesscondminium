@@ -88,12 +88,13 @@ if (process.argv[2]) {
     const response = await post('users', { name: `区分${partnerType}担当者`, email: `type${partnerType}_${Date.now()}@example.test`, partner_type: partnerType, slug: 'ignored_name' }, adminCookie);
     assert.equal(response.status, 200);
     const typed = await response.json();
-    assert.match(typed.link.slug, new RegExp(`^${partnerType}(?:_\\d+)?$`));
+    const prefix = partnerType === '101' ? '100' : '200';
+    assert.match(typed.link.slug, new RegExp(`^${prefix}[1-9]\\d*$`));
     assert.equal(typed.user.partner_type, partnerType);
     const again = await post(`users/${typed.user.id}/referral`, { partner_type: partnerType }, adminCookie);
     assert.equal(again.status, 200);
     const extra = await again.json();
-    assert.match(extra.link.slug, new RegExp(`^${partnerType}_\\d+$`));
+    assert.match(extra.link.slug, new RegExp(`^${prefix}[1-9]\\d*$`));
     assert.notEqual(extra.link.slug, typed.link.slug);
     const redirect = await fetch(`${base}/r/${extra.link.slug}`, { redirect: 'manual' });
     assert.equal(redirect.status, 302);
