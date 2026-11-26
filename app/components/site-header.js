@@ -12,7 +12,7 @@ export default function SiteHeader({ headerClassName = '', navItems = [], center
             </div>
             <a
               className="jpn-badge__instagram"
-              href="https://www.instagram.com/timelesscondominium/"
+              href="https://www.instagram.com/timelessinc_jp/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
